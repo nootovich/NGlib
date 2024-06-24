@@ -20,18 +20,11 @@ public class NGKeyboardHandler {
 
     public void onKeyUp(int key, char chr) { }
 
-    private int convertKeyCode(int badKeyCode) {
-        return switch(badKeyCode) {
-            // TODO: put conversion into a (hashmap?) inside of NGKeys
-            case KeyEvent.VK_A -> NGKeys.A;
-            case KeyEvent.VK_D -> NGKeys.D;
-            case KeyEvent.VK_S -> NGKeys.S;
-            case KeyEvent.VK_W -> NGKeys.W;
-            default -> {
-                System.out.printf("The key '%s' is not implemented%n", KeyEvent.getKeyText(badKeyCode));
-                System.exit(1);
-                yield -1;
-            }
-        };
+    private int convertKeyCode(int awtfulKeyCode) {
+        if (!NGKeys.conversion.containsKey(awtfulKeyCode)) {
+            System.out.printf("The key '%s' is not implemented%n", KeyEvent.getKeyText(awtfulKeyCode));
+            System.exit(1);
+        }
+        return NGKeys.conversion.get(awtfulKeyCode);
     }
 }
