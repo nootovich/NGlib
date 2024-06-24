@@ -1,29 +1,37 @@
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
-// TODO: I'm not very happy about extending KeyAdapter.
-//  Need to think about a better way to handle keyboard events.
-public class NGKeyboardHandler extends KeyAdapter {
-    public void onKeyDown(int key, char chr) {
-    }
+public class NGKeyboardHandler {
 
-    public void onKeyUp(int key, char chr) {
-    }
-
-    @Override
     @Deprecated
-    public void keyTyped(KeyEvent e) {
-    }
+    @SuppressWarnings("DeprecatedIsStillUsed")
+    public KeyListener listener = new KeyListener() {
+        @Override
+        public void keyTyped(KeyEvent e) { }
 
-    @Override
-    @Deprecated
-    public void keyPressed(KeyEvent e) {
-        onKeyDown(e.getKeyCode(), e.getKeyChar());
-    }
+        @Override
+        public void keyPressed(KeyEvent e) { onKeyDn(convertKeyCode(e.getKeyCode()), e.getKeyChar()); }
 
-    @Override
-    @Deprecated
-    public void keyReleased(KeyEvent e) {
-        onKeyUp(e.getKeyCode(), e.getKeyChar());
+        @Override
+        public void keyReleased(KeyEvent e) { onKeyUp(convertKeyCode(e.getKeyCode()), e.getKeyChar()); }
+    };
+
+    public void onKeyDn(int key, char chr) { }
+
+    public void onKeyUp(int key, char chr) { }
+
+    private int convertKeyCode(int badKeyCode) {
+        return switch(badKeyCode) {
+            // TODO: put conversion into a (hashmap?) inside of NGKeys
+            case KeyEvent.VK_A -> NGKeys.A;
+            case KeyEvent.VK_D -> NGKeys.D;
+            case KeyEvent.VK_S -> NGKeys.S;
+            case KeyEvent.VK_W -> NGKeys.W;
+            default -> {
+                System.out.printf("The key '%s' is not implemented%n", KeyEvent.getKeyText(badKeyCode));
+                System.exit(1);
+                yield -1;
+            }
+        };
     }
 }

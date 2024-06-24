@@ -6,9 +6,9 @@ public class NGWindow {
     public int w, h;
     public boolean shouldClose = false;
 
-    public final JFrame jf = new JFrame();
+    public final JFrame     jf       = new JFrame();
     public final NGGraphics g;
-    public NGRenderer renderer = null;
+    public       NGRenderer renderer = null;
 
     NGWindow(int width, int height) {
         this.w = width;
@@ -30,7 +30,8 @@ public class NGWindow {
         g.displayOn(jf);
     }
 
+    @SuppressWarnings("deprecation")
     public void setKeyboardHandler(NGKeyboardHandler keyboardHandler) {
-        jf.addKeyListener(keyboardHandler);
+        jf.addKeyListener(keyboardHandler.listener);
     }
 }

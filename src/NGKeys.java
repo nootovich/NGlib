@@ -1,5 +1,6 @@
 @SuppressWarnings({"unused", "SpellCheckingInspection"})
 public class NGKeys {
+    // TODO: make this an interface? record? enum?
     /* TODO:
      *  4  Arrows
      *  2  Ctrl

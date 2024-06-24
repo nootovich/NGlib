@@ -1,16 +1,15 @@
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.util.Stack;
 
 public class Snake {
 
     private static final int cellAmount = 20;
-    private static final int cellSize = 40;
-    private static final int w = cellSize * cellAmount;
-    private static final int h = cellSize * cellAmount;
+    private static final int cellSize   = 40;
+    private static final int w          = cellSize * cellAmount;
+    private static final int h          = cellSize * cellAmount;
 
     private static final Stack<Integer[]> snakePositions = new Stack<>();
-    private static int snakeDirection = 0;
+    private static       int              snakeDirection = 0;
 
     private static Integer[] foodPosition = new Integer[2];
 
@@ -91,22 +90,21 @@ public class Snake {
     private static final class KeyboardHandler extends NGKeyboardHandler {
 
         @Override
-        public void onKeyDown(int key, char chr) {
+        public void onKeyDn(int key, char chr) {
             switch (key) {
-                // TODO: Should I do something about awt's 'KeyEvents'?
-                case KeyEvent.VK_W -> {
+                case NGKeys.W -> {
                     if (snakeDirection == 2) return;
                     snakeDirection = 0;
                 }
-                case KeyEvent.VK_A -> {
+                case NGKeys.A -> {
                     if (snakeDirection == 1) return;
                     snakeDirection = 3;
                 }
-                case KeyEvent.VK_S -> {
+                case NGKeys.S -> {
                     if (snakeDirection == 0) return;
                     snakeDirection = 2;
                 }
-                case KeyEvent.VK_D -> {
+                case NGKeys.D -> {
                     if (snakeDirection == 3) return;
                     snakeDirection = 1;
                 }
