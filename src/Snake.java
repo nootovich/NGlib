@@ -3,15 +3,15 @@ import java.util.Stack;
 
 public class Snake {
 
-    private static final int cellAmount = 20;
-    private static final int cellSize   = 40;
-    private static final int w          = cellSize * cellAmount;
-    private static final int h          = cellSize * cellAmount;
+    private static final int              cellAmount     = 20;
+    private static final int              cellSize       = 40;
+    private static final int              w              = cellSize * cellAmount;
+    private static final int              h              = cellSize * cellAmount;
 
     private static final Stack<Integer[]> snakePositions = new Stack<>();
     private static       int              snakeDirection = 0;
 
-    private static Integer[] foodPosition = new Integer[2];
+    private static       Integer[]        foodPosition   = new Integer[2];
 
     private static final NGWindow window = new NGWindow(w, h);
 
@@ -47,40 +47,38 @@ public class Snake {
                 g.drawRectBorder(cords[0] * cellSize, cords[1] * cellSize, cellSize, cellSize, Color.BLACK);
             }
 
-            int w = (int) (cellSize * 0.25f);
-            int h = (int) (cellSize * 0.25f);
-
+            int radius = (int) (cellSize * 0.25f);
             switch (snakeDirection) {
                 case 0 -> {
                     int x = (int) (head[0] * cellSize + cellSize * 0.15f);
                     int z = (int) (head[0] * cellSize + cellSize * 0.60f);
                     int y = (int) (head[1] * cellSize + cellSize * 0.15f);
-                    g.g2d.fillOval(x, y, w, h);
-                    g.g2d.fillOval(z, y, w, h);
+                    g.drawCircle(x, y, radius, Color.BLACK);
+                    g.drawCircle(z, y, radius, Color.BLACK);
                     snakeAddPos(head[0], mod(head[1] - 1, cellAmount));
                 }
                 case 1 -> {
                     int x = (int) (head[0] * cellSize + cellSize * 0.60f);
                     int y = (int) (head[1] * cellSize + cellSize * 0.15f);
                     int z = (int) (head[1] * cellSize + cellSize * 0.60f);
-                    g.g2d.fillOval(x, y, w, h);
-                    g.g2d.fillOval(x, z, w, h);
+                    g.drawCircle(x, y, radius, Color.BLACK);
+                    g.drawCircle(x, z, radius, Color.BLACK);
                     snakeAddPos(mod(head[0] + 1, cellAmount), head[1]);
                 }
                 case 2 -> {
                     int x = (int) (head[0] * cellSize + cellSize * 0.15f);
                     int z = (int) (head[0] * cellSize + cellSize * 0.60f);
                     int y = (int) (head[1] * cellSize + cellSize * 0.60f);
-                    g.g2d.fillOval(x, y, w, h);
-                    g.g2d.fillOval(z, y, w, h);
+                    g.drawCircle(x, y, radius, Color.BLACK);
+                    g.drawCircle(z, y, radius, Color.BLACK);
                     snakeAddPos(head[0], mod(head[1] + 1, cellAmount));
                 }
                 case 3 -> {
                     int x = (int) (head[0] * cellSize + cellSize * 0.15f);
                     int y = (int) (head[1] * cellSize + cellSize * 0.15f);
                     int z = (int) (head[1] * cellSize + cellSize * 0.60f);
-                    g.g2d.fillOval(x, y, w, h);
-                    g.g2d.fillOval(x, z, w, h);
+                    g.drawCircle(x, y, radius, Color.BLACK);
+                    g.drawCircle(x, z, radius, Color.BLACK);
                     snakeAddPos(mod(head[0] - 1, cellAmount), head[1]);
                 }
             }
