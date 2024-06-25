@@ -5,7 +5,7 @@ public class NGKeyboardHandler {
 
     @Deprecated
     @SuppressWarnings("DeprecatedIsStillUsed")
-    public KeyListener listener = new KeyListener() {
+    public final KeyListener listener = new KeyListener() {
         @Override
         public void keyTyped(KeyEvent e) { }
 

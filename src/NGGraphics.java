@@ -5,17 +5,25 @@ import java.awt.image.BufferedImage;
 
 public class NGGraphics {
 
-    private final int gX, gY, gW, gH;
-    private final BufferedImage buffer;
-    private final Graphics2D g2d;
+    private final int gX, gY;
+    private int gW, gH;
+    private BufferedImage buffer;
+    private Graphics2D    g2d;
 
     NGGraphics(Container c) {
-        this.gX     = c.getInsets().left;
-        this.gY     = c.getInsets().top;
-        this.gW     = c.getComponent(0).getWidth();
-        this.gH     = c.getComponent(0).getHeight();
-        this.buffer = new BufferedImage(gW, gH, BufferedImage.TYPE_INT_RGB);
-        this.g2d    = buffer.createGraphics();
+        gX     = c.getInsets().left;
+        gY     = c.getInsets().top;
+        gW     = c.getComponent(0).getWidth();
+        gH     = c.getComponent(0).getHeight();
+        buffer = new BufferedImage(gW, gH, BufferedImage.TYPE_INT_RGB);
+        g2d    = buffer.createGraphics();
+    }
+
+    public void resize(int w, int h) {
+        gW     = w;
+        gH     = h;
+        buffer = new BufferedImage(gW, gH, BufferedImage.TYPE_INT_RGB);
+        g2d    = buffer.createGraphics();
     }
 
     public void drawCircle(int x, int y, int radius, Color color) {

@@ -1,17 +1,18 @@
+import javax.swing.*;
 import java.awt.*;
 import java.util.Stack;
 
 public class Snake {
 
-    private static final int              cellAmount     = 20;
-    private static final int              cellSize       = 40;
-    private static final int              w              = cellSize * cellAmount;
-    private static final int              h              = cellSize * cellAmount;
+    private static final int cellAmount = 20;
+    private static final int cellSize   = 40;
+    private static       int w          = cellSize * cellAmount;
+    private static       int h          = cellSize * cellAmount;
 
     private static final Stack<Integer[]> snakePositions = new Stack<>();
     private static       int              snakeDirection = 0;
 
-    private static       Integer[]        foodPosition   = new Integer[2];
+    private static Integer[] foodPosition = new Integer[2];
 
     private static final NGWindow window = new NGWindow(w, h);
 
@@ -55,7 +56,7 @@ public class Snake {
                     int y = (int) (head[1] * cellSize + cellSize * 0.15f);
                     g.drawCircle(x, y, radius, Color.BLACK);
                     g.drawCircle(z, y, radius, Color.BLACK);
-                    snakeAddPos(head[0], mod(head[1] - 1, cellAmount));
+                    snakeAddPos(head[0], mod(head[1] - 1, h / cellSize));
                 }
                 case 1 -> {
                     int x = (int) (head[0] * cellSize + cellSize * 0.60f);
@@ -63,7 +64,7 @@ public class Snake {
                     int z = (int) (head[1] * cellSize + cellSize * 0.60f);
                     g.drawCircle(x, y, radius, Color.BLACK);
                     g.drawCircle(x, z, radius, Color.BLACK);
-                    snakeAddPos(mod(head[0] + 1, cellAmount), head[1]);
+                    snakeAddPos(mod(head[0] + 1, w / cellSize), head[1]);
                 }
                 case 2 -> {
                     int x = (int) (head[0] * cellSize + cellSize * 0.15f);
@@ -71,7 +72,7 @@ public class Snake {
                     int y = (int) (head[1] * cellSize + cellSize * 0.60f);
                     g.drawCircle(x, y, radius, Color.BLACK);
                     g.drawCircle(z, y, radius, Color.BLACK);
-                    snakeAddPos(head[0], mod(head[1] + 1, cellAmount));
+                    snakeAddPos(head[0], mod(head[1] + 1, h / cellSize));
                 }
                 case 3 -> {
                     int x = (int) (head[0] * cellSize + cellSize * 0.15f);
@@ -79,7 +80,7 @@ public class Snake {
                     int z = (int) (head[1] * cellSize + cellSize * 0.60f);
                     g.drawCircle(x, y, radius, Color.BLACK);
                     g.drawCircle(x, z, radius, Color.BLACK);
-                    snakeAddPos(mod(head[0] - 1, cellAmount), head[1]);
+                    snakeAddPos(mod(head[0] - 1, w / cellSize), head[1]);
                 }
             }
         }
@@ -110,6 +111,19 @@ public class Snake {
         }
     }
 
+    private static final class ResizeHandler extends NGResizeHandler {
+        ResizeHandler(NGWindow window) {
+            super(window); // TODO: I don't like this
+        }
+
+        @Override
+        public void onResize(int nw, int nh) {
+            w = nw;
+            h = nh;
+            window.g.resize(w, h);
+        }
+    }
+
     public static void main(String[] args) {
         snakeAddPos(cellAmount / 2, cellAmount / 2 + 6);
         snakeAddPos(cellAmount / 2, cellAmount / 2 + 5);
@@ -119,18 +133,10 @@ public class Snake {
         // TODO: Parity
         window.renderer = new Renderer();
         window.setKeyboardHandler(new KeyboardHandler());
+        window.setResizeHandler(new ResizeHandler(window)); // TODO: I don't like this
 
-        while (!window.shouldClose) {
-            window.redraw();
-            try {
-                // TODO: Make a cleaner way to sleep.
-                //  Also would be nice to have a proper
-                //  framerate control system.
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        Timer timer = new Timer(100, _ -> window.redraw());
+        timer.start();
     }
 
     public static void snakeAddPos(int x, int y) {
