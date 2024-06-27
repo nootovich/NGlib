@@ -13,7 +13,6 @@ public class NGWindow {
     public       NGRenderer renderer;
     public final Insets     ins;
 
-    NGWindow(int width, int height) {
     public NGWindow(int width, int height) {
         this.w = width;
         this.h = height;
