@@ -1,3 +1,5 @@
+package nootovich.nglib;
+
 import java.awt.event.KeyEvent;
 import java.util.Map;
 
@@ -103,11 +105,13 @@ public interface NGKeys {
     // 126 -> 96
 
     Map<Integer, Integer> conversion = Map.of(
-            KeyEvent.VK_A, A,
-            KeyEvent.VK_B, B,
-            KeyEvent.VK_D, D,
-            KeyEvent.VK_S, S,
-            KeyEvent.VK_W, W
+            KeyEvent.VK_ENTER, ENTER,       // 10
+            KeyEvent.VK_SPACE, SPACEBAR,    // 32
+            KeyEvent.VK_A, A,               // 65
+            KeyEvent.VK_B, B,               // 66
+            KeyEvent.VK_D, D,               // 68
+            KeyEvent.VK_S, S,               // 83
+            KeyEvent.VK_W, W                // 87
     );
 
 }

@@ -1,3 +1,5 @@
+package nootovich.nglib;
+
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 
@@ -23,10 +25,6 @@ public class NGResizeHandler {
     };
 
     public NGWindow window;
-
-    NGResizeHandler(NGWindow window) {
-        this.window = window;
-    }
 
     public void onResize(int w, int h) { }
 

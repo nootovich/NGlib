@@ -1,3 +1,5 @@
+package nootovich.nglib;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -12,6 +14,7 @@ public class NGWindow {
     public final Insets     ins;
 
     NGWindow(int width, int height) {
+    public NGWindow(int width, int height) {
         this.w = width;
         this.h = height;
 
@@ -54,6 +57,7 @@ public class NGWindow {
 
     @SuppressWarnings("deprecation")
     public void setResizeHandler(NGResizeHandler resizeHandler) {
+        resizeHandler.window = this;
         jf.addComponentListener(resizeHandler.listener);
     }
 }

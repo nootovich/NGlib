@@ -1,3 +1,5 @@
+import nootovich.nglib.*;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Stack;
@@ -112,9 +114,6 @@ public class Snake {
     }
 
     private static final class ResizeHandler extends NGResizeHandler {
-        ResizeHandler(NGWindow window) {
-            super(window); // TODO: I don't like this
-        }
 
         @Override
         public void onResize(int nw, int nh) {
@@ -133,7 +132,7 @@ public class Snake {
         // TODO: Parity
         window.renderer = new Renderer();
         window.setKeyboardHandler(new KeyboardHandler());
-        window.setResizeHandler(new ResizeHandler(window)); // TODO: I don't like this
+        window.setResizeHandler(new ResizeHandler());
 
         Timer timer = new Timer(100, _ -> window.redraw());
         timer.start();
