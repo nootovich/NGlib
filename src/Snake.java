@@ -50,40 +50,21 @@ public class Snake {
                 g.drawRectBorder(cords[0] * cellSize, cords[1] * cellSize, cellSize, cellSize, Color.BLACK);
             }
 
-            int radius = (int) (cellSize * 0.25f);
+            float[][] eyeCords       = new float[][]{{0.15f, 0.15f}, {0.60f, 0.15f}, {0.60f, 0.60f}, {0.15f, 0.60f}};
+            int       nextSDirection = (snakeDirection + 1) % 4;
+            int       snakeX1        = (int) ((head[0] + eyeCords[snakeDirection][0]) * cellSize);
+            int       snakeY1        = (int) ((head[1] + eyeCords[snakeDirection][1]) * cellSize);
+            int       snakeX2        = (int) ((head[0] + eyeCords[nextSDirection][0]) * cellSize);
+            int       snakeY2        = (int) ((head[1] + eyeCords[nextSDirection][1]) * cellSize);
+            int       radius         = (int) (cellSize * 0.25f);
+
+            g.drawCircle(snakeX1, snakeY1, radius, Color.BLACK);
+            g.drawCircle(snakeX2, snakeY2, radius, Color.BLACK);
             switch (snakeDirection) {
-                case 0 -> {
-                    int x = (int) (head[0] * cellSize + cellSize * 0.15f);
-                    int z = (int) (head[0] * cellSize + cellSize * 0.60f);
-                    int y = (int) (head[1] * cellSize + cellSize * 0.15f);
-                    g.drawCircle(x, y, radius, Color.BLACK);
-                    g.drawCircle(z, y, radius, Color.BLACK);
-                    snakeAddPos(head[0], mod(head[1] - 1, h / cellSize));
-                }
-                case 1 -> {
-                    int x = (int) (head[0] * cellSize + cellSize * 0.60f);
-                    int y = (int) (head[1] * cellSize + cellSize * 0.15f);
-                    int z = (int) (head[1] * cellSize + cellSize * 0.60f);
-                    g.drawCircle(x, y, radius, Color.BLACK);
-                    g.drawCircle(x, z, radius, Color.BLACK);
-                    snakeAddPos(mod(head[0] + 1, w / cellSize), head[1]);
-                }
-                case 2 -> {
-                    int x = (int) (head[0] * cellSize + cellSize * 0.15f);
-                    int z = (int) (head[0] * cellSize + cellSize * 0.60f);
-                    int y = (int) (head[1] * cellSize + cellSize * 0.60f);
-                    g.drawCircle(x, y, radius, Color.BLACK);
-                    g.drawCircle(z, y, radius, Color.BLACK);
-                    snakeAddPos(head[0], mod(head[1] + 1, h / cellSize));
-                }
-                case 3 -> {
-                    int x = (int) (head[0] * cellSize + cellSize * 0.15f);
-                    int y = (int) (head[1] * cellSize + cellSize * 0.15f);
-                    int z = (int) (head[1] * cellSize + cellSize * 0.60f);
-                    g.drawCircle(x, y, radius, Color.BLACK);
-                    g.drawCircle(x, z, radius, Color.BLACK);
-                    snakeAddPos(mod(head[0] - 1, w / cellSize), head[1]);
-                }
+                case 0 -> snakeAddPos(head[0], mod(head[1] - 1, h / cellSize));
+                case 1 -> snakeAddPos(mod(head[0] + 1, w / cellSize), head[1]);
+                case 2 -> snakeAddPos(head[0], mod(head[1] + 1, h / cellSize));
+                case 3 -> snakeAddPos(mod(head[0] - 1, w / cellSize), head[1]);
             }
         }
     }
