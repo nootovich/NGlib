@@ -40,14 +40,65 @@ public class NGGraphics {
         g2d.fillRect(x, y, w, h);
     }
 
-    public void drawRect(double x, double y, double w, double h, Color color) {
+    public void drawRect(int x, int y, int size, Color color) {
         g2d.setColor(color);
-        g2d.fillRect((int) (x * gW), (int) (y * gH), (int) (w * gW), (int) (h * gH));
+        g2d.fillRect(x, y, size, size);
+    }
+
+    public void drawRect(NGVec2i pos, NGVec2i size, Color color) {
+        g2d.setColor(color);
+        g2d.fillRect(pos.x, pos.y, size.x, size.y);
+    }
+
+    public void drawRect(NGVec2f fpos, NGVec2f fsize, Color color) {
+        g2d.setColor(color);
+        NGVec2i ipos  = new NGVec2i(fpos);
+        NGVec2i isize = new NGVec2i(fsize);
+        g2d.fillRect(ipos.x, ipos.y, isize.x, isize.y);
+    }
+
+    public void drawRect(NGVec2i pos, int size, Color color) {
+        g2d.setColor(color);
+        g2d.fillRect(pos.x, pos.y, size, size);
+    }
+
+    public void drawRect(NGVec2f fpos, int size, Color color) {
+        g2d.setColor(color);
+        NGVec2i ipos = new NGVec2i(fpos);
+        g2d.fillRect(ipos.x, ipos.y, size, size);
     }
 
     public void drawRectBorder(int x, int y, int w, int h, Color color) {
         g2d.setColor(color);
         g2d.drawRect(x, y, w, h);
+    }
+
+    public void drawRectBorder(int x, int y, int size, Color color) {
+        g2d.setColor(color);
+        g2d.drawRect(x, y, size, size);
+    }
+
+    public void drawRectBorder(NGVec2i pos, NGVec2i size, Color color) {
+        g2d.setColor(color);
+        g2d.drawRect(pos.x, pos.y, size.x, size.y);
+    }
+
+    public void drawRectBorder(NGVec2f fpos, NGVec2f fsize, Color color) {
+        g2d.setColor(color);
+        NGVec2i ipos  = new NGVec2i(fpos);
+        NGVec2i isize = new NGVec2i(fsize);
+        g2d.drawRect(ipos.x, ipos.y, isize.x, isize.y);
+    }
+
+    public void drawRectBorder(NGVec2i pos, int size, Color color) {
+        g2d.setColor(color);
+        g2d.drawRect(pos.x, pos.y, size, size);
+    }
+
+    public void drawRectBorder(NGVec2f fpos, int size, Color color) {
+        g2d.setColor(color);
+        NGVec2i ipos = new NGVec2i(fpos);
+        g2d.drawRect(ipos.x, ipos.y, size, size);
     }
 
     public void drawRoundRect(int x, int y, int w, int h, int aw, int ah, Color color) {
