@@ -8,14 +8,15 @@ public class NGWindow {
     public int w, h;
     public boolean shouldClose = false;
 
-    public final JFrame     jf = new JFrame();
-    public final NGGraphics g;
-    public       NGRenderer renderer;
-    public final Insets     ins;
+    public final  JFrame     jf = new JFrame();
+    public final  NGGraphics g;
+    private       NGRenderer renderer;
+    private final Insets     ins;
 
-    public NGWindow(int width, int height) {
+    public NGWindow(int width, int height, NGRenderer renderer) {
         this.w = width;
         this.h = height;
+        setRenderer(renderer);
 
         jf.pack();
         ins = jf.getInsets();
@@ -29,7 +30,8 @@ public class NGWindow {
     }
 
     public void redraw() {
-        if (renderer != null) renderer.render(g);
+        renderer.reloadIfNeeded(this);
+        renderer.render(g);
         g.displayOn(jf);
     }
 
@@ -47,6 +49,10 @@ public class NGWindow {
 
     public int toWindowHeight(int realH) {
         return realH + ins.top + ins.bottom;
+    }
+
+    public void setRenderer(NGRenderer renderer) {
+        this.renderer = renderer;
     }
 
     @SuppressWarnings("deprecation")
