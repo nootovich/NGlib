@@ -13,6 +13,8 @@ public class NGWindow {
     private       NGRenderer renderer;
     private final Insets     ins;
 
+    private long lastHotReloadCheckTime = 0;
+
     public NGWindow(int width, int height, NGRenderer renderer) {
         this.w = width;
         this.h = height;
@@ -30,9 +32,12 @@ public class NGWindow {
     }
 
     public void redraw() {
-        // TODO: Move this check into game logic loop to reduce amount of checks per second
-        NGRenderer reloadedRenderer = (NGRenderer) renderer.reloadIfNeeded();
-        if (reloadedRenderer != null) renderer = reloadedRenderer;
+        long curTime = System.currentTimeMillis();
+        if (curTime - lastHotReloadCheckTime > 250) {
+            lastHotReloadCheckTime = curTime;
+            NGRenderer reloadedRenderer = (NGRenderer) renderer.reloadIfNeeded();
+            if (reloadedRenderer != null) renderer = reloadedRenderer;
+        }
         renderer.render(g);
         g.displayOn(jf);
     }
