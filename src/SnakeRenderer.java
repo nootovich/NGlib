@@ -1,4 +1,3 @@
-import nootovich.nglib.NGAnimation;
 import nootovich.nglib.NGGraphics;
 import nootovich.nglib.NGRenderer;
 
@@ -25,35 +24,13 @@ public class SnakeRenderer extends NGRenderer {
         g.drawRect(Snake.foodPosition[0] * Snake.cellSize, Snake.foodPosition[1] * Snake.cellSize, Snake.cellSize, Snake.cellSize, COLOR_FOOD);
         g.drawRectBorder(Snake.foodPosition[0] * Snake.cellSize, Snake.foodPosition[1] * Snake.cellSize, Snake.cellSize, Snake.cellSize, COLOR_FOOD_BORDER);
 
-        // TODO: this is jank and i can't figure out what is even happening, but for now it's good enough
-        //  NOTE TO MY FUTURE SELF: just delete this garbage and do it properly
-        for (int i = 0; i < Snake.snake.size() - 1; i++) {
-            Snake.SnakePart curPart = Snake.snake.get(i);
-            if (curPart.anim != null) {
-                if (!curPart.anim.update(dt)) {
-                    float           progressBleed = curPart.anim.progress - curPart.anim.duration;
-                    Snake.DIRECTION dir           = Snake.snake.get(i + 1).dir;
-                    int             hx            = Snake.snake.get(i + 1).x * Snake.cellSize;
-                    int             hy            = Snake.snake.get(i + 1).y * Snake.cellSize;
-                    int             nx            = hx;
-                    int             ny            = hy;
-                    switch (dir.ordinal()) {
-                        case 0 -> ny = Snake.mod(hy - Snake.cellSize, Snake.h);
-                        case 1 -> nx = Snake.mod(hx + Snake.cellSize, Snake.w);
-                        case 2 -> ny = Snake.mod(hy + Snake.cellSize, Snake.h);
-                        case 3 -> nx = Snake.mod(hx - Snake.cellSize, Snake.w);
-                    }
-                    curPart.anim = new NGAnimation(hx, hy, nx, ny, Snake.TICK_DURATION);
-                    curPart.anim.update(progressBleed);
-                }
-                g.drawRect(curPart.anim.state, Snake.cellSize, COLOR_SNAKE);
-                g.drawRectBorder(curPart.anim.state, Snake.cellSize, COLOR_SNAKE_BORDER);
-            } else {
-                g.drawRect(curPart.x * Snake.cellSize, curPart.y * Snake.cellSize, Snake.cellSize, COLOR_SNAKE);
-                g.drawRectBorder(curPart.x * Snake.cellSize, curPart.y * Snake.cellSize, Snake.cellSize, COLOR_SNAKE_BORDER);
-            }
+        for (Snake.SnakePart part : Snake.snake) {
+            g.drawRect(part.anim.state, Snake.cellSize, COLOR_SNAKE);
+            g.drawRectBorder(part.anim.state, Snake.cellSize, COLOR_SNAKE_BORDER);
+            part.anim.update(dt);
         }
 
+        // TODO: Bring eyes back
         Snake.SnakePart head     = Snake.snake.getLast();
         float[][]       eyeCords = new float[][]{{0.15f, 0.15f}, {0.60f, 0.15f}, {0.60f, 0.60f}, {0.15f, 0.60f}};
         int             snakeDir = head.dir.ordinal();

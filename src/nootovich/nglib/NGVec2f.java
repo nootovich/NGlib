@@ -22,8 +22,16 @@ public class NGVec2f {
         return new NGVec2f(x + other.x, y + other.y);
     }
 
+    public NGVec2f add(float n) {
+        return new NGVec2f(x + n, y + n);
+    }
+
     public NGVec2f sub(NGVec2f other) {
         return new NGVec2f(x - other.x, y - other.y);
+    }
+
+    public NGVec2f sub(float n) {
+        return new NGVec2f(x - n, y - n);
     }
 
     public NGVec2f scale(float factor) {
