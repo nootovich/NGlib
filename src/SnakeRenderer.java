@@ -6,6 +6,12 @@ import java.awt.*;
 
 public class SnakeRenderer extends NGRenderer {
 
+    private final Color COLOR_BG           = new Color(0x141820);
+    private final Color COLOR_SNAKE        = new Color(0xFFFFFF);
+    private final Color COLOR_SNAKE_BORDER = new Color(0x000000);
+    private final Color COLOR_FOOD         = new Color(0x166236);
+    private final Color COLOR_FOOD_BORDER  = new Color(0xFFFFFF);
+
     public long prevTime = System.currentTimeMillis();
 
     @Override
@@ -14,10 +20,10 @@ public class SnakeRenderer extends NGRenderer {
         float dt      = (curTime - prevTime) / 1000f;
         prevTime = curTime;
 
-        g.drawRect(0, 0, Snake.w, Snake.h, new Color(0x656795));
+        g.drawRect(0, 0, Snake.w, Snake.h, COLOR_BG);
 
-        g.drawRect(Snake.foodPosition[0] * Snake.cellSize, Snake.foodPosition[1] * Snake.cellSize, Snake.cellSize, Snake.cellSize, Color.RED);
-        g.drawRectBorder(Snake.foodPosition[0] * Snake.cellSize, Snake.foodPosition[1] * Snake.cellSize, Snake.cellSize, Snake.cellSize, Color.DARK_GRAY);
+        g.drawRect(Snake.foodPosition[0] * Snake.cellSize, Snake.foodPosition[1] * Snake.cellSize, Snake.cellSize, Snake.cellSize, COLOR_FOOD);
+        g.drawRectBorder(Snake.foodPosition[0] * Snake.cellSize, Snake.foodPosition[1] * Snake.cellSize, Snake.cellSize, Snake.cellSize, COLOR_FOOD_BORDER);
 
         // TODO: this is jank and i can't figure out what is even happening, but for now it's good enough
         //  NOTE TO MY FUTURE SELF: just delete this garbage and do it properly
@@ -40,11 +46,11 @@ public class SnakeRenderer extends NGRenderer {
                     curPart.anim = new NGAnimation(hx, hy, nx, ny, Snake.TICK_DURATION);
                     curPart.anim.update(progressBleed);
                 }
-                g.drawRect(curPart.anim.state, Snake.cellSize, Color.WHITE);
-                g.drawRectBorder(curPart.anim.state, Snake.cellSize, Color.BLACK);
+                g.drawRect(curPart.anim.state, Snake.cellSize, COLOR_SNAKE);
+                g.drawRectBorder(curPart.anim.state, Snake.cellSize, COLOR_SNAKE_BORDER);
             } else {
-                g.drawRect(curPart.x * Snake.cellSize, curPart.y * Snake.cellSize, Snake.cellSize, Color.WHITE);
-                g.drawRectBorder(curPart.x * Snake.cellSize, curPart.y * Snake.cellSize, Snake.cellSize, Color.BLACK);
+                g.drawRect(curPart.x * Snake.cellSize, curPart.y * Snake.cellSize, Snake.cellSize, COLOR_SNAKE);
+                g.drawRectBorder(curPart.x * Snake.cellSize, curPart.y * Snake.cellSize, Snake.cellSize, COLOR_SNAKE_BORDER);
             }
         }
 

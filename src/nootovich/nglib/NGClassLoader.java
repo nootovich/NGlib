@@ -10,6 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 //          window.renderer = new NGClassLoader(MyRenderer.class.getName(), "src/", "out/production/my_game/").getNew(NGRenderer.class)
 public class NGClassLoader extends ClassLoader {
 
+    // TODO: I don't like these variables just hanging out here
     private final String sourceDir;
     private final String sourceFile;
     private final String classDir;
@@ -30,20 +31,22 @@ public class NGClassLoader extends ClassLoader {
         if (!name.equals(classFile)) try {
             return super.loadClass(name);
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            NGUtils.error(e.getMessage());
         }
         byte[] classData = NGFileSystem.loadBytes(classDir + classFile + ".class");
         return defineClass(classFile, classData, 0, classData.length);
     }
 
-    public <T> T getNew(Class<T> castClass) {
+    public NGHotReloadable getNew() {
         try {
             Main.compile(new String[]{"-d", classDir, "-sourcepath", sourceDir, sourceDir + sourceFile + ".java"});
-            return castClass.cast(loadClass(sourceFile).getDeclaredConstructor().newInstance());
+            NGUtils.info("Reloaded class: " + classFile);
+            return (NGHotReloadable) loadClass(sourceFile).getDeclaredConstructor().newInstance();
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-                 NoSuchMethodException e) {
-            throw new RuntimeException(e.getMessage());
+                 NoSuchMethodException e) { // TODO: Actually handle errors
+            NGUtils.error(e.getMessage());
         }
+        return null;
     }
 
 }

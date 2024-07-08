@@ -30,7 +30,9 @@ public class NGWindow {
     }
 
     public void redraw() {
-        renderer.reloadIfNeeded(this);
+        // TODO: Move this check into game logic loop to reduce amount of checks per second
+        NGRenderer reloadedRenderer = (NGRenderer) renderer.reloadIfNeeded();
+        if (reloadedRenderer != null) renderer = reloadedRenderer;
         renderer.render(g);
         g.displayOn(jf);
     }
