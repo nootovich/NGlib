@@ -1,7 +1,6 @@
 import nootovich.nglib.*;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 
 public class Snake {
@@ -119,9 +118,6 @@ public class Snake {
         snake.add(new SnakePart(cellAmount / 2, cellAmount / 2 + 5, DIRECTION.UP));
         snake.add(new SnakePart(cellAmount / 2, cellAmount / 2 + 4, DIRECTION.UP));
         foodPosition = new Integer[]{getRandomPos(), getRandomPos()};
-
-        // TODO: Parity
-        window.renderer = new Renderer();
 
         window.setKeyboardHandler(new KeyboardHandler());
         window.setResizeHandler(new ResizeHandler());
