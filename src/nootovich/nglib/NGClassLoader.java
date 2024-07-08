@@ -31,7 +31,7 @@ public class NGClassLoader extends ClassLoader {
         if (!name.equals(classFile)) try {
             return super.loadClass(name);
         } catch (ClassNotFoundException e) {
-            NGUtils.error(e.getMessage());
+            throw new RuntimeException(e);
         }
         byte[] classData = NGFileSystem.loadBytes(classDir + classFile + ".class");
         return defineClass(classFile, classData, 0, classData.length);

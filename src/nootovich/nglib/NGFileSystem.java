@@ -6,7 +6,9 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Stack;
+import java.util.stream.Stream;
 
+@SuppressWarnings("unused")
 public class NGFileSystem {
 
     public static String loadFile(String filepath) {
@@ -36,32 +38,52 @@ public class NGFileSystem {
     }
 
     public static String[] getDirectoryFiles(String dir) {
-        // TODO: rewrite using `File` class
-        try {
-            Stack<String> list = new Stack<>();
-            Files.list(Path.of(dir))
-                    .filter(f -> {
-                        if (Files.isDirectory(f)) return false;
-                        String temp = String.valueOf(f.getFileName());
-                        return temp.endsWith(".bf") || temp.endsWith(".bfn");
-                    })
-                    .forEach(f -> list.push(String.valueOf(f.getFileName())));
-            return list.toArray(new String[0]);
+        // TODO: rewrite using `File` class?
+        Stack<String> list = new Stack<>();
+        try (Stream<Path> paths = Files.list(Path.of(dir))) {
+            paths.filter(path -> !Files.isDirectory(path)).forEach(path -> list.push(path.getFileName().toString()));
+            return list.toArray(new String[]{});
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
+    public static String findRecursively(String filename) {
+        try {
+            return findRecursively(filename, "./");
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    private static String findRecursively(String filename, String dir) throws IOException {
+        Stack<String> list = new Stack<>();
+        try (Stream<Path> paths = Files.list(Path.of(dir))) {
+            paths.forEach(path -> list.push(path.toString()));
+        }
+        for (String entry : list) {
+            Path path = Path.of(entry);
+            if (path.getFileName().toString().equals(filename)) return entry;
+            if (Files.isDirectory(path)) {
+                String result = findRecursively(filename, entry);
+                if (result != null) return result;
+            }
+        }
+        return null;
+    }
+
+    @SuppressWarnings("DataFlowIssue")
     public static boolean delete(String path) {
         boolean success = true;
         File    file    = new File(path);
-        if (file.isDirectory()) for (File f : file.listFiles()) success &= recursiveDelete(f);
+        if (file.isDirectory()) for (File f : file.listFiles()) success &= deleteRecursively(f);
         return file.delete() && success;
     }
 
-    public static boolean recursiveDelete(File file) {
+    @SuppressWarnings("DataFlowIssue")
+    private static boolean deleteRecursively(File file) {
         boolean success = true;
-        if (file.isDirectory()) for (File f : file.listFiles()) success &= recursiveDelete(f);
+        if (file.isDirectory()) for (File f : file.listFiles()) success &= deleteRecursively(f);
         return file.delete() && success;
     }
 
@@ -73,4 +95,7 @@ public class NGFileSystem {
         }
     }
 
+    public static String getParent(String path) {
+        return Path.of(path).getParent().toString() + File.separator;
+    }
 }
