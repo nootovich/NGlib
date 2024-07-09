@@ -31,6 +31,10 @@ public class NGGraphics {
         g2d    = buffer.createGraphics();
     }
 
+    public void drawPixel(int x, int y, Color color) {
+        drawRect(x, y, 1, 1, color);
+    }
+
     public void drawLine(int x1, int y1, int x2, int y2, Color color) {
         g2d.setColor(color);
         g2d.drawLine(x1, y1, x2, y2);
@@ -135,6 +139,20 @@ public class NGGraphics {
     public void drawText(String text, int x, int y, Color color) {
         g2d.setColor(color);
         g2d.drawString(text, x, y);
+    }
+
+    public void drawPixelSprite(int x, int y, int w, int h, NGSprite pixelSprite) {
+        // TODO: Temporary naive approach. Just enough to get things going
+        if (pixelSprite.pixels.length == 0 || pixelSprite.pixels[0].length == 0) NGUtils.error("Invalid `NGPixelSprite`");
+        int sw = pixelSprite.pixels.length;
+        int sh = pixelSprite.pixels[0].length;
+        for (int dy = 0; dy < h; dy++) {
+            for (int dx = 0; dx < w; dx++) {
+                int sx = dx * sw / w;
+                int sy = dy * sh / h;
+                drawPixel(dx, dy, pixelSprite.getPixel(sx, sy));
+            }
+        }
     }
 
     public void setStroke(Stroke stroke) {
