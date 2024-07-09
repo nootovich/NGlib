@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 
 // TODO: NGColor
 
+@SuppressWarnings("unused")
 public class NGGraphics {
 
     private final int gX, gY;
@@ -52,9 +53,9 @@ public class NGGraphics {
 
     public void drawRect(NGVec2f fpos, NGVec2f fsize, Color color) {
         g2d.setColor(color);
-        NGVec2i ipos  = new NGVec2i(fpos);
-        NGVec2i isize = new NGVec2i(fsize);
-        g2d.fillRect(ipos.x, ipos.y, isize.x, isize.y);
+        NGVec2i pos  = new NGVec2i(fpos);
+        NGVec2i size = new NGVec2i(fsize);
+        g2d.fillRect(pos.x, pos.y, size.x, size.y);
     }
 
     public void drawRect(NGVec2i pos, int size, Color color) {
@@ -64,8 +65,8 @@ public class NGGraphics {
 
     public void drawRect(NGVec2f fpos, int size, Color color) {
         g2d.setColor(color);
-        NGVec2i ipos = new NGVec2i(fpos);
-        g2d.fillRect(ipos.x, ipos.y, size, size);
+        NGVec2i pos = new NGVec2i(fpos);
+        g2d.fillRect(pos.x, pos.y, size, size);
     }
 
     public void drawRectBorder(int x, int y, int w, int h, Color color) {
@@ -85,9 +86,9 @@ public class NGGraphics {
 
     public void drawRectBorder(NGVec2f fpos, NGVec2f fsize, Color color) {
         g2d.setColor(color);
-        NGVec2i ipos  = new NGVec2i(fpos);
-        NGVec2i isize = new NGVec2i(fsize);
-        g2d.drawRect(ipos.x, ipos.y, isize.x, isize.y);
+        NGVec2i pos  = new NGVec2i(fpos);
+        NGVec2i size = new NGVec2i(fsize);
+        g2d.drawRect(pos.x, pos.y, size.x, size.y);
     }
 
     public void drawRectBorder(NGVec2i pos, int size, Color color) {
@@ -97,8 +98,8 @@ public class NGGraphics {
 
     public void drawRectBorder(NGVec2f fpos, int size, Color color) {
         g2d.setColor(color);
-        NGVec2i ipos = new NGVec2i(fpos);
-        g2d.drawRect(ipos.x, ipos.y, size, size);
+        NGVec2i pos = new NGVec2i(fpos);
+        g2d.drawRect(pos.x, pos.y, size, size);
     }
 
     public void drawRoundRect(int x, int y, int w, int h, int aw, int ah, Color color) {
@@ -116,7 +117,20 @@ public class NGGraphics {
         g2d.fillOval(x, y, radius, radius);
     }
 
-    // TODO: drawCircleCentered()
+    public void drawCircle(NGVec2i pos, int radius, Color color) {
+        g2d.setColor(color);
+        g2d.fillOval(pos.x, pos.y, radius, radius);
+    }
+
+    public void drawCircle(NGVec2f fpos, int radius, Color color) {
+        g2d.setColor(color);
+        NGVec2i pos = new NGVec2i(fpos);
+        g2d.fillOval(pos.x, pos.y, radius, radius);
+    }
+
+    public void drawCircleCentered(int x, int y, int radius, Color color) {
+        drawCircle(x - radius / 2, y - radius / 2, radius, color);
+    }
 
     public void drawText(String text, int x, int y, Color color) {
         g2d.setColor(color);

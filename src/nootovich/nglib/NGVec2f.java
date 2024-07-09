@@ -18,6 +18,16 @@ public class NGVec2f {
         this.y = y;
     }
 
+    public static NGVec2f[] createArray(float[][] positions) {
+        NGVec2f[] result = new NGVec2f[positions.length];
+        for (int i = 0; i < positions.length; i++) {
+            float[] pos = positions[i];
+            if (pos.length != 2) NGUtils.error("Invalid amount of arguments. Expected 2 but got " + pos.length);
+            result[i] = new NGVec2f(pos[0], pos[1]);
+        }
+        return result;
+    }
+
     public NGVec2f add(NGVec2f other) {
         return new NGVec2f(x + other.x, y + other.y);
     }

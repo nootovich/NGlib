@@ -1,15 +1,18 @@
 import nootovich.nglib.NGGraphics;
 import nootovich.nglib.NGRenderer;
+import nootovich.nglib.NGVec2f;
 
 import java.awt.*;
 
 public class SnakeRenderer extends NGRenderer {
 
-    private final Color COLOR_BG           = new Color(0x141820);
-    private final Color COLOR_SNAKE        = new Color(0xFFFFFF);
-    private final Color COLOR_SNAKE_BORDER = new Color(0x000000);
-    private final Color COLOR_FOOD         = new Color(0x166236);
-    private final Color COLOR_FOOD_BORDER  = new Color(0xFFFFFF);
+    private static final Color COLOR_BG           = new Color(0x141820);
+    private static final Color COLOR_SNAKE        = new Color(0xFFFFFF);
+    private static final Color COLOR_SNAKE_BORDER = new Color(0x000000);
+    private static final Color COLOR_FOOD         = new Color(0x166236);
+    private static final Color COLOR_FOOD_BORDER  = new Color(0xFFFFFF);
+
+    private static final NGVec2f[] eyeCords = NGVec2f.createArray(new float[][]{{0.15f, 0.15f}, {0.60f, 0.15f}, {0.60f, 0.60f}, {0.15f, 0.60f}});
 
     public long prevTime = System.currentTimeMillis();
 
@@ -18,30 +21,26 @@ public class SnakeRenderer extends NGRenderer {
         long  curTime = System.currentTimeMillis();
         float dt      = (curTime - prevTime) / 1000f;
         prevTime = curTime;
-
-        g.drawRect(0, 0, Snake.w, Snake.h, COLOR_BG);
-
-        g.drawRect(Snake.foodPosition[0] * Snake.cellSize, Snake.foodPosition[1] * Snake.cellSize, Snake.cellSize, Snake.cellSize, COLOR_FOOD);
-        g.drawRectBorder(Snake.foodPosition[0] * Snake.cellSize, Snake.foodPosition[1] * Snake.cellSize, Snake.cellSize, Snake.cellSize, COLOR_FOOD_BORDER);
-
-        for (Snake.SnakePart part : Snake.snake) {
-            g.drawRect(part.anim.state, Snake.cellSize, COLOR_SNAKE);
-            g.drawRectBorder(part.anim.state, Snake.cellSize, COLOR_SNAKE_BORDER);
-            part.anim.update(dt);
+        { // BG
+            g.drawRect(0, 0, Snake.w, Snake.h, COLOR_BG);
         }
-
-        // TODO: Bring eyes back
-        Snake.SnakePart head     = Snake.snake.getLast();
-        float[][]       eyeCords = new float[][]{{0.15f, 0.15f}, {0.60f, 0.15f}, {0.60f, 0.60f}, {0.15f, 0.60f}};
-        int             snakeDir = head.dir.ordinal();
-        int             otherDir = (snakeDir + 1) % 4;
-        int             snakeX1  = (int) ((head.x + eyeCords[snakeDir][0]) * Snake.cellSize);
-        int             snakeY1  = (int) ((head.y + eyeCords[snakeDir][1]) * Snake.cellSize);
-        int             snakeX2  = (int) ((head.x + eyeCords[otherDir][0]) * Snake.cellSize);
-        int             snakeY2  = (int) ((head.y + eyeCords[otherDir][1]) * Snake.cellSize);
-        int             radius   = (int) (Snake.cellSize * 0.25f);
-
-//            g.drawCircle(snakeX1, snakeY1, radius, Color.BLACK);
-//            g.drawCircle(snakeX2, snakeY2, radius, Color.BLACK);
+        { // FOOD
+            g.drawRect(Snake.foodPosition[0] * Snake.cellSize, Snake.foodPosition[1] * Snake.cellSize, Snake.cellSize, Snake.cellSize, COLOR_FOOD);
+            g.drawRectBorder(Snake.foodPosition[0] * Snake.cellSize, Snake.foodPosition[1] * Snake.cellSize, Snake.cellSize, Snake.cellSize, COLOR_FOOD_BORDER);
+        }
+        { // SNAKE
+            for (Snake.SnakePart part : Snake.snake) {
+                part.anim.update(dt);
+                g.drawRect(part.anim.state, Snake.cellSize, COLOR_SNAKE);
+                g.drawRectBorder(part.anim.state, Snake.cellSize, COLOR_SNAKE_BORDER);
+            }
+        }
+        { // EYES
+            Snake.SnakePart head     = Snake.snake.getLast();
+            NGVec2f         leftEye  = eyeCords[head.dir.ordinal()].scale(Snake.cellSize).add(head.anim.state);
+            NGVec2f         rightEye = eyeCords[(head.dir.ordinal() + 1) % 4].scale(Snake.cellSize).add(head.anim.state);
+            g.drawCircle(leftEye, Snake.cellSize / 4, Color.BLACK);
+            g.drawCircle(rightEye, Snake.cellSize / 4, Color.BLACK);
+        }
     }
 }
