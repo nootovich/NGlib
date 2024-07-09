@@ -2,8 +2,7 @@ package nootovich.nglib;
 
 public class NGVec2i {
 
-    public int x = 0;
-    public int y = 0;
+    public int x = 0, y = 0;
 
     public NGVec2i() {
     }
@@ -13,9 +12,19 @@ public class NGVec2i {
         this.y = y;
     }
 
-    public NGVec2i(NGVec2f pos) {
-        this.x = (int) pos.x;
-        this.y = (int) pos.y;
+    public NGVec2i(float x, float y) {
+        this.x = (int) x;
+        this.y = (int) y;
+    }
+
+    public static NGVec2i[] createArray(int[][] positions) {
+        NGVec2i[] result = new NGVec2i[positions.length];
+        for (int i = 0; i < positions.length; i++) {
+            int[] pos = positions[i];
+            if (pos.length != 2) NGUtils.error("Invalid amount of arguments. Expected 2 but got " + pos.length);
+            result[i] = new NGVec2i(pos[0], pos[1]);
+        }
+        return result;
     }
 
     public NGVec2i add(NGVec2i other) {
@@ -24,6 +33,10 @@ public class NGVec2i {
 
     public NGVec2i add(int n) {
         return new NGVec2i(x + n, y + n);
+    }
+
+    public NGVec2i add(int dx, int dy) {
+        return new NGVec2i(x + dx, y + dy);
     }
 
     public NGVec2i sub(NGVec2i other) {
@@ -35,11 +48,15 @@ public class NGVec2i {
     }
 
     public NGVec2i scale(float factor) {
-        return new NGVec2i((int) (x * factor), (int) (y * factor));
+        return new NGVec2i(x * factor, y * factor);
     }
 
     public NGVec2i lerp(NGVec2i other, float n) {
         return this.add(other.sub(this).scale(n));
+    }
+
+    public NGVec2f toFloat() {
+        return new NGVec2f(x, y);
     }
 
     @Override

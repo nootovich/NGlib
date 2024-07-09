@@ -2,8 +2,7 @@ package nootovich.nglib;
 
 public class NGVec2f {
 
-    public float x = 0;
-    public float y = 0;
+    public float x = 0, y = 0;
 
     public NGVec2f() {
     }
@@ -36,6 +35,10 @@ public class NGVec2f {
         return new NGVec2f(x + n, y + n);
     }
 
+    public NGVec2f add(float dx, float dy) {
+        return new NGVec2f(x + dx, y + dy);
+    }
+
     public NGVec2f sub(NGVec2f other) {
         return new NGVec2f(x - other.x, y - other.y);
     }
@@ -50,6 +53,10 @@ public class NGVec2f {
 
     public NGVec2f lerp(NGVec2f other, float n) {
         return this.add(other.sub(this).scale(n));
+    }
+
+    public NGVec2i toInt() {
+        return new NGVec2i(x, y);
     }
 
     @Override

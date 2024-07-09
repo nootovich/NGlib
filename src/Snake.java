@@ -24,15 +24,12 @@ public class Snake {
     private static DIRECTION queuedDirection = DIRECTION.UP;
 
     public static class SnakePart {
-        // TODO: x,y -> NGVec2i
-        public int         x;
-        public int         y;
+        public NGVec2i     pos;
         public DIRECTION   dir;
         public NGAnimation anim;
 
         public SnakePart(int x, int y, DIRECTION dir, NGAnimation anim) {
-            this.x   = x;
-            this.y   = y;
+            this.pos = new NGVec2i(x, y);
             this.dir = dir;
             if (anim == null) nextAnim();
             else this.anim = anim;
@@ -43,21 +40,21 @@ public class Snake {
         }
 
         public void nextAnim() {
-            NGVec2f start = new NGVec2f(x, y).scale(Snake.cellSize);
-            NGVec2f end = switch (dir) {
-                case UP -> new NGVec2f(x, y - 1).scale(Snake.cellSize);
-                case RIGHT -> new NGVec2f(x + 1, y).scale(Snake.cellSize);
-                case DOWN -> new NGVec2f(x, y + 1).scale(Snake.cellSize);
-                case LEFT -> new NGVec2f(x - 1, y).scale(Snake.cellSize);
+            NGVec2i start = pos.scale(Snake.cellSize);
+            NGVec2i end = switch (dir) {
+                case UP -> pos.add(0, -1).scale(Snake.cellSize);
+                case RIGHT -> pos.add(1, 0).scale(Snake.cellSize);
+                case DOWN -> pos.add(0, 1).scale(Snake.cellSize);
+                case LEFT -> pos.add(-1, 0).scale(Snake.cellSize);
             };
-            anim = new NGAnimation(start, end, Snake.TICK_DURATION);
+            anim = new NGAnimation(start.toFloat(), end.toFloat(), Snake.TICK_DURATION);
         }
     }
 
     public static void update() {
 
         SnakePart head = snake.getLast();
-        if (head.x == foodPosition[0] && head.y == foodPosition[1])
+        if (head.pos.x == foodPosition[0] && head.pos.y == foodPosition[1])
             foodPosition = new Integer[]{getRandomPos(), getRandomPos()};
         else snake.removeFirst();
 
@@ -65,7 +62,7 @@ public class Snake {
             SnakePart part = snake.get(i);
             for (int j = i + 1; j < snake.size(); j++) {
                 SnakePart otherPart = snake.get(j);
-                if (part.x == otherPart.x && part.y == otherPart.y) {
+                if (part.pos.x == otherPart.pos.x && part.pos.y == otherPart.pos.y) {
                     System.out.println("dead");
                     // TODO: window.shouldClose = true;
                     System.exit(0);
@@ -73,13 +70,13 @@ public class Snake {
             }
         }
 
-        int nx = head.x;
-        int ny = head.y;
+        int nx = head.pos.x;
+        int ny = head.pos.y;
         switch (head.dir) {
-            case UP -> ny = mod(head.y - 1, h / cellSize);
-            case RIGHT -> nx = mod(head.x + 1, w / cellSize);
-            case DOWN -> ny = mod(head.y + 1, h / cellSize);
-            case LEFT -> nx = mod(head.x - 1, w / cellSize);
+            case UP -> ny = mod(head.pos.y - 1, h / cellSize);
+            case RIGHT -> nx = mod(head.pos.x + 1, w / cellSize);
+            case DOWN -> ny = mod(head.pos.y + 1, h / cellSize);
+            case LEFT -> nx = mod(head.pos.x - 1, w / cellSize);
             default -> NGUtils.error("Snake has entered the 4-th dimension.");
         }
         snake.add(new SnakePart(nx, ny, head.dir));
