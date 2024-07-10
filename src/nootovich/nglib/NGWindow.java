@@ -9,9 +9,11 @@ public class NGWindow {
     public boolean shouldClose = false;
 
     public final  JFrame     jf = new JFrame();
-    public final  NGGraphics g;
-    private       NGRenderer renderer;
     private final Insets     ins;
+    public final  NGGraphics g;
+
+    private       NGRenderer renderer;
+    private NGKeyboardHandler keyboardHandler;
 
     private long lastHotReloadCheckTime = 0;
 
@@ -32,14 +34,23 @@ public class NGWindow {
     }
 
     public void redraw() {
+        if (shouldClose) System.exit(0);
+        reloadNGClassesIfNeeded();
+        renderer.render(g);
+        g.displayOn(jf);
+    }
+
+    public void reloadNGClassesIfNeeded() {
         long curTime = System.currentTimeMillis();
         if (curTime - lastHotReloadCheckTime > 250) {
             lastHotReloadCheckTime = curTime;
+
             NGRenderer reloadedRenderer = (NGRenderer) renderer.reloadIfNeeded();
-            if (reloadedRenderer != null) renderer = reloadedRenderer;
+            if (reloadedRenderer != null) setRenderer(reloadedRenderer);
+
+            NGKeyboardHandler reloadedKeyboardHandler = (NGKeyboardHandler) keyboardHandler.reloadIfNeeded();
+            if (reloadedKeyboardHandler != null) setKeyboardHandler(reloadedKeyboardHandler);
         }
-        renderer.render(g);
-        g.displayOn(jf);
     }
 
     public int toRealWidth(int windowW) {
@@ -64,6 +75,7 @@ public class NGWindow {
 
     @SuppressWarnings("deprecation")
     public void setKeyboardHandler(NGKeyboardHandler keyboardHandler) {
+        this.keyboardHandler = keyboardHandler;
         jf.addKeyListener(keyboardHandler.listener);
     }
 

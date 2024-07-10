@@ -21,7 +21,7 @@ public class Snake {
 
     private static final NGWindow window = new NGWindow(w, h, new SnakeRenderer());
 
-    private static DIRECTION queuedDirection = DIRECTION.UP;
+    public static DIRECTION queuedDirection = DIRECTION.UP;
 
     public static class SnakePart {
         public NGVec2i     pos;
@@ -64,8 +64,7 @@ public class Snake {
                 SnakePart otherPart = snake.get(j);
                 if (part.pos.x == otherPart.pos.x && part.pos.y == otherPart.pos.y) {
                     System.out.println("dead");
-                    // TODO: window.shouldClose = true;
-                    System.exit(0);
+                    window.shouldClose = true;
                 }
             }
         }
@@ -83,21 +82,6 @@ public class Snake {
 
         if (snake.getLast().dir != queuedDirection) snake.getLast().dir = queuedDirection;
         for (SnakePart part : snake) part.nextAnim();
-    }
-
-    private static final class KeyboardHandler extends NGKeyboardHandler {
-
-        @Override
-        public void onKeyDn(int key, char chr) {
-            SnakePart head = snake.getLast();
-            queuedDirection = switch (key) {
-                case NGKeys.W -> head.dir != DIRECTION.DOWN ? DIRECTION.UP : head.dir;
-                case NGKeys.A -> head.dir != DIRECTION.RIGHT ? DIRECTION.LEFT : head.dir;
-                case NGKeys.S -> head.dir != DIRECTION.UP ? DIRECTION.DOWN : head.dir;
-                case NGKeys.D -> head.dir != DIRECTION.LEFT ? DIRECTION.RIGHT : head.dir;
-                default -> head.dir;
-            };
-        }
     }
 
     private static final class ResizeHandler extends NGResizeHandler {
