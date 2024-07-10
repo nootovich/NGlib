@@ -100,7 +100,6 @@ public class Snake {
         snake.add(new SnakePart(cellAmount / 2, cellAmount / 2 + 4, DIRECTION.UP));
         foodPosition = new Integer[]{getRandomPos(), getRandomPos()};
 
-        window.setKeyboardHandler(new KeyboardHandler());
         window.setKeyboardHandler(new SnakeKeyboardHandler());
         window.setResizeHandler(new ResizeHandler());
 
