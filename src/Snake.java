@@ -101,6 +101,7 @@ public class Snake {
         foodPosition = new Integer[]{getRandomPos(), getRandomPos()};
 
         window.setKeyboardHandler(new KeyboardHandler());
+        window.setKeyboardHandler(new SnakeKeyboardHandler());
         window.setResizeHandler(new ResizeHandler());
 
         Timer updateTimer = new Timer((int) (TICK_DURATION * 1000), _ -> update());
