@@ -50,7 +50,9 @@ public class NGFileSystem {
 
     public static String findRecursively(String filename) {
         try {
-            return findRecursively(filename, "./");
+            String result = findRecursively(filename, "./");
+            if (result == null) NGUtils.error("Not able to find: " + filename);
+            return result;
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -96,6 +98,11 @@ public class NGFileSystem {
     }
 
     public static String getParent(String path) {
-        return Path.of(path).getParent().toString() + File.separator;
+        try {
+            return Path.of(path).getParent().toString() + File.separator;
+        } catch (Exception e) {
+            NGUtils.error("Not able to get parent directory of: " + path);
+        }
+        return null;
     }
 }

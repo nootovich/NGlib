@@ -10,7 +10,7 @@ public class NGResizeHandler {
     public final ComponentListener listener = new ComponentListener() {
         @Override
         public void componentResized(ComponentEvent e) {
-            if (window == null) NGUtils.error("U Can'T hAz wIndoW :(");// TODO: an error message
+            if (window == null) NGUtils.error("Not able to create a window for some reason...");
             onResize(window.toRealWidth(e.getComponent().getWidth()), window.toRealHeight(e.getComponent().getHeight()));
         }
 

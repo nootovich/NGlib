@@ -4,7 +4,7 @@ public class NGUtils {
 
     private static final int FILENAME_LEN = 24;
 
-    public static int clampi(int n, int min, int max) {
+    public static int clamp(int n, int min, int max) {
         if (max < min) max = min;
         if (n < min) return min;
         if (n > max) return max;

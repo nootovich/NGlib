@@ -3,7 +3,6 @@ package nootovich.nglib;
 @SuppressWarnings({"unused", "SpellCheckingInspection"})
 public interface NGKeys {
     /* TODO:
-     *  4  Arrows
      *  2  Ctrl
      *  2  Shift
      *  2  Alt
