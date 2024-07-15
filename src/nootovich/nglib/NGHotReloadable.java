@@ -6,10 +6,10 @@ import java.lang.reflect.InvocationTargetException;
 
 public class NGHotReloadable extends ClassLoader {
 
-    public String sourceDir;
+    // TODO: un-hardcode again...
     public String sourceFile;
-    public String classDir;
-    public String className;
+    public String sourcePath = ".\\src\\";
+    public String classPath  = ".\\out\\production\\snake\\";
 
     public long lastModifiedTime = 0;
 
@@ -22,15 +22,12 @@ public class NGHotReloadable extends ClassLoader {
         Class<?> declaringClass = getClass();
         while (declaringClass.getDeclaringClass() != null) declaringClass = declaringClass.getDeclaringClass();
 
-        sourceFile = declaringClass.getSimpleName();
-        sourceDir  = NGFileSystem.getParent(NGFileSystem.findRecursively(sourceFile + ".java"));
-
-        className = getClass().getSimpleName();
-        classDir  = NGFileSystem.getParent(NGFileSystem.findRecursively(className + ".class"));
+        String sourceFileName = declaringClass.getSimpleName() + ".java";
+        sourceFile = NGFileSystem.getParent(NGFileSystem.findRecursively(sourceFileName)) + sourceFileName;
     }
 
     public NGHotReloadable reloadIfNeeded() {
-        long curModifiedTime = NGFileSystem.getLastModifiedTime(sourceDir + sourceFile + ".java");
+        long curModifiedTime = NGFileSystem.getLastModifiedTime(sourceFile);
         if (curModifiedTime != lastModifiedTime) {
             if (lastModifiedTime > 0) return getNew();
             lastModifiedTime = curModifiedTime;
@@ -40,26 +37,30 @@ public class NGHotReloadable extends ClassLoader {
 
     @Override
     public Class<?> loadClass(String name) {
-        if (!name.equals(className)) try {
+        if (!name.equals(getClass().getName())) try {
             return super.loadClass(name);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-        byte[] classData = NGFileSystem.loadBytes(classDir + className + ".class");
-        return defineClass(className, classData, 0, classData.length);
+        byte[] classData = NGFileSystem.loadBytes(classPath + getClass().getName().replace('.', '/') + ".class");
+        return defineClass(getClass().getName(), classData, 0, classData.length);
     }
 
     // CREDIT: https://jenkov.com/tutorials/java-reflection/dynamic-class-loading-reloading.html
     public NGHotReloadable getNew() {
         try {
-            Main.compile(new String[]{"-d", classDir, "-sourcepath", sourceDir, sourceDir + sourceFile + ".java"});
-            NGUtils.info("Reloaded class: " + className);
-            return (NGHotReloadable) loadClass(sourceFile).getDeclaredConstructor().newInstance();
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-                 NoSuchMethodException e) { // TODO: Actually handle errors
-            NGUtils.error(e.getMessage());
+            if (Main.compile(new String[]{"-d", classPath, "-sourcepath", sourcePath, sourceFile}) != 0) {
+                NGUtils.error("Compilation failed!");
+            }
+            NGUtils.info("Reloaded class: " + getClass().getName());
+            return (NGHotReloadable) loadClass(getClass().getName()).getDeclaredConstructor().newInstance();
+        } catch (InstantiationException
+                 | IllegalAccessException
+                 | InvocationTargetException
+                 | NoSuchMethodException e) {
+            // TODO: Actually handle errors
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
 }

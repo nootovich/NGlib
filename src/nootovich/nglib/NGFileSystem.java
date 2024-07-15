@@ -61,7 +61,7 @@ public class NGFileSystem {
     private static String findRecursively(String filename, String dir) throws IOException {
         Stack<String> list = new Stack<>();
         try (Stream<Path> paths = Files.list(Path.of(dir))) {
-            paths.forEach(path -> list.push(path.toString()));
+            paths.filter(path -> !path.getFileName().toString().startsWith(".")).map(Path::toString).forEach(list::push);
         }
         for (String entry : list) {
             Path path = Path.of(entry);

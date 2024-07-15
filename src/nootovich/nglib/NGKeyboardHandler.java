@@ -5,7 +5,7 @@ import java.awt.event.KeyListener;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NGKeyboardHandler extends NGHotReloadable {
+public class NGKeyboardHandler {
 
     // TODO SOMEDAY: Stop depending on AWT and handle `Events` myself (if possible)
     private static final Map<Integer, Integer> conversion = new HashMap<>();

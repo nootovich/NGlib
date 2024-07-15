@@ -45,11 +45,15 @@ public class NGWindow {
         if (curTime - lastHotReloadCheckTime > 250) {
             lastHotReloadCheckTime = curTime;
 
-            NGRenderer reloadedRenderer = (NGRenderer) renderer.reloadIfNeeded();
-            if (reloadedRenderer != null) setRenderer(reloadedRenderer);
+            if (renderer != null) {
+                NGRenderer reloadedRenderer = (NGRenderer) renderer.reloadIfNeeded();
+                if (reloadedRenderer != null) setRenderer(reloadedRenderer);
+            }
 
-            NGKeyboardHandler reloadedKeyboardHandler = (NGKeyboardHandler) keyboardHandler.reloadIfNeeded();
-            if (reloadedKeyboardHandler != null) setKeyboardHandler(reloadedKeyboardHandler);
+//            if (keyboardHandler != null) {
+//                NGKeyboardHandler reloadedKeyboardHandler = (NGKeyboardHandler) keyboardHandler.reloadIfNeeded();
+//                if (reloadedKeyboardHandler != null) setKeyboardHandler(reloadedKeyboardHandler);
+//            }
         }
     }
 
