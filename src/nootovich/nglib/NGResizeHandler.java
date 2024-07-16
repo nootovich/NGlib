@@ -5,6 +5,7 @@ import java.awt.event.ComponentListener;
 
 public class NGResizeHandler {
 
+    // TODO: migrate to new system
     @Deprecated
     @SuppressWarnings("DeprecatedIsStillUsed")
     public final ComponentListener listener = new ComponentListener() {

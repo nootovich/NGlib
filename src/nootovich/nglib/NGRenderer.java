@@ -1,8 +1,5 @@
 package nootovich.nglib;
 
-public class NGRenderer extends NGHotReloadable {
-
-    public void render(NGGraphics g) {
-    }
-
+public abstract class NGRenderer extends NGHotReloadable {
+    public abstract void render(NGGraphics g);
 }

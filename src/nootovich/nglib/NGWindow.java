@@ -5,15 +5,17 @@ import java.awt.*;
 
 public class NGWindow {
 
+    public static final int HOT_RELOAD_CHECK_COOLDOWN = 500;
+
     public int w, h;
     public boolean shouldClose = false;
 
-    public final  JFrame     jf = new JFrame();
+    private final JFrame     jf = new JFrame();
     private final Insets     ins;
     public final  NGGraphics g;
 
-    private       NGRenderer renderer;
-    private NGKeyboardHandler keyboardHandler;
+    private NGRenderer   renderer;
+    private NGKeyHandler keyHandler;
 
     private long lastHotReloadCheckTime = 0;
 
@@ -42,7 +44,7 @@ public class NGWindow {
 
     public void reloadNGClassesIfNeeded() {
         long curTime = System.currentTimeMillis();
-        if (curTime - lastHotReloadCheckTime > 250) {
+        if (curTime - lastHotReloadCheckTime > HOT_RELOAD_CHECK_COOLDOWN) {
             lastHotReloadCheckTime = curTime;
 
             if (renderer != null) {
@@ -50,10 +52,11 @@ public class NGWindow {
                 if (reloadedRenderer != null) setRenderer(reloadedRenderer);
             }
 
-//            if (keyboardHandler != null) {
-//                NGKeyboardHandler reloadedKeyboardHandler = (NGKeyboardHandler) keyboardHandler.reloadIfNeeded();
-//                if (reloadedKeyboardHandler != null) setKeyboardHandler(reloadedKeyboardHandler);
-//            }
+            if (keyHandler != null) {
+                NGKeyHandler reloadedKeyHandler = (NGKeyHandler) keyHandler.reloadIfNeeded();
+                if (reloadedKeyHandler != null) setKeyHandler(reloadedKeyHandler);
+            }
+
         }
     }
 
@@ -77,10 +80,9 @@ public class NGWindow {
         this.renderer = renderer;
     }
 
-    @SuppressWarnings("deprecation")
-    public void setKeyboardHandler(NGKeyboardHandler keyboardHandler) {
-        this.keyboardHandler = keyboardHandler;
-        jf.addKeyListener(keyboardHandler.listener);
+    public void setKeyHandler(NGKeyHandler keyHandler) {
+        this.keyHandler = keyHandler;
+        jf.getToolkit().addAWTEventListener(this.keyHandler, NGKeyHandler.KEY);
     }
 
     @SuppressWarnings("deprecation")

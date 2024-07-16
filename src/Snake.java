@@ -100,7 +100,7 @@ public class Snake {
         snake.add(new SnakePart(cellAmount / 2, cellAmount / 2 + 4, DIRECTION.UP));
         foodPosition = new Integer[]{getRandomPos(), getRandomPos()};
 
-        window.setKeyboardHandler(new SnakeKeyboardHandler());
+        window.setKeyHandler(new SnakeKeyHandler());
         window.setResizeHandler(new ResizeHandler());
 
         Timer updateTimer = new Timer((int) (TICK_DURATION * 1000), _ -> update());
