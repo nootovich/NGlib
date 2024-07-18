@@ -1,3 +1,5 @@
+package examples.snake;
+
 import nootovich.nglib.NGKeyHandler;
 import nootovich.nglib.NGKeys;
 

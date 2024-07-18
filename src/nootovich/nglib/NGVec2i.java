@@ -59,6 +59,10 @@ public class NGVec2i {
         return new NGVec2f(x, y);
     }
 
+    public boolean equals(NGVec2i other) {
+        return this.x == other.x && this.y == other.y;
+    }
+
     @Override
     public String toString() {
         return "(%d, %d)".formatted(x, y);

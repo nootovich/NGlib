@@ -55,6 +55,11 @@ public class NGGraphics {
         g2d.fillRect(pos.x, pos.y, size.x, size.y);
     }
 
+    public void drawRect(NGVec4i rect, Color color) {
+        g2d.setColor(color);
+        g2d.fillRect(rect.x, rect.y, rect.z, rect.w);
+    }
+
     public void drawRect(NGVec2f fpos, NGVec2f fsize, Color color) {
         g2d.setColor(color);
         NGVec2i pos  = fpos.toInt();
@@ -86,6 +91,11 @@ public class NGGraphics {
     public void drawRectBorder(NGVec2i pos, NGVec2i size, Color color) {
         g2d.setColor(color);
         g2d.drawRect(pos.x, pos.y, size.x, size.y);
+    }
+
+    public void drawRectBorder(NGVec4i rect, Color color) {
+        g2d.setColor(color);
+        g2d.drawRect(rect.x, rect.y, rect.z, rect.w);
     }
 
     public void drawRectBorder(NGVec2f fpos, NGVec2f fsize, Color color) {
@@ -134,6 +144,15 @@ public class NGGraphics {
 
     public void drawCircleCentered(int x, int y, int radius, Color color) {
         drawCircle(x - radius / 2, y - radius / 2, radius, color);
+    }
+
+    public void drawCircleCentered(NGVec2i pos, int radius, Color color) {
+        drawCircle(pos.x - radius / 2, pos.y - radius / 2, radius, color);
+    }
+
+    public void drawCircleCentered(NGVec2f fpos, int radius, Color color) {
+        NGVec2i pos = fpos.toInt();
+        drawCircle(pos.x - radius / 2, pos.y - radius / 2, radius, color);
     }
 
     public void drawText(String text, int x, int y, Color color) {
