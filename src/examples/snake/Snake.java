@@ -6,6 +6,7 @@ import nootovich.nglib.NGVec2i;
 import nootovich.nglib.NGWindow;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Snake {
@@ -18,7 +19,9 @@ public class Snake {
     protected static       int w          = cellSize * cellAmount;
     protected static       int h          = cellSize * cellAmount;
 
-    private static final NGWindow window = new NGWindow(w, h, new SnakeRenderer());
+    protected static int score = 0;
+
+    private static NGWindow window;
 
     protected static final ArrayList<SnakePart> snake = new ArrayList<>();
 
@@ -41,9 +44,12 @@ public class Snake {
             default -> NGUtils.error("Snake has entered the 4-th dimension.");
         }
 
-        if (nx == foodPosition.x && ny == foodPosition.y)
+        if (nx == foodPosition.x && ny == foodPosition.y) {
             foodPosition = new NGVec2i(getRandomPos(), getRandomPos());
-        else snake.removeFirst();
+            score++;
+        } else {
+            snake.removeFirst();
+        }
 
         for (SnakePart part : snake) {
             if (part.pos.x == nx && part.pos.y == ny) {
@@ -57,18 +63,20 @@ public class Snake {
     }
 
     public static void main(String[] args) {
+        SnakeRenderer renderer = new SnakeRenderer();
+        renderer.defaultFont = new Font(Font.MONOSPACED, Font.BOLD, 64);
+
+        window = new NGWindow(w, h, renderer);
+        window.setKeyHandler(new SnakeKeyHandler());
+        window.setResizeHandler(new SnakeResizeHandler());
+
         snake.add(new SnakePart(cellAmount / 2, cellAmount / 2 + 6, DIRECTION.UP));
         snake.add(new SnakePart(cellAmount / 2, cellAmount / 2 + 5, DIRECTION.UP));
         snake.add(new SnakePart(cellAmount / 2, cellAmount / 2 + 4, DIRECTION.UP));
         foodPosition = new NGVec2i(getRandomPos(), getRandomPos());
 
-        window.setKeyHandler(new SnakeKeyHandler());
-        window.setResizeHandler(new SnakeResizeHandler());
-
-        Timer updateTimer = new Timer((int) (TICK_DURATION * 1000), _ -> update());
-        Timer redrawTimer = new Timer((int) (FRAME_DURATION * 1000), _ -> window.redraw());
-        updateTimer.start();
-        redrawTimer.start();
+        new Timer((int) (TICK_DURATION * 1000), _ -> update()).start();
+        new Timer((int) (FRAME_DURATION * 1000), _ -> window.redraw()).start();
     }
 
     private static int getRandomPos() {

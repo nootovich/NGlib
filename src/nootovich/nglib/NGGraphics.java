@@ -155,11 +155,6 @@ public class NGGraphics {
         drawCircle(pos.x - radius / 2, pos.y - radius / 2, radius, color);
     }
 
-    public void drawText(String text, int x, int y, Color color) {
-        g2d.setColor(color);
-        g2d.drawString(text, x, y);
-    }
-
     public void drawPixelSprite(int x, int y, int w, int h, NGSprite pixelSprite) {
         // TODO: Temporary naive approach. Just enough to get things going
         if (pixelSprite.pixels.length == 0 || pixelSprite.pixels[0].length == 0) NGUtils.error("Invalid `NGPixelSprite`");
@@ -184,6 +179,22 @@ public class NGGraphics {
 
     public void resetClip() {
         g2d.setClip(null);
+    }
+
+    public void setFont(Font font) {
+        g2d.setFont(font);
+    }
+
+    public void drawText(String text, int x, int y, Color color) {
+        g2d.setColor(color);
+        g2d.drawString(text, x, y);
+    }
+
+    public void drawTextCentered(String text, int x, int y, Color color) {
+        var metrics = g2d.getFontMetrics();
+        int textW   = metrics.stringWidth(text);
+        int textH   = metrics.getHeight();
+        drawText(text, x - textW / 2, y + textH / 2, color);
     }
 
     public void displayOn(Container c) {

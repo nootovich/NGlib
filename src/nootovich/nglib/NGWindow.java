@@ -5,30 +5,32 @@ import java.awt.*;
 
 public class NGWindow {
 
-    public static final int HOT_RELOAD_CHECK_COOLDOWN = 500;
+    public final int HOT_RELOAD_CHECK_COOLDOWN = 500;
 
-    public int w, h;
     public boolean shouldClose = false;
+    public int w, h;
 
-    private final JFrame     jf = new JFrame();
-    private final Insets     ins;
-    public final  NGGraphics g;
+    private final Insets ins;
 
-    private NGRenderer   renderer;
-    private NGKeyHandler keyHandler;
+    public NGRenderer     renderer;
+    public NGKeyHandler   keyHandler;
+    public NGEventHandler mouseHandler;
+
+    public final JFrame     jf = new JFrame();
+    public final NGGraphics g;
 
     private long lastHotReloadCheckTime = 0;
 
     public NGWindow(int width, int height, NGRenderer renderer) {
         this.w = width;
         this.h = height;
-        setRenderer(renderer);
 
         jf.pack();
         ins = jf.getInsets();
         jf.setSize(toWindowWidth(w), toWindowHeight(h));
 
         g = new NGGraphics(jf);
+        setRenderer(renderer);
 
         jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         jf.setVisible(true);
@@ -78,6 +80,7 @@ public class NGWindow {
 
     public void setRenderer(NGRenderer renderer) {
         this.renderer = renderer;
+        if (renderer.defaultFont != null) g.setFont(renderer.defaultFont);
     }
 
     public void setKeyHandler(NGKeyHandler keyHandler) {
