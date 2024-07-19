@@ -24,7 +24,7 @@ public class NGMouseHandler extends NGEventHandler {
                 else if (me.getButton() == MouseEvent.BUTTON2) onMMBReleased(pos);
             }
             case MouseEvent.MOUSE_MOVED, MouseEvent.MOUSE_DRAGGED -> onMoved(pos);
-            case MouseEvent.MOUSE_WHEEL -> onWheel(((MouseWheelEvent) e).getWheelRotation());
+            case MouseEvent.MOUSE_WHEEL -> onWheel(pos, ((MouseWheelEvent) e).getWheelRotation());
             case MouseEvent.MOUSE_ENTERED, MouseEvent.MOUSE_EXITED, MouseEvent.MOUSE_CLICKED -> { }
             default -> NGUtils.error("Unexpected event!\n{%d} : %s".formatted(e.getID(), e));
         }
@@ -44,5 +44,5 @@ public class NGMouseHandler extends NGEventHandler {
 
     public void onMoved(NGVec2i pos) { }
 
-    public void onWheel(int direction) { }
+    public void onWheel(NGVec2i pos, int direction) { }
 }
