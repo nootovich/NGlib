@@ -1,5 +1,7 @@
 package nootovich.nglib;
 
+import java.awt.*;
+
 public class NGVec2i {
 
     public int x = 0, y = 0;
@@ -15,6 +17,11 @@ public class NGVec2i {
     public NGVec2i(float x, float y) {
         this.x = (int) x;
         this.y = (int) y;
+    }
+
+    public NGVec2i(Point p) {
+        this.x = p.x;
+        this.y = p.y;
     }
 
     public static NGVec2i[] createArray(int[][] positions) {
@@ -47,8 +54,16 @@ public class NGVec2i {
         return new NGVec2i(x - n, y - n);
     }
 
+    public NGVec2i sub(int dx, int dy) {
+        return new NGVec2i(x - dx, y - dy);
+    }
+
     public NGVec2i scale(float factor) {
         return new NGVec2i(x * factor, y * factor);
+    }
+
+    public NGVec2i divide(float factor) {
+        return new NGVec2i(x / factor, y / factor);
     }
 
     public NGVec2i lerp(NGVec2i other, float n) {

@@ -11,18 +11,21 @@ import static examples.snake.Snake.*;
 
 public class SnakeRenderer extends NGRenderer {
 
-    private static final Color COLOR_BG           = new Color(0x141820);
-    private static final Color COLOR_SNAKE        = new Color(0xFFFFFF);
-    private static final Color COLOR_SNAKE_BORDER = new Color(0x000000);
-    private static final Color COLOR_FOOD         = new Color(0x166236);
-    private static final Color COLOR_FOOD_BORDER  = new Color(0xFFFFFF);
-    private static final Color COLOR_SCORE        = new Color(0x507DBE);
+    private static final Color COLOR_BG             = new Color(0x141820);
+    private static final Color COLOR_SNAKE          = new Color(0xFFFFFF);
+    private static final Color COLOR_SNAKE_BORDER   = new Color(0x000000);
+    private static final Color COLOR_FOOD           = new Color(0x166236);
+    private static final Color COLOR_FOOD_HIGHLIGHT = new Color(0x338F54);
+    private static final Color COLOR_FOOD_BORDER    = new Color(0xFFFFFF);
+    private static final Color COLOR_SCORE          = new Color(0x507DBE);
 
     private static final int EYE_RADIUS = cellSize / 4;
     private static final int EYE_LEFT   = (int) (cellSize * 0.275f);
     private static final int EYE_RIGHT  = (int) (cellSize * 0.725f);
 
     public long prevTime = System.currentTimeMillis();
+
+    public static boolean highlightFood = false;
 
     @Override
     public void render(NGGraphics g) {
@@ -34,7 +37,7 @@ public class SnakeRenderer extends NGRenderer {
         }
         { // FOOD
             NGVec4i foodPos = new NGVec4i(foodPosition, 1, 1).scale(cellSize);
-            g.drawRect(foodPos, COLOR_FOOD);
+            g.drawRect(foodPos, highlightFood ? COLOR_FOOD_HIGHLIGHT : COLOR_FOOD);
             g.drawRectBorder(foodPos, COLOR_FOOD_BORDER);
         }
         { // SNAKE

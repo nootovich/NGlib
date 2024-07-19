@@ -22,13 +22,9 @@ public class NGAnimation {
         this.duration = duration;
     }
 
-    public boolean update(float dt) {
+    public void update(float dt) {
         progress += dt;
-        if (progress >= duration) {
-            state = end;
-            return false;
-        }
+        if (progress >= duration) state = end;
         state = start.lerp(end, progress / duration);
-        return true;
     }
 }

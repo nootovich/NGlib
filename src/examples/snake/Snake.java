@@ -44,12 +44,8 @@ public class Snake {
             default -> NGUtils.error("Snake has entered the 4-th dimension.");
         }
 
-        if (nx == foodPosition.x && ny == foodPosition.y) {
-            foodPosition = new NGVec2i(getRandomPos(), getRandomPos());
-            score++;
-        } else {
-            snake.removeFirst();
-        }
+        if (nx == foodPosition.x && ny == foodPosition.y) eat();
+        else snake.removeFirst();
 
         for (SnakePart part : snake) {
             if (part.pos.x == nx && part.pos.y == ny) {
@@ -62,12 +58,18 @@ public class Snake {
         for (SnakePart part : snake) part.nextAnim();
     }
 
+    protected static void eat() {
+        foodPosition = new NGVec2i(getRandomPos(), getRandomPos());
+        score++;
+    }
+
     public static void main(String[] args) {
         SnakeRenderer renderer = new SnakeRenderer();
         renderer.defaultFont = new Font(Font.MONOSPACED, Font.BOLD, 64);
 
         window = new NGWindow(w, h, renderer);
         window.setKeyHandler(new SnakeKeyHandler());
+        window.setMouseHandler(new SnakeMouseHandler());
         window.setResizeHandler(new SnakeResizeHandler());
 
         snake.add(new SnakePart(cellAmount / 2, cellAmount / 2 + 6, DIRECTION.UP));

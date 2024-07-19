@@ -85,7 +85,12 @@ public class NGWindow {
 
     public void setKeyHandler(NGKeyHandler keyHandler) {
         this.keyHandler = keyHandler;
-        jf.getToolkit().addAWTEventListener(this.keyHandler, NGKeyHandler.KEY);
+        jf.getToolkit().addAWTEventListener(this.keyHandler, NGEventHandler.KEY);
+    }
+
+    public void setMouseHandler(NGMouseHandler mouseHandler) {
+        this.mouseHandler = mouseHandler;
+        jf.getToolkit().addAWTEventListener(this.mouseHandler, NGEventHandler.MOUSE);
     }
 
     @SuppressWarnings("deprecation")

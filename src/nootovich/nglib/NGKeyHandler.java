@@ -9,6 +9,26 @@ public class NGKeyHandler extends NGEventHandler {
 
     private static final Map<Integer, Integer> conversion = new HashMap<>();
 
+    @Override
+    public void eventDispatched(AWTEvent e) {
+        switch (e.getID()) {
+            case KeyEvent.KEY_TYPED    /*400*/ -> { }
+            case KeyEvent.KEY_PRESSED  /*401*/ -> onKeyDn(convertKeyCode(((KeyEvent) e).getKeyCode()), ((KeyEvent) e).getKeyChar());
+            case KeyEvent.KEY_RELEASED /*402*/ -> onKeyUp(convertKeyCode(((KeyEvent) e).getKeyCode()), ((KeyEvent) e).getKeyChar());
+            default -> NGUtils.error("Unexpected event!\n{%d} : %s".formatted(e.getID(), e));
+        }
+    }
+
+    private int convertKeyCode(int awtfulKeyCode) {
+        if (!conversion.containsKey(awtfulKeyCode))
+            NGUtils.error("The key '%s' is not implemented%n".formatted(KeyEvent.getKeyText(awtfulKeyCode)));
+        return conversion.get(awtfulKeyCode);
+    }
+
+    public void onKeyDn(int key, char chr) { }
+
+    public void onKeyUp(int key, char chr) { }
+
     static { // NOTE: some of those are REALLY redundant...
         conversion.put(KeyEvent.VK_ENTER, NGKeys.ENTER);
         conversion.put(KeyEvent.VK_UP, NGKeys.ARROW_UP);
@@ -39,29 +59,9 @@ public class NGKeyHandler extends NGEventHandler {
         conversion.put(KeyEvent.VK_U, NGKeys.U);
         conversion.put(KeyEvent.VK_V, NGKeys.V);
         conversion.put(KeyEvent.VK_W, NGKeys.W);
-        conversion.put(KeyEvent.VK_X, NGKeys.X); 
+        conversion.put(KeyEvent.VK_X, NGKeys.X);
         conversion.put(KeyEvent.VK_Y, NGKeys.Y);
         conversion.put(KeyEvent.VK_Z, NGKeys.Z);
     }
-
-    @Override
-    public void eventDispatched(AWTEvent e) {
-        switch (e.getID()) {
-            case KeyEvent.KEY_TYPED    /*400*/ -> { }
-            case KeyEvent.KEY_PRESSED  /*401*/ -> onKeyDn(convertKeyCode(((KeyEvent) e).getKeyCode()), ((KeyEvent) e).getKeyChar());
-            case KeyEvent.KEY_RELEASED /*402*/ -> onKeyUp(convertKeyCode(((KeyEvent) e).getKeyCode()), ((KeyEvent) e).getKeyChar());
-            default -> NGUtils.error("Unexpected event!\n{%d} : %s".formatted(e.getID(), e));
-        }
-    }
-
-    private int convertKeyCode(int awtfulKeyCode) {
-        if (!conversion.containsKey(awtfulKeyCode))
-            NGUtils.error("The key '%s' is not implemented%n".formatted(KeyEvent.getKeyText(awtfulKeyCode)));
-        return conversion.get(awtfulKeyCode);
-    }
-
-    public void onKeyDn(int key, char chr) { }
-
-    public void onKeyUp(int key, char chr) { }
 
 }
