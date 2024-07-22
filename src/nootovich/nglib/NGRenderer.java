@@ -1,6 +1,6 @@
 package nootovich.nglib;
 
-import java.awt.*;
+import java.awt.Font;
 
 public abstract class NGRenderer extends NGHotReloadable {
 

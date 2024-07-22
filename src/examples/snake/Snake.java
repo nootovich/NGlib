@@ -1,13 +1,9 @@
 package examples.snake;
 
-import nootovich.nglib.NGAnimation;
-import nootovich.nglib.NGUtils;
-import nootovich.nglib.NGVec2i;
-import nootovich.nglib.NGWindow;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Font;
 import java.util.ArrayList;
+import javax.swing.Timer;
+import nootovich.nglib.*;
 
 public class Snake {
 
@@ -37,17 +33,17 @@ public class Snake {
         int nx = head.pos.x;
         int ny = head.pos.y;
         switch (head.dir) {
-            case UP    -> ny = mod(head.pos.y - 1, h / cellSize);
+            case UP -> ny = mod(head.pos.y - 1, h / cellSize);
             case RIGHT -> nx = mod(head.pos.x + 1, w / cellSize);
-            case DOWN  -> ny = mod(head.pos.y + 1, h / cellSize);
-            case LEFT  -> nx = mod(head.pos.x - 1, w / cellSize);
+            case DOWN -> ny = mod(head.pos.y + 1, h / cellSize);
+            case LEFT -> nx = mod(head.pos.x - 1, w / cellSize);
             default -> NGUtils.error("Snake has entered the 4-th dimension.");
         }
 
         if (nx == foodPosition.x && ny == foodPosition.y) eat();
         else snake.removeFirst();
 
-        for (SnakePart part : snake) {
+        for (SnakePart part: snake) {
             if (part.pos.x == nx && part.pos.y == ny) {
                 System.out.println("u ded");
                 window.shouldClose = true;
@@ -55,7 +51,7 @@ public class Snake {
         }
 
         snake.add(new SnakePart(nx, ny, queuedDirection));
-        for (SnakePart part : snake) part.nextAnim();
+        for (SnakePart part: snake) part.nextAnim();
     }
 
     protected static void eat() {
@@ -114,13 +110,12 @@ public class Snake {
         public void nextAnim() {
             NGVec2i start = pos.scale(Snake.cellSize);
             NGVec2i end = switch (dir) {
-                case UP    -> pos.add( 0, -1).scale(Snake.cellSize);
-                case RIGHT -> pos.add( 1,  0).scale(Snake.cellSize);
-                case DOWN  -> pos.add( 0,  1).scale(Snake.cellSize);
-                case LEFT  -> pos.add(-1,  0).scale(Snake.cellSize);
+                case UP -> pos.add(0, -1).scale(Snake.cellSize);
+                case RIGHT -> pos.add(1, 0).scale(Snake.cellSize);
+                case DOWN -> pos.add(0, 1).scale(Snake.cellSize);
+                case LEFT -> pos.add(-1, 0).scale(Snake.cellSize);
             };
             anim = new NGAnimation(start.toFloat(), end.toFloat(), Snake.TICK_DURATION);
         }
     }
-
 }

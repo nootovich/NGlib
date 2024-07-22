@@ -1,11 +1,7 @@
 package examples.snake;
 
-import nootovich.nglib.NGGraphics;
-import nootovich.nglib.NGRenderer;
-import nootovich.nglib.NGVec2f;
-import nootovich.nglib.NGVec4i;
-
-import java.awt.*;
+import java.awt.Color;
+import nootovich.nglib.*;
 
 import static examples.snake.Snake.*;
 
@@ -41,7 +37,7 @@ public class SnakeRenderer extends NGRenderer {
             g.drawRectBorder(foodPos, COLOR_FOOD_BORDER);
         }
         { // SNAKE
-            for (SnakePart part : snake) {
+            for (SnakePart part: snake) {
                 part.anim.update(dt);
                 g.drawRect(part.anim.state, cellSize, COLOR_SNAKE);
                 g.drawRectBorder(part.anim.state, cellSize, COLOR_SNAKE_BORDER);

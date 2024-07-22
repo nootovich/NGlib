@@ -1,8 +1,6 @@
 package nootovich.nglib;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.UncheckedIOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Stack;
@@ -42,7 +40,7 @@ public class NGFileSystem {
         Stack<String> list = new Stack<>();
         try (Stream<Path> paths = Files.list(Path.of(dir))) {
             paths.filter(path -> !Files.isDirectory(path)).forEach(path -> list.push(path.getFileName().toString()));
-            return list.toArray(new String[]{});
+            return list.toArray(new String[]{ });
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -63,7 +61,7 @@ public class NGFileSystem {
         try (Stream<Path> paths = Files.list(Path.of(dir))) {
             paths.filter(path -> !path.getFileName().toString().startsWith(".")).map(Path::toString).forEach(list::push);
         }
-        for (String entry : list) {
+        for (String entry: list) {
             Path path = Path.of(entry);
             if (path.getFileName().toString().equals(filename)) return entry;
             if (Files.isDirectory(path)) {
@@ -78,14 +76,14 @@ public class NGFileSystem {
     public static boolean delete(String path) {
         boolean success = true;
         File    file    = new File(path);
-        if (file.isDirectory()) for (File f : file.listFiles()) success &= deleteRecursively(f);
+        if (file.isDirectory()) for (File f: file.listFiles()) success &= deleteRecursively(f);
         return file.delete() && success;
     }
 
     @SuppressWarnings("DataFlowIssue")
     private static boolean deleteRecursively(File file) {
         boolean success = true;
-        if (file.isDirectory()) for (File f : file.listFiles()) success &= deleteRecursively(f);
+        if (file.isDirectory()) for (File f: file.listFiles()) success &= deleteRecursively(f);
         return file.delete() && success;
     }
 

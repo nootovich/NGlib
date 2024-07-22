@@ -1,14 +1,16 @@
 package nootovich.nglib;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.GraphicsEnvironment;
+import java.awt.Insets;
+import javax.swing.JFrame;
+import javax.swing.WindowConstants;
 
 public class NGWindow {
 
     public final int HOT_RELOAD_CHECK_COOLDOWN = 500;
 
     public boolean shouldClose = false;
-    public int w, h;
+    public int     w, h;
 
     private final Insets ins;
 
@@ -59,7 +61,6 @@ public class NGWindow {
                 NGKeyHandler reloadedKeyHandler = (NGKeyHandler) keyHandler.reloadIfNeeded();
                 if (reloadedKeyHandler != null) setKeyHandler(reloadedKeyHandler);
             }
-
         }
     }
 

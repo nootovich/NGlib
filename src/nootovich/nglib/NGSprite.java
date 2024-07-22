@@ -1,6 +1,6 @@
 package nootovich.nglib;
 
-import java.awt.*;
+import java.awt.Color;
 
 public class NGSprite {
 
@@ -22,5 +22,4 @@ public class NGSprite {
     public Color getPixel(int x, int y) {
         return pixels[y][x];
     }
-
 }

@@ -102,5 +102,4 @@ public interface NGKeys {
     int BACKTICK    = 96;
     // 97-125 -> 65-93
     // 126 -> 96
-
 }

@@ -74,5 +74,4 @@ public class NGVec4i {
     public String toString() {
         return "(%d, %d, %d, %d)".formatted(x, y, z, w);
     }
-
 }

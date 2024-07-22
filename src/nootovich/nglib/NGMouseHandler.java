@@ -1,9 +1,10 @@
 package nootovich.nglib;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.AWTEvent;
+import java.awt.Insets;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import javax.swing.JFrame;
 
 public class NGMouseHandler extends NGEventHandler {
 

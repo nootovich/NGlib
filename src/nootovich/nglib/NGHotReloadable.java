@@ -1,7 +1,6 @@
 package nootovich.nglib;
 
 import com.sun.tools.javac.Main;
-
 import java.lang.reflect.InvocationTargetException;
 
 public class NGHotReloadable extends ClassLoader {
@@ -62,5 +61,4 @@ public class NGHotReloadable extends ClassLoader {
             throw new RuntimeException(e);
         }
     }
-
 }

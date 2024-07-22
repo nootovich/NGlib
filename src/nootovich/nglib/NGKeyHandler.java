@@ -1,6 +1,6 @@
 package nootovich.nglib;
 
-import java.awt.*;
+import java.awt.AWTEvent;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,5 +63,4 @@ public class NGKeyHandler extends NGEventHandler {
         conversion.put(KeyEvent.VK_Y, NGKeys.Y);
         conversion.put(KeyEvent.VK_Z, NGKeys.Z);
     }
-
 }

@@ -1,6 +1,6 @@
 package nootovich.nglib;
 
-import java.awt.*;
+import java.awt.Point;
 
 public class NGVec2i {
 
@@ -82,5 +82,4 @@ public class NGVec2i {
     public String toString() {
         return "(%d, %d)".formatted(x, y);
     }
-
 }

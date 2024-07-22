@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 @SuppressWarnings("unused")
 public class NGGraphics {
 
+    // TODO: NGVec4(2x2?)i
     private final int gX, gY;
     private int gW, gH;
     private BufferedImage buffer;

@@ -67,5 +67,4 @@ public class NGVec2f {
     public String toString() {
         return "(%.3f, %.3f)".formatted(x, y);
     }
-
 }
