@@ -19,16 +19,22 @@ public class NGGraphics {
         gW     = c.getComponent(0).getWidth();
         gH     = c.getComponent(0).getHeight();
         buffer = new BufferedImage(gW, gH, BufferedImage.TYPE_INT_RGB);
-        g2d    = buffer.createGraphics();
+        updateGraphics();
+    }
+
+    public void updateGraphics() {
+        g2d = buffer.createGraphics();
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     }
 
     public void resize(int w, int h) {
-        gW     = w;
-        gH     = h;
+        gW = w;
+        gH = h;
+        Font temp = g2d.getFont();
         buffer = new BufferedImage(gW, gH, BufferedImage.TYPE_INT_RGB);
-        g2d    = buffer.createGraphics();
+        updateGraphics();
+        setFont(temp);
     }
 
     public void drawPixel(int x, int y, Color color) {

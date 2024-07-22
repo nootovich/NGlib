@@ -63,6 +63,12 @@ public class Snake {
         score++;
     }
 
+    protected static void resize(int nw, int nh) {
+        w = nw;
+        h = nh;
+        window.g.resize(w, h);
+    }
+
     public static void main(String[] args) {
         SnakeRenderer renderer = new SnakeRenderer();
         renderer.defaultFont = new Font(Font.MONOSPACED, Font.BOLD, 64);
@@ -70,7 +76,7 @@ public class Snake {
         window = new NGWindow(w, h, renderer);
         window.setKeyHandler(new SnakeKeyHandler());
         window.setMouseHandler(new SnakeMouseHandler());
-        window.setResizeHandler(new SnakeResizeHandler());
+        window.setResizeHandler(new SnakeWindowHandler());
 
         snake.add(new SnakePart(cellAmount / 2, cellAmount / 2 + 6, DIRECTION.UP));
         snake.add(new SnakePart(cellAmount / 2, cellAmount / 2 + 5, DIRECTION.UP));

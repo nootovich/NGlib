@@ -12,9 +12,10 @@ public class NGWindow {
 
     private final Insets ins;
 
-    public NGRenderer     renderer;
-    public NGKeyHandler   keyHandler;
-    public NGEventHandler mouseHandler;
+    public NGRenderer      renderer;
+    public NGKeyHandler    keyHandler;
+    public NGMouseHandler  mouseHandler;
+    public NGWindowHandler resizeHandler;
 
     public final JFrame     jf = new JFrame();
     public final NGGraphics g;
@@ -93,9 +94,8 @@ public class NGWindow {
         jf.getToolkit().addAWTEventListener(this.mouseHandler, NGEventHandler.MOUSE);
     }
 
-    @SuppressWarnings("deprecation")
-    public void setResizeHandler(NGResizeHandler resizeHandler) {
-        resizeHandler.window = this;
-        jf.addComponentListener(resizeHandler.listener);
+    public void setResizeHandler(NGWindowHandler resizeHandler) {
+        this.resizeHandler = resizeHandler;
+        jf.getToolkit().addAWTEventListener(this.resizeHandler, NGEventHandler.WINDOW);
     }
 }

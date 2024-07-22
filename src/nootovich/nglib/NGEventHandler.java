@@ -1,6 +1,6 @@
 package nootovich.nglib;
 
-import java.awt.*;
+import java.awt.AWTEvent;
 import java.awt.event.AWTEventListener;
 
 public class NGEventHandler extends NGHotReloadable implements AWTEventListener {
@@ -26,8 +26,9 @@ public class NGEventHandler extends NGHotReloadable implements AWTEventListener 
     private static final long AWT_WINDOW_STATE          = 0b01000000000000000000;
     private static final long AWT_WINDOW_FOCUS          = 0b10000000000000000000;
 
-    public static final long KEY = AWT_KEY;
-    public static final long MOUSE = AWT_MOUSE | AWT_MOUSE_MOTION | AWT_MOUSE_WHEEL;
+    public static final long KEY    = AWT_KEY;
+    public static final long MOUSE  = AWT_MOUSE | AWT_MOUSE_MOTION | AWT_MOUSE_WHEEL;
+    public static final long WINDOW = AWT_WINDOW_STATE | AWT_COMPONENT;
 
     @Override
     public void eventDispatched(AWTEvent event) { }
