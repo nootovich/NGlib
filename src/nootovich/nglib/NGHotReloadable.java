@@ -3,6 +3,8 @@ package nootovich.nglib;
 import com.sun.tools.javac.Main;
 import java.lang.reflect.InvocationTargetException;
 
+// IMPORTANT NOTE: Hot reloadable classes will break after reload if they encounter a `protected` field
+
 public class NGHotReloadable extends ClassLoader {
 
     // TODO: un-hardcode again...

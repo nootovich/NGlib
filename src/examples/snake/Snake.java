@@ -10,22 +10,22 @@ public class Snake {
     private static final float TICK_DURATION  = 0.1f;
     private static final float FRAME_DURATION = 0.02f;
 
-    protected static final int cellAmount = 20;
-    protected static final int cellSize   = 40;
-    protected static       int w          = cellSize * cellAmount;
-    protected static       int h          = cellSize * cellAmount;
+    public static final int cellAmount = 20;
+    public static final int cellSize   = 40;
+    public static       int w          = cellSize * cellAmount;
+    public static       int h          = cellSize * cellAmount;
 
-    protected static int score = 0;
+    public static int score = 0;
 
     private static NGWindow window;
 
-    protected static final ArrayList<SnakePart> snake = new ArrayList<>();
+    public static final ArrayList<SnakePart> snake = new ArrayList<>();
 
-    protected enum DIRECTION {UP, RIGHT, DOWN, LEFT}
+    public enum DIRECTION {UP, RIGHT, DOWN, LEFT}
 
-    protected static DIRECTION queuedDirection = DIRECTION.UP;
+    public static DIRECTION queuedDirection = DIRECTION.UP;
 
-    protected static NGVec2i foodPosition = new NGVec2i();
+    public static NGVec2i foodPosition = new NGVec2i();
 
     private static void update() {
         SnakePart head = snake.getLast();
@@ -54,12 +54,12 @@ public class Snake {
         for (SnakePart part: snake) part.nextAnim();
     }
 
-    protected static void eat() {
+    public static void eat() {
         foodPosition = new NGVec2i(getRandomPos(), getRandomPos());
         score++;
     }
 
-    protected static void resize(int nw, int nh) {
+    public static void resize(int nw, int nh) {
         w = nw;
         h = nh;
         window.g.resize(w, h);
@@ -91,7 +91,7 @@ public class Snake {
         return ((n % m) + m) % m;
     }
 
-    protected static class SnakePart {
+    public static class SnakePart {
         public NGVec2i     pos;
         public DIRECTION   dir;
         public NGAnimation anim;
