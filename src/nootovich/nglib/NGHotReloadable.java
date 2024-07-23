@@ -1,6 +1,8 @@
 package nootovich.nglib;
 
 import com.sun.tools.javac.Main;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 
 // IMPORTANT NOTE: Hot reloadable classes will break after reload if they encounter a `protected` field
@@ -50,9 +52,11 @@ public class NGHotReloadable extends ClassLoader {
     // CREDIT: https://jenkov.com/tutorials/java-reflection/dynamic-class-loading-reloading.html
     public NGHotReloadable getNew() {
         try {
-            if (Main.compile(new String[]{"-d", classPath, "-sourcepath", sourcePath, sourceFile}) != 0) {
-                NGUtils.error("Compilation failed!");
-            }
+            PrintStream stderr = System.err;
+            System.setErr(new PrintStream(OutputStream.nullOutputStream()));
+            int compilationResult = Main.compile(new String[]{"-d", classPath, "-sourcepath", sourcePath, sourceFile});
+            System.setErr(stderr);
+            if (compilationResult != 0) return NGUtils.info("Compilation failed!");
             NGUtils.info("Reloaded class: " + getClass().getName());
             return (NGHotReloadable) loadClass(getClass().getName()).getDeclaredConstructor().newInstance();
         } catch (InstantiationException
