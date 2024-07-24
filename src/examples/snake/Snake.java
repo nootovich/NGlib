@@ -1,31 +1,30 @@
 package examples.snake;
 
 import java.awt.Font;
-import java.util.ArrayList;
 import javax.swing.Timer;
 import nootovich.nglib.*;
 
-public class Snake {
+import static examples.snake.Main.*;
+import static nootovich.nglib.NGUtils.mod;
 
-    private static final float TICK_DURATION  = 0.1f;
-    private static final float FRAME_DURATION = 0.02f;
-
-    public static final int cellAmount = 20;
-    public static final int cellSize   = 40;
-    public static       int w          = cellSize * cellAmount;
-    public static       int h          = cellSize * cellAmount;
-
-    public static int score = 0;
+public class Snake extends NGMain {
 
     private static NGWindow window;
 
-    public static final ArrayList<SnakePart> snake = new ArrayList<>();
+    public void main() {
+        SnakeRenderer renderer = new SnakeRenderer();
+        renderer.defaultFont = new Font(Font.MONOSPACED, Font.BOLD, 64);
 
-    public enum DIRECTION {UP, RIGHT, DOWN, LEFT}
+        window = new NGWindow(w, h, renderer, this);
 
-    public static DIRECTION queuedDirection = DIRECTION.UP;
+        snake.add(new SnakePart(cellAmount / 2, cellAmount / 2 + 6, DIRECTION.UP));
+        snake.add(new SnakePart(cellAmount / 2, cellAmount / 2 + 5, DIRECTION.UP));
+        snake.add(new SnakePart(cellAmount / 2, cellAmount / 2 + 4, DIRECTION.UP));
+        foodPosition = new NGVec2i(getRandomPos(), getRandomPos());
 
-    public static NGVec2i foodPosition = new NGVec2i();
+        new Timer((int) (TICK_DURATION * 1000), _ -> update()).start();
+        new Timer((int) (FRAME_DURATION * 1000), _ -> window.redraw()).start();
+    }
 
     private static void update() {
         SnakePart head = snake.getLast();
@@ -54,41 +53,55 @@ public class Snake {
         for (SnakePart part: snake) part.nextAnim();
     }
 
-    public static void eat() {
-        foodPosition = new NGVec2i(getRandomPos(), getRandomPos());
-        score++;
+    @Override
+    public void onLMBPressed(NGVec2i pos) {
+        if (pos.divide(cellSize).equals(foodPosition)) eat();
+        SnakeRenderer.highlightFood = false;
     }
 
-    public static void resize(int nw, int nh) {
+    @Override
+    public void onMouseMoved(NGVec2i pos) {
+        SnakeRenderer.highlightFood = (pos.divide(cellSize).equals(foodPosition));
+    }
+
+    @Override
+    public void onWPress() {
+        SnakePart head = snake.getLast();
+        queuedDirection = head.dir != DIRECTION.DOWN ? DIRECTION.UP : head.dir;
+    }
+
+    @Override
+    public void onAPress() {
+        SnakePart head = snake.getLast();
+        queuedDirection = head.dir != DIRECTION.RIGHT ? DIRECTION.LEFT : head.dir;
+    }
+
+    @Override
+    public void onSPress() {
+        SnakePart head = snake.getLast();
+        queuedDirection = head.dir != DIRECTION.UP ? DIRECTION.DOWN : head.dir;
+    }
+
+    @Override
+    public void onDPress() {
+        SnakePart head = snake.getLast();
+        queuedDirection = head.dir != DIRECTION.LEFT ? DIRECTION.RIGHT : head.dir;
+    }
+
+    @Override
+    public void onWindowResize(int nw, int nh) {
         w = nw;
         h = nh;
         window.g.resize(w, h);
     }
 
-    public static void main(String[] args) {
-        SnakeRenderer renderer = new SnakeRenderer();
-        renderer.defaultFont = new Font(Font.MONOSPACED, Font.BOLD, 64);
-
-        window = new NGWindow(w, h, renderer);
-        window.setKeyHandler(new SnakeKeyHandler());
-        window.setMouseHandler(new SnakeMouseHandler());
-        window.setResizeHandler(new SnakeWindowHandler());
-
-        snake.add(new SnakePart(cellAmount / 2, cellAmount / 2 + 6, DIRECTION.UP));
-        snake.add(new SnakePart(cellAmount / 2, cellAmount / 2 + 5, DIRECTION.UP));
-        snake.add(new SnakePart(cellAmount / 2, cellAmount / 2 + 4, DIRECTION.UP));
+    public static void eat() {
         foodPosition = new NGVec2i(getRandomPos(), getRandomPos());
-
-        new Timer((int) (TICK_DURATION * 1000), _ -> update()).start();
-        new Timer((int) (FRAME_DURATION * 1000), _ -> window.redraw()).start();
+        score++;
     }
 
     private static int getRandomPos() {
         return (int) (Math.random() * (cellAmount));
-    }
-
-    public static int mod(int n, int m) {
-        return ((n % m) + m) % m;
     }
 
     public static class SnakePart {
@@ -108,14 +121,14 @@ public class Snake {
         }
 
         public void nextAnim() {
-            NGVec2i start = pos.scale(Snake.cellSize);
+            NGVec2i start = pos.scale(cellSize);
             NGVec2i end = switch (dir) {
-                case UP -> pos.add(0, -1).scale(Snake.cellSize);
-                case RIGHT -> pos.add(1, 0).scale(Snake.cellSize);
-                case DOWN -> pos.add(0, 1).scale(Snake.cellSize);
-                case LEFT -> pos.add(-1, 0).scale(Snake.cellSize);
+                case UP -> pos.add(0, -1).scale(cellSize);
+                case RIGHT -> pos.add(1, 0).scale(cellSize);
+                case DOWN -> pos.add(0, 1).scale(cellSize);
+                case LEFT -> pos.add(-1, 0).scale(cellSize);
             };
-            anim = new NGAnimation(start.toFloat(), end.toFloat(), Snake.TICK_DURATION);
+            anim = new NGAnimation(start.toFloat(), end.toFloat(), TICK_DURATION);
         }
     }
 }
