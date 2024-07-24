@@ -1,6 +1,5 @@
 package nootovich.nglib;
 
-import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
@@ -38,8 +37,6 @@ public class NGWindow {
         setRenderer(renderer);
 
         jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        // DO NOT COMMIT. THIS IS A LOCAL FIX
-        jf.setLocation(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0].getDefaultConfiguration().getBounds().getLocation());
         jf.setVisible(true);
         jf.requestFocus();
     }
