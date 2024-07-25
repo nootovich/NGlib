@@ -18,7 +18,7 @@ public class NGGenerateMain {
     // TODO: good enough to just get something working, but needs to change at some point
     public static void main(String[] args) {
 
-        for(String s: args) {
+        for (String s: args) {
             switch (s) {
                 case "-d" -> DEBUG = true;
                 default -> throw new IllegalStateException("Unexpected argument: " + s);
@@ -50,7 +50,7 @@ public class NGGenerateMain {
         sb.append("import java.awt.event.*;\n");
         sb.append("import java.lang.reflect.InvocationTargetException;\n");
         sb.append("import java.util.Stack;\n");
-        sb.append("import javax.swing.JFrame;\n\n");
+        sb.append("import javax.swing.JFrame;\n");
         sb.append("import javax.swing.Timer;\n\n");
 
         sb.append("@SuppressWarnings(\"unused\")\n");
@@ -130,13 +130,13 @@ public class NGGenerateMain {
             sb.append("            Insets  ins = ((JFrame) event.getSource()).getInsets();\n");
             sb.append("            NGVec2i pos = new NGVec2i(((MouseEvent) event).getPoint()).sub(ins.left, ins.top);\n");
             sb.append("            switch (((MouseEvent) event).getButton()) {\n");
-            for (int key: mouseButtons.keySet()) {
-                sb.append("                case MouseEvent.BUTTON").append(key).append(" -> {\n");
+            for (int mouseButton = 1; mouseButton <= 3; mouseButton++) {
+                sb.append("                case MouseEvent.BUTTON").append(mouseButton).append(" -> {\n");
                 sb.append("                    if (id == MouseEvent.MOUSE_PRESSED) {\n");
-                sb.append("                        heldKeys.push(\"").append(mouseButtons.get(key)).append("\");\n");
+                sb.append("                        heldKeys.push(\"").append(mouseButtons.get(mouseButton)).append("\");\n");
                 sb.append("                        onLMBPressed(pos);\n");
                 sb.append("                    } else {\n");
-                sb.append("                        heldKeys.remove(\"").append(mouseButtons.get(key)).append("\");\n");
+                sb.append("                        heldKeys.remove(\"").append(mouseButtons.get(mouseButton)).append("\");\n");
                 sb.append("                        onLMBReleased(pos);\n");
                 sb.append("                    }\n");
                 sb.append("                }\n");
@@ -179,10 +179,11 @@ public class NGGenerateMain {
         sb.append("    public void onWindowRestore() { }\n\n");
 
         { // on<Key>Pressed(), on<Key>Released(), while<Key>Held()
-            for (String mouseButton: mouseButtons.values()) {
-                sb.append("    public void on").append(mouseButton).append("Pressed(NGVec2i pos) { }\n");
-                sb.append("    public void on").append(mouseButton).append("Released(NGVec2i pos) { }\n");
-                sb.append("    public void while").append(mouseButton).append("Held(NGVec2i pos) { }\n\n");
+            for (int mouseButton = 1; mouseButton <= 3; mouseButton++) {
+                String mouseButtonName = mouseButtons.get(mouseButton);
+                sb.append("    public void on").append(mouseButtonName).append("Pressed(NGVec2i pos) { }\n");
+                sb.append("    public void on").append(mouseButtonName).append("Released(NGVec2i pos) { }\n");
+                sb.append("    public void while").append(mouseButtonName).append("Held(NGVec2i pos) { }\n\n");
             }
             for (int i = 0; i < keys.size(); i++) {
                 sb.append("    public void on").append(names.get(i)).append("Press() { }\n");

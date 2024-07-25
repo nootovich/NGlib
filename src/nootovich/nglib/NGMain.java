@@ -1423,12 +1423,12 @@ public class NGMain extends NGHotReloadable implements AWTEventListener {
             Insets  ins = ((JFrame) event.getSource()).getInsets();
             NGVec2i pos = new NGVec2i(((MouseEvent) event).getPoint()).sub(ins.left, ins.top);
             switch (((MouseEvent) event).getButton()) {
-                case MouseEvent.BUTTON3 -> {
+                case MouseEvent.BUTTON1 -> {
                     if (id == MouseEvent.MOUSE_PRESSED) {
-                        heldKeys.push("RMB");
+                        heldKeys.push("LMB");
                         onLMBPressed(pos);
                     } else {
-                        heldKeys.remove("RMB");
+                        heldKeys.remove("LMB");
                         onLMBReleased(pos);
                     }
                 }
@@ -1441,12 +1441,12 @@ public class NGMain extends NGHotReloadable implements AWTEventListener {
                         onLMBReleased(pos);
                     }
                 }
-                case MouseEvent.BUTTON1 -> {
+                case MouseEvent.BUTTON3 -> {
                     if (id == MouseEvent.MOUSE_PRESSED) {
-                        heldKeys.push("LMB");
+                        heldKeys.push("RMB");
                         onLMBPressed(pos);
                     } else {
-                        heldKeys.remove("LMB");
+                        heldKeys.remove("RMB");
                         onLMBReleased(pos);
                     }
                 }
@@ -1486,17 +1486,17 @@ public class NGMain extends NGHotReloadable implements AWTEventListener {
     public void onWindowMinimize() { }
     public void onWindowRestore() { }
 
-    public void onRMBPressed(NGVec2i pos) { }
-    public void onRMBReleased(NGVec2i pos) { }
-    public void whileRMBHeld(NGVec2i pos) { }
+    public void onLMBPressed(NGVec2i pos) { }
+    public void onLMBReleased(NGVec2i pos) { }
+    public void whileLMBHeld(NGVec2i pos) { }
 
     public void onMMBPressed(NGVec2i pos) { }
     public void onMMBReleased(NGVec2i pos) { }
     public void whileMMBHeld(NGVec2i pos) { }
 
-    public void onLMBPressed(NGVec2i pos) { }
-    public void onLMBReleased(NGVec2i pos) { }
-    public void whileLMBHeld(NGVec2i pos) { }
+    public void onRMBPressed(NGVec2i pos) { }
+    public void onRMBReleased(NGVec2i pos) { }
+    public void whileRMBHeld(NGVec2i pos) { }
 
     public void onEnterPress() { }
     public void onEnterRelease() { }
