@@ -8,9 +8,6 @@ import nootovich.nglib.NGVec2i;
 //  Would be nice to get rid of this at least by supporting inner classes hot-reloading.
 public class Main {
 
-    public static final float TICK_DURATION  = 0.2f;
-    public static final float FRAME_DURATION = 0.012f;
-
     public static final int cellAmount = 20;
     public static final int cellSize   = 40;
 

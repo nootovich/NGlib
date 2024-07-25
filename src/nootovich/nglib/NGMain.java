@@ -2,367 +2,1454 @@ package nootovich.nglib;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Stack;
 import javax.swing.JFrame;
+import javax.swing.Timer;
 
 @SuppressWarnings("unused")
 public class NGMain extends NGHotReloadable implements AWTEventListener {
+
+    public static float TICK_DURATION  = 0.0333f; // Measured in seconds
+    public static float FRAME_DURATION = 0.0167f; // Measured in seconds
+
+    public NGWindow window;
+
+    Stack<String> heldKeys = new Stack<>();
+
+    public void setTickRate(int updatesPerSecond) {
+        TICK_DURATION = 1.0f / updatesPerSecond;
+    }
+
+    public void setFrameRate(int fps) {
+        FRAME_DURATION = 1.0f / fps;
+    }
+
+    public void start() {
+        NGUtils.info("tickrate: %f".formatted(1 / TICK_DURATION));
+        NGUtils.info("framerate: %f".formatted(1 / FRAME_DURATION));
+        new Timer((int) (TICK_DURATION  * 1000), _ -> updateAll()).start();
+        new Timer((int) (FRAME_DURATION * 1000), _ -> window.redraw()).start();
+    }
+
+    public void updateAll() {
+        updateHeldKeys();
+        update();
+    }
+
+    public void update() { }
+
+    public void updateHeldKeys() {
+        for (String heldKey: heldKeys) {
+            try {
+                if (heldKey.equals("LMB") || heldKey.equals("RMB") || heldKey.equals("MMB"))
+                    getClass().getDeclaredMethod("while" + heldKey + "Held", NGVec2i.class)
+                              .invoke(this, new NGVec2i(MouseInfo.getPointerInfo().getLocation()).sub(window.pos));
+                else getClass().getDeclaredMethod("while" + heldKey + "Held").invoke(this);
+            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ignored) { }
+        }
+    }
 
     @Override
     public void eventDispatched(AWTEvent event) {
         int id = event.getID();
         if (id == KeyEvent.KEY_PRESSED) {
             switch (((KeyEvent) event).getKeyCode()) {
-                case 10 -> onEnterPress();
-                case 12 -> onClearPress();
-                case 16 -> onShiftPress();
-                case 17 -> onCtrlPress();
-                case 18 -> onAltPress();
-                case 19 -> onPausePress();
-                case 20 -> onCapsLockPress();
-                case 21 -> onKanaPress();
-                case 24 -> onFinalPress();
-                case 25 -> onKanjiPress();
-                case 27 -> onEscapePress();
-                case 28 -> onConvertPress();
-                case 29 -> onNoConvertPress();
-                case 30 -> onAcceptPress();
-                case 31 -> onModeChangePress();
-                case 32 -> onSpacePress();
-                case 33 -> onPageUpPress();
-                case 34 -> onPageDownPress();
-                case 35 -> onEndPress();
-                case 36 -> onHomePress();
-                case 37 -> onLeftPress();
-                case 38 -> onUpPress();
-                case 39 -> onRightPress();
-                case 40 -> onDownPress();
-                case 44 -> onCommaPress();
-                case 45 -> onMinusPress();
-                case 46 -> onPeriodPress();
-                case 47 -> onSlashPress();
-                case 48 -> on0Press();
-                case 49 -> on1Press();
-                case 50 -> on2Press();
-                case 51 -> on3Press();
-                case 52 -> on4Press();
-                case 53 -> on5Press();
-                case 54 -> on6Press();
-                case 55 -> on7Press();
-                case 56 -> on8Press();
-                case 57 -> on9Press();
-                case 59 -> onSemicolonPress();
-                case 61 -> onEqualsPress();
-                case 65 -> onAPress();
-                case 66 -> onBPress();
-                case 67 -> onCPress();
-                case 68 -> onDPress();
-                case 69 -> onEPress();
-                case 70 -> onFPress();
-                case 71 -> onGPress();
-                case 72 -> onHPress();
-                case 73 -> onIPress();
-                case 74 -> onJPress();
-                case 75 -> onKPress();
-                case 76 -> onLPress();
-                case 77 -> onMPress();
-                case 78 -> onNPress();
-                case 79 -> onOPress();
-                case 80 -> onPPress();
-                case 81 -> onQPress();
-                case 82 -> onRPress();
-                case 83 -> onSPress();
-                case 84 -> onTPress();
-                case 85 -> onUPress();
-                case 86 -> onVPress();
-                case 87 -> onWPress();
-                case 88 -> onXPress();
-                case 89 -> onYPress();
-                case 90 -> onZPress();
-                case 91 -> onOpenBracketPress();
-                case 92 -> onBackSlashPress();
-                case 93 -> onCloseBracketPress();
-                case 96 -> onNumPad0Press();
-                case 97 -> onNumPad1Press();
-                case 98 -> onNumPad2Press();
-                case 99 -> onNumPad3Press();
-                case 100 -> onNumPad4Press();
-                case 101 -> onNumPad5Press();
-                case 102 -> onNumPad6Press();
-                case 103 -> onNumPad7Press();
-                case 104 -> onNumPad8Press();
-                case 105 -> onNumPad9Press();
-                case 106 -> onNumPadAsteriskPress();
-                case 107 -> onNumPadPlusPress();
-                case 108 -> onNumPadCommaPress();
-                case 109 -> onNumPadPress();
-                case 110 -> onNumPadPeriodPress();
-                case 111 -> onNumPadSlashPress();
-                case 112 -> onF1Press();
-                case 113 -> onF2Press();
-                case 114 -> onF3Press();
-                case 115 -> onF4Press();
-                case 116 -> onF5Press();
-                case 117 -> onF6Press();
-                case 118 -> onF7Press();
-                case 119 -> onF8Press();
-                case 120 -> onF9Press();
-                case 121 -> onF10Press();
-                case 122 -> onF11Press();
-                case 123 -> onF12Press();
-                case 127 -> onDeletePress();
-                case 128 -> onDeadGravePress();
-                case 129 -> onDeadAcutePress();
-                case 130 -> onDeadCircumflexPress();
-                case 131 -> onDeadTildePress();
-                case 132 -> onDeadMacronPress();
-                case 133 -> onDeadBrevePress();
-                case 134 -> onDeadAboveDotPress();
-                case 135 -> onDeadDiaeresisPress();
-                case 136 -> onDeadAboveRingPress();
-                case 137 -> onDeadDoubleAcutePress();
-                case 138 -> onDeadCaronPress();
-                case 139 -> onDeadCedillaPress();
-                case 140 -> onDeadOgonekPress();
-                case 141 -> onDeadIotaPress();
-                case 142 -> onDeadVoicedSoundPress();
-                case 143 -> onDeadSemivoicedSoundPress();
-                case 144 -> onNumLockPress();
-                case 145 -> onScrollLockPress();
-                case 150 -> onAmpersandPress();
-                case 151 -> onAsteriskPress();
-                case 152 -> onDoubleQuotePress();
-                case 153 -> onLessPress();
-                case 154 -> onPrintScreenPress();
-                case 155 -> onInsertPress();
-                case 156 -> onHelpPress();
-                case 157 -> onMetaPress();
-                case 160 -> onGreaterPress();
-                case 161 -> onLeftBracePress();
-                case 162 -> onRightBracePress();
-                case 192 -> onBackQuotePress();
-                case 222 -> onQuotePress();
-                case 240 -> onAlphanumericPress();
-                case 241 -> onKatakanaPress();
-                case 242 -> onHiraganaPress();
-                case 243 -> onFullWidthPress();
-                case 244 -> onHalfWidthPress();
-                case 245 -> onRomanCharactersPress();
-                case 256 -> onAllCandidatesPress();
-                case 257 -> onPreviousCandidatePress();
-                case 258 -> onCodeInputPress();
-                case 259 -> onJapaneseKatakanaPress();
-                case 260 -> onJapaneseHiraganaPress();
-                case 261 -> onJapaneseRomanPress();
-                case 262 -> onKanaLockPress();
-                case 263 -> onInputMethodOnOffPress();
-                case 512 -> onAtPress();
-                case 513 -> onColonPress();
-                case 514 -> onCircumflexPress();
-                case 515 -> onDollarPress();
-                case 516 -> onEuroPress();
-                case 517 -> onExclamationMarkPress();
-                case 518 -> onInvertedExclamationMarkPress();
-                case 519 -> onLeftParenthesisPress();
-                case 520 -> onNumberSignPress();
-                case 521 -> onPlusPress();
-                case 522 -> onRightParenthesisPress();
-                case 523 -> onUnderscorePress();
-                case 524 -> onWindowsPress();
-                case 525 -> onContextMenuPress();
-                case 61440 -> onF13Press();
-                case 61441 -> onF14Press();
-                case 61442 -> onF15Press();
-                case 61443 -> onF16Press();
-                case 61444 -> onF17Press();
-                case 61445 -> onF18Press();
-                case 61446 -> onF19Press();
-                case 61447 -> onF20Press();
-                case 61448 -> onF21Press();
-                case 61449 -> onF22Press();
-                case 61450 -> onF23Press();
-                case 61451 -> onF24Press();
-                case 65312 -> onComposePress();
+                case 10 -> {
+                    heldKeys.push("Enter");
+                    onEnterPress();
+                }
+                case 12 -> {
+                    heldKeys.push("Clear");
+                    onClearPress();
+                }
+                case 16 -> {
+                    heldKeys.push("Shift");
+                    onShiftPress();
+                }
+                case 17 -> {
+                    heldKeys.push("Ctrl");
+                    onCtrlPress();
+                }
+                case 18 -> {
+                    heldKeys.push("Alt");
+                    onAltPress();
+                }
+                case 19 -> {
+                    heldKeys.push("Pause");
+                    onPausePress();
+                }
+                case 20 -> {
+                    heldKeys.push("CapsLock");
+                    onCapsLockPress();
+                }
+                case 21 -> {
+                    heldKeys.push("Kana");
+                    onKanaPress();
+                }
+                case 24 -> {
+                    heldKeys.push("Final");
+                    onFinalPress();
+                }
+                case 25 -> {
+                    heldKeys.push("Kanji");
+                    onKanjiPress();
+                }
+                case 27 -> {
+                    heldKeys.push("Escape");
+                    onEscapePress();
+                }
+                case 28 -> {
+                    heldKeys.push("Convert");
+                    onConvertPress();
+                }
+                case 29 -> {
+                    heldKeys.push("NoConvert");
+                    onNoConvertPress();
+                }
+                case 30 -> {
+                    heldKeys.push("Accept");
+                    onAcceptPress();
+                }
+                case 31 -> {
+                    heldKeys.push("ModeChange");
+                    onModeChangePress();
+                }
+                case 32 -> {
+                    heldKeys.push("Space");
+                    onSpacePress();
+                }
+                case 33 -> {
+                    heldKeys.push("PageUp");
+                    onPageUpPress();
+                }
+                case 34 -> {
+                    heldKeys.push("PageDown");
+                    onPageDownPress();
+                }
+                case 35 -> {
+                    heldKeys.push("End");
+                    onEndPress();
+                }
+                case 36 -> {
+                    heldKeys.push("Home");
+                    onHomePress();
+                }
+                case 37 -> {
+                    heldKeys.push("Left");
+                    onLeftPress();
+                }
+                case 38 -> {
+                    heldKeys.push("Up");
+                    onUpPress();
+                }
+                case 39 -> {
+                    heldKeys.push("Right");
+                    onRightPress();
+                }
+                case 40 -> {
+                    heldKeys.push("Down");
+                    onDownPress();
+                }
+                case 44 -> {
+                    heldKeys.push("Comma");
+                    onCommaPress();
+                }
+                case 45 -> {
+                    heldKeys.push("Minus");
+                    onMinusPress();
+                }
+                case 46 -> {
+                    heldKeys.push("Period");
+                    onPeriodPress();
+                }
+                case 47 -> {
+                    heldKeys.push("Slash");
+                    onSlashPress();
+                }
+                case 48 -> {
+                    heldKeys.push("0");
+                    on0Press();
+                }
+                case 49 -> {
+                    heldKeys.push("1");
+                    on1Press();
+                }
+                case 50 -> {
+                    heldKeys.push("2");
+                    on2Press();
+                }
+                case 51 -> {
+                    heldKeys.push("3");
+                    on3Press();
+                }
+                case 52 -> {
+                    heldKeys.push("4");
+                    on4Press();
+                }
+                case 53 -> {
+                    heldKeys.push("5");
+                    on5Press();
+                }
+                case 54 -> {
+                    heldKeys.push("6");
+                    on6Press();
+                }
+                case 55 -> {
+                    heldKeys.push("7");
+                    on7Press();
+                }
+                case 56 -> {
+                    heldKeys.push("8");
+                    on8Press();
+                }
+                case 57 -> {
+                    heldKeys.push("9");
+                    on9Press();
+                }
+                case 59 -> {
+                    heldKeys.push("Semicolon");
+                    onSemicolonPress();
+                }
+                case 61 -> {
+                    heldKeys.push("Equals");
+                    onEqualsPress();
+                }
+                case 65 -> {
+                    heldKeys.push("A");
+                    onAPress();
+                }
+                case 66 -> {
+                    heldKeys.push("B");
+                    onBPress();
+                }
+                case 67 -> {
+                    heldKeys.push("C");
+                    onCPress();
+                }
+                case 68 -> {
+                    heldKeys.push("D");
+                    onDPress();
+                }
+                case 69 -> {
+                    heldKeys.push("E");
+                    onEPress();
+                }
+                case 70 -> {
+                    heldKeys.push("F");
+                    onFPress();
+                }
+                case 71 -> {
+                    heldKeys.push("G");
+                    onGPress();
+                }
+                case 72 -> {
+                    heldKeys.push("H");
+                    onHPress();
+                }
+                case 73 -> {
+                    heldKeys.push("I");
+                    onIPress();
+                }
+                case 74 -> {
+                    heldKeys.push("J");
+                    onJPress();
+                }
+                case 75 -> {
+                    heldKeys.push("K");
+                    onKPress();
+                }
+                case 76 -> {
+                    heldKeys.push("L");
+                    onLPress();
+                }
+                case 77 -> {
+                    heldKeys.push("M");
+                    onMPress();
+                }
+                case 78 -> {
+                    heldKeys.push("N");
+                    onNPress();
+                }
+                case 79 -> {
+                    heldKeys.push("O");
+                    onOPress();
+                }
+                case 80 -> {
+                    heldKeys.push("P");
+                    onPPress();
+                }
+                case 81 -> {
+                    heldKeys.push("Q");
+                    onQPress();
+                }
+                case 82 -> {
+                    heldKeys.push("R");
+                    onRPress();
+                }
+                case 83 -> {
+                    heldKeys.push("S");
+                    onSPress();
+                }
+                case 84 -> {
+                    heldKeys.push("T");
+                    onTPress();
+                }
+                case 85 -> {
+                    heldKeys.push("U");
+                    onUPress();
+                }
+                case 86 -> {
+                    heldKeys.push("V");
+                    onVPress();
+                }
+                case 87 -> {
+                    heldKeys.push("W");
+                    onWPress();
+                }
+                case 88 -> {
+                    heldKeys.push("X");
+                    onXPress();
+                }
+                case 89 -> {
+                    heldKeys.push("Y");
+                    onYPress();
+                }
+                case 90 -> {
+                    heldKeys.push("Z");
+                    onZPress();
+                }
+                case 91 -> {
+                    heldKeys.push("OpenBracket");
+                    onOpenBracketPress();
+                }
+                case 92 -> {
+                    heldKeys.push("BackSlash");
+                    onBackSlashPress();
+                }
+                case 93 -> {
+                    heldKeys.push("CloseBracket");
+                    onCloseBracketPress();
+                }
+                case 96 -> {
+                    heldKeys.push("NumPad0");
+                    onNumPad0Press();
+                }
+                case 97 -> {
+                    heldKeys.push("NumPad1");
+                    onNumPad1Press();
+                }
+                case 98 -> {
+                    heldKeys.push("NumPad2");
+                    onNumPad2Press();
+                }
+                case 99 -> {
+                    heldKeys.push("NumPad3");
+                    onNumPad3Press();
+                }
+                case 100 -> {
+                    heldKeys.push("NumPad4");
+                    onNumPad4Press();
+                }
+                case 101 -> {
+                    heldKeys.push("NumPad5");
+                    onNumPad5Press();
+                }
+                case 102 -> {
+                    heldKeys.push("NumPad6");
+                    onNumPad6Press();
+                }
+                case 103 -> {
+                    heldKeys.push("NumPad7");
+                    onNumPad7Press();
+                }
+                case 104 -> {
+                    heldKeys.push("NumPad8");
+                    onNumPad8Press();
+                }
+                case 105 -> {
+                    heldKeys.push("NumPad9");
+                    onNumPad9Press();
+                }
+                case 106 -> {
+                    heldKeys.push("NumPadAsterisk");
+                    onNumPadAsteriskPress();
+                }
+                case 107 -> {
+                    heldKeys.push("NumPadPlus");
+                    onNumPadPlusPress();
+                }
+                case 108 -> {
+                    heldKeys.push("NumPadComma");
+                    onNumPadCommaPress();
+                }
+                case 109 -> {
+                    heldKeys.push("NumPad");
+                    onNumPadPress();
+                }
+                case 110 -> {
+                    heldKeys.push("NumPadPeriod");
+                    onNumPadPeriodPress();
+                }
+                case 111 -> {
+                    heldKeys.push("NumPadSlash");
+                    onNumPadSlashPress();
+                }
+                case 112 -> {
+                    heldKeys.push("F1");
+                    onF1Press();
+                }
+                case 113 -> {
+                    heldKeys.push("F2");
+                    onF2Press();
+                }
+                case 114 -> {
+                    heldKeys.push("F3");
+                    onF3Press();
+                }
+                case 115 -> {
+                    heldKeys.push("F4");
+                    onF4Press();
+                }
+                case 116 -> {
+                    heldKeys.push("F5");
+                    onF5Press();
+                }
+                case 117 -> {
+                    heldKeys.push("F6");
+                    onF6Press();
+                }
+                case 118 -> {
+                    heldKeys.push("F7");
+                    onF7Press();
+                }
+                case 119 -> {
+                    heldKeys.push("F8");
+                    onF8Press();
+                }
+                case 120 -> {
+                    heldKeys.push("F9");
+                    onF9Press();
+                }
+                case 121 -> {
+                    heldKeys.push("F10");
+                    onF10Press();
+                }
+                case 122 -> {
+                    heldKeys.push("F11");
+                    onF11Press();
+                }
+                case 123 -> {
+                    heldKeys.push("F12");
+                    onF12Press();
+                }
+                case 127 -> {
+                    heldKeys.push("Delete");
+                    onDeletePress();
+                }
+                case 128 -> {
+                    heldKeys.push("DeadGrave");
+                    onDeadGravePress();
+                }
+                case 129 -> {
+                    heldKeys.push("DeadAcute");
+                    onDeadAcutePress();
+                }
+                case 130 -> {
+                    heldKeys.push("DeadCircumflex");
+                    onDeadCircumflexPress();
+                }
+                case 131 -> {
+                    heldKeys.push("DeadTilde");
+                    onDeadTildePress();
+                }
+                case 132 -> {
+                    heldKeys.push("DeadMacron");
+                    onDeadMacronPress();
+                }
+                case 133 -> {
+                    heldKeys.push("DeadBreve");
+                    onDeadBrevePress();
+                }
+                case 134 -> {
+                    heldKeys.push("DeadAboveDot");
+                    onDeadAboveDotPress();
+                }
+                case 135 -> {
+                    heldKeys.push("DeadDiaeresis");
+                    onDeadDiaeresisPress();
+                }
+                case 136 -> {
+                    heldKeys.push("DeadAboveRing");
+                    onDeadAboveRingPress();
+                }
+                case 137 -> {
+                    heldKeys.push("DeadDoubleAcute");
+                    onDeadDoubleAcutePress();
+                }
+                case 138 -> {
+                    heldKeys.push("DeadCaron");
+                    onDeadCaronPress();
+                }
+                case 139 -> {
+                    heldKeys.push("DeadCedilla");
+                    onDeadCedillaPress();
+                }
+                case 140 -> {
+                    heldKeys.push("DeadOgonek");
+                    onDeadOgonekPress();
+                }
+                case 141 -> {
+                    heldKeys.push("DeadIota");
+                    onDeadIotaPress();
+                }
+                case 142 -> {
+                    heldKeys.push("DeadVoicedSound");
+                    onDeadVoicedSoundPress();
+                }
+                case 143 -> {
+                    heldKeys.push("DeadSemivoicedSound");
+                    onDeadSemivoicedSoundPress();
+                }
+                case 144 -> {
+                    heldKeys.push("NumLock");
+                    onNumLockPress();
+                }
+                case 145 -> {
+                    heldKeys.push("ScrollLock");
+                    onScrollLockPress();
+                }
+                case 150 -> {
+                    heldKeys.push("Ampersand");
+                    onAmpersandPress();
+                }
+                case 151 -> {
+                    heldKeys.push("Asterisk");
+                    onAsteriskPress();
+                }
+                case 152 -> {
+                    heldKeys.push("DoubleQuote");
+                    onDoubleQuotePress();
+                }
+                case 153 -> {
+                    heldKeys.push("Less");
+                    onLessPress();
+                }
+                case 154 -> {
+                    heldKeys.push("PrintScreen");
+                    onPrintScreenPress();
+                }
+                case 155 -> {
+                    heldKeys.push("Insert");
+                    onInsertPress();
+                }
+                case 156 -> {
+                    heldKeys.push("Help");
+                    onHelpPress();
+                }
+                case 157 -> {
+                    heldKeys.push("Meta");
+                    onMetaPress();
+                }
+                case 160 -> {
+                    heldKeys.push("Greater");
+                    onGreaterPress();
+                }
+                case 161 -> {
+                    heldKeys.push("LeftBrace");
+                    onLeftBracePress();
+                }
+                case 162 -> {
+                    heldKeys.push("RightBrace");
+                    onRightBracePress();
+                }
+                case 192 -> {
+                    heldKeys.push("BackQuote");
+                    onBackQuotePress();
+                }
+                case 222 -> {
+                    heldKeys.push("Quote");
+                    onQuotePress();
+                }
+                case 240 -> {
+                    heldKeys.push("Alphanumeric");
+                    onAlphanumericPress();
+                }
+                case 241 -> {
+                    heldKeys.push("Katakana");
+                    onKatakanaPress();
+                }
+                case 242 -> {
+                    heldKeys.push("Hiragana");
+                    onHiraganaPress();
+                }
+                case 243 -> {
+                    heldKeys.push("FullWidth");
+                    onFullWidthPress();
+                }
+                case 244 -> {
+                    heldKeys.push("HalfWidth");
+                    onHalfWidthPress();
+                }
+                case 245 -> {
+                    heldKeys.push("RomanCharacters");
+                    onRomanCharactersPress();
+                }
+                case 256 -> {
+                    heldKeys.push("AllCandidates");
+                    onAllCandidatesPress();
+                }
+                case 257 -> {
+                    heldKeys.push("PreviousCandidate");
+                    onPreviousCandidatePress();
+                }
+                case 258 -> {
+                    heldKeys.push("CodeInput");
+                    onCodeInputPress();
+                }
+                case 259 -> {
+                    heldKeys.push("JapaneseKatakana");
+                    onJapaneseKatakanaPress();
+                }
+                case 260 -> {
+                    heldKeys.push("JapaneseHiragana");
+                    onJapaneseHiraganaPress();
+                }
+                case 261 -> {
+                    heldKeys.push("JapaneseRoman");
+                    onJapaneseRomanPress();
+                }
+                case 262 -> {
+                    heldKeys.push("KanaLock");
+                    onKanaLockPress();
+                }
+                case 263 -> {
+                    heldKeys.push("InputMethodOnOff");
+                    onInputMethodOnOffPress();
+                }
+                case 512 -> {
+                    heldKeys.push("At");
+                    onAtPress();
+                }
+                case 513 -> {
+                    heldKeys.push("Colon");
+                    onColonPress();
+                }
+                case 514 -> {
+                    heldKeys.push("Circumflex");
+                    onCircumflexPress();
+                }
+                case 515 -> {
+                    heldKeys.push("Dollar");
+                    onDollarPress();
+                }
+                case 516 -> {
+                    heldKeys.push("Euro");
+                    onEuroPress();
+                }
+                case 517 -> {
+                    heldKeys.push("ExclamationMark");
+                    onExclamationMarkPress();
+                }
+                case 518 -> {
+                    heldKeys.push("InvertedExclamationMark");
+                    onInvertedExclamationMarkPress();
+                }
+                case 519 -> {
+                    heldKeys.push("LeftParenthesis");
+                    onLeftParenthesisPress();
+                }
+                case 520 -> {
+                    heldKeys.push("NumberSign");
+                    onNumberSignPress();
+                }
+                case 521 -> {
+                    heldKeys.push("Plus");
+                    onPlusPress();
+                }
+                case 522 -> {
+                    heldKeys.push("RightParenthesis");
+                    onRightParenthesisPress();
+                }
+                case 523 -> {
+                    heldKeys.push("Underscore");
+                    onUnderscorePress();
+                }
+                case 524 -> {
+                    heldKeys.push("Windows");
+                    onWindowsPress();
+                }
+                case 525 -> {
+                    heldKeys.push("ContextMenu");
+                    onContextMenuPress();
+                }
+                case 61440 -> {
+                    heldKeys.push("F13");
+                    onF13Press();
+                }
+                case 61441 -> {
+                    heldKeys.push("F14");
+                    onF14Press();
+                }
+                case 61442 -> {
+                    heldKeys.push("F15");
+                    onF15Press();
+                }
+                case 61443 -> {
+                    heldKeys.push("F16");
+                    onF16Press();
+                }
+                case 61444 -> {
+                    heldKeys.push("F17");
+                    onF17Press();
+                }
+                case 61445 -> {
+                    heldKeys.push("F18");
+                    onF18Press();
+                }
+                case 61446 -> {
+                    heldKeys.push("F19");
+                    onF19Press();
+                }
+                case 61447 -> {
+                    heldKeys.push("F20");
+                    onF20Press();
+                }
+                case 61448 -> {
+                    heldKeys.push("F21");
+                    onF21Press();
+                }
+                case 61449 -> {
+                    heldKeys.push("F22");
+                    onF22Press();
+                }
+                case 61450 -> {
+                    heldKeys.push("F23");
+                    onF23Press();
+                }
+                case 61451 -> {
+                    heldKeys.push("F24");
+                    onF24Press();
+                }
+                case 65312 -> {
+                    heldKeys.push("Compose");
+                    onComposePress();
+                }
             }
         } else if (id == KeyEvent.KEY_RELEASED) {
             switch (((KeyEvent) event).getKeyCode()) {
-                case 10 -> onEnterRelease();
-                case 12 -> onClearRelease();
-                case 16 -> onShiftRelease();
-                case 17 -> onCtrlRelease();
-                case 18 -> onAltRelease();
-                case 19 -> onPauseRelease();
-                case 20 -> onCapsLockRelease();
-                case 21 -> onKanaRelease();
-                case 24 -> onFinalRelease();
-                case 25 -> onKanjiRelease();
-                case 27 -> onEscapeRelease();
-                case 28 -> onConvertRelease();
-                case 29 -> onNoConvertRelease();
-                case 30 -> onAcceptRelease();
-                case 31 -> onModeChangeRelease();
-                case 32 -> onSpaceRelease();
-                case 33 -> onPageUpRelease();
-                case 34 -> onPageDownRelease();
-                case 35 -> onEndRelease();
-                case 36 -> onHomeRelease();
-                case 37 -> onLeftRelease();
-                case 38 -> onUpRelease();
-                case 39 -> onRightRelease();
-                case 40 -> onDownRelease();
-                case 44 -> onCommaRelease();
-                case 45 -> onMinusRelease();
-                case 46 -> onPeriodRelease();
-                case 47 -> onSlashRelease();
-                case 48 -> on0Release();
-                case 49 -> on1Release();
-                case 50 -> on2Release();
-                case 51 -> on3Release();
-                case 52 -> on4Release();
-                case 53 -> on5Release();
-                case 54 -> on6Release();
-                case 55 -> on7Release();
-                case 56 -> on8Release();
-                case 57 -> on9Release();
-                case 59 -> onSemicolonRelease();
-                case 61 -> onEqualsRelease();
-                case 65 -> onARelease();
-                case 66 -> onBRelease();
-                case 67 -> onCRelease();
-                case 68 -> onDRelease();
-                case 69 -> onERelease();
-                case 70 -> onFRelease();
-                case 71 -> onGRelease();
-                case 72 -> onHRelease();
-                case 73 -> onIRelease();
-                case 74 -> onJRelease();
-                case 75 -> onKRelease();
-                case 76 -> onLRelease();
-                case 77 -> onMRelease();
-                case 78 -> onNRelease();
-                case 79 -> onORelease();
-                case 80 -> onPRelease();
-                case 81 -> onQRelease();
-                case 82 -> onRRelease();
-                case 83 -> onSRelease();
-                case 84 -> onTRelease();
-                case 85 -> onURelease();
-                case 86 -> onVRelease();
-                case 87 -> onWRelease();
-                case 88 -> onXRelease();
-                case 89 -> onYRelease();
-                case 90 -> onZRelease();
-                case 91 -> onOpenBracketRelease();
-                case 92 -> onBackSlashRelease();
-                case 93 -> onCloseBracketRelease();
-                case 96 -> onNumPad0Release();
-                case 97 -> onNumPad1Release();
-                case 98 -> onNumPad2Release();
-                case 99 -> onNumPad3Release();
-                case 100 -> onNumPad4Release();
-                case 101 -> onNumPad5Release();
-                case 102 -> onNumPad6Release();
-                case 103 -> onNumPad7Release();
-                case 104 -> onNumPad8Release();
-                case 105 -> onNumPad9Release();
-                case 106 -> onNumPadAsteriskRelease();
-                case 107 -> onNumPadPlusRelease();
-                case 108 -> onNumPadCommaRelease();
-                case 109 -> onNumPadRelease();
-                case 110 -> onNumPadPeriodRelease();
-                case 111 -> onNumPadSlashRelease();
-                case 112 -> onF1Release();
-                case 113 -> onF2Release();
-                case 114 -> onF3Release();
-                case 115 -> onF4Release();
-                case 116 -> onF5Release();
-                case 117 -> onF6Release();
-                case 118 -> onF7Release();
-                case 119 -> onF8Release();
-                case 120 -> onF9Release();
-                case 121 -> onF10Release();
-                case 122 -> onF11Release();
-                case 123 -> onF12Release();
-                case 127 -> onDeleteRelease();
-                case 128 -> onDeadGraveRelease();
-                case 129 -> onDeadAcuteRelease();
-                case 130 -> onDeadCircumflexRelease();
-                case 131 -> onDeadTildeRelease();
-                case 132 -> onDeadMacronRelease();
-                case 133 -> onDeadBreveRelease();
-                case 134 -> onDeadAboveDotRelease();
-                case 135 -> onDeadDiaeresisRelease();
-                case 136 -> onDeadAboveRingRelease();
-                case 137 -> onDeadDoubleAcuteRelease();
-                case 138 -> onDeadCaronRelease();
-                case 139 -> onDeadCedillaRelease();
-                case 140 -> onDeadOgonekRelease();
-                case 141 -> onDeadIotaRelease();
-                case 142 -> onDeadVoicedSoundRelease();
-                case 143 -> onDeadSemivoicedSoundRelease();
-                case 144 -> onNumLockRelease();
-                case 145 -> onScrollLockRelease();
-                case 150 -> onAmpersandRelease();
-                case 151 -> onAsteriskRelease();
-                case 152 -> onDoubleQuoteRelease();
-                case 153 -> onLessRelease();
-                case 154 -> onPrintScreenRelease();
-                case 155 -> onInsertRelease();
-                case 156 -> onHelpRelease();
-                case 157 -> onMetaRelease();
-                case 160 -> onGreaterRelease();
-                case 161 -> onLeftBraceRelease();
-                case 162 -> onRightBraceRelease();
-                case 192 -> onBackQuoteRelease();
-                case 222 -> onQuoteRelease();
-                case 240 -> onAlphanumericRelease();
-                case 241 -> onKatakanaRelease();
-                case 242 -> onHiraganaRelease();
-                case 243 -> onFullWidthRelease();
-                case 244 -> onHalfWidthRelease();
-                case 245 -> onRomanCharactersRelease();
-                case 256 -> onAllCandidatesRelease();
-                case 257 -> onPreviousCandidateRelease();
-                case 258 -> onCodeInputRelease();
-                case 259 -> onJapaneseKatakanaRelease();
-                case 260 -> onJapaneseHiraganaRelease();
-                case 261 -> onJapaneseRomanRelease();
-                case 262 -> onKanaLockRelease();
-                case 263 -> onInputMethodOnOffRelease();
-                case 512 -> onAtRelease();
-                case 513 -> onColonRelease();
-                case 514 -> onCircumflexRelease();
-                case 515 -> onDollarRelease();
-                case 516 -> onEuroRelease();
-                case 517 -> onExclamationMarkRelease();
-                case 518 -> onInvertedExclamationMarkRelease();
-                case 519 -> onLeftParenthesisRelease();
-                case 520 -> onNumberSignRelease();
-                case 521 -> onPlusRelease();
-                case 522 -> onRightParenthesisRelease();
-                case 523 -> onUnderscoreRelease();
-                case 524 -> onWindowsRelease();
-                case 525 -> onContextMenuRelease();
-                case 61440 -> onF13Release();
-                case 61441 -> onF14Release();
-                case 61442 -> onF15Release();
-                case 61443 -> onF16Release();
-                case 61444 -> onF17Release();
-                case 61445 -> onF18Release();
-                case 61446 -> onF19Release();
-                case 61447 -> onF20Release();
-                case 61448 -> onF21Release();
-                case 61449 -> onF22Release();
-                case 61450 -> onF23Release();
-                case 61451 -> onF24Release();
-                case 65312 -> onComposeRelease();
+                case 10 -> {
+                    heldKeys.remove("Enter");
+                    onEnterRelease();
+                }
+                case 12 -> {
+                    heldKeys.remove("Clear");
+                    onClearRelease();
+                }
+                case 16 -> {
+                    heldKeys.remove("Shift");
+                    onShiftRelease();
+                }
+                case 17 -> {
+                    heldKeys.remove("Ctrl");
+                    onCtrlRelease();
+                }
+                case 18 -> {
+                    heldKeys.remove("Alt");
+                    onAltRelease();
+                }
+                case 19 -> {
+                    heldKeys.remove("Pause");
+                    onPauseRelease();
+                }
+                case 20 -> {
+                    heldKeys.remove("CapsLock");
+                    onCapsLockRelease();
+                }
+                case 21 -> {
+                    heldKeys.remove("Kana");
+                    onKanaRelease();
+                }
+                case 24 -> {
+                    heldKeys.remove("Final");
+                    onFinalRelease();
+                }
+                case 25 -> {
+                    heldKeys.remove("Kanji");
+                    onKanjiRelease();
+                }
+                case 27 -> {
+                    heldKeys.remove("Escape");
+                    onEscapeRelease();
+                }
+                case 28 -> {
+                    heldKeys.remove("Convert");
+                    onConvertRelease();
+                }
+                case 29 -> {
+                    heldKeys.remove("NoConvert");
+                    onNoConvertRelease();
+                }
+                case 30 -> {
+                    heldKeys.remove("Accept");
+                    onAcceptRelease();
+                }
+                case 31 -> {
+                    heldKeys.remove("ModeChange");
+                    onModeChangeRelease();
+                }
+                case 32 -> {
+                    heldKeys.remove("Space");
+                    onSpaceRelease();
+                }
+                case 33 -> {
+                    heldKeys.remove("PageUp");
+                    onPageUpRelease();
+                }
+                case 34 -> {
+                    heldKeys.remove("PageDown");
+                    onPageDownRelease();
+                }
+                case 35 -> {
+                    heldKeys.remove("End");
+                    onEndRelease();
+                }
+                case 36 -> {
+                    heldKeys.remove("Home");
+                    onHomeRelease();
+                }
+                case 37 -> {
+                    heldKeys.remove("Left");
+                    onLeftRelease();
+                }
+                case 38 -> {
+                    heldKeys.remove("Up");
+                    onUpRelease();
+                }
+                case 39 -> {
+                    heldKeys.remove("Right");
+                    onRightRelease();
+                }
+                case 40 -> {
+                    heldKeys.remove("Down");
+                    onDownRelease();
+                }
+                case 44 -> {
+                    heldKeys.remove("Comma");
+                    onCommaRelease();
+                }
+                case 45 -> {
+                    heldKeys.remove("Minus");
+                    onMinusRelease();
+                }
+                case 46 -> {
+                    heldKeys.remove("Period");
+                    onPeriodRelease();
+                }
+                case 47 -> {
+                    heldKeys.remove("Slash");
+                    onSlashRelease();
+                }
+                case 48 -> {
+                    heldKeys.remove("0");
+                    on0Release();
+                }
+                case 49 -> {
+                    heldKeys.remove("1");
+                    on1Release();
+                }
+                case 50 -> {
+                    heldKeys.remove("2");
+                    on2Release();
+                }
+                case 51 -> {
+                    heldKeys.remove("3");
+                    on3Release();
+                }
+                case 52 -> {
+                    heldKeys.remove("4");
+                    on4Release();
+                }
+                case 53 -> {
+                    heldKeys.remove("5");
+                    on5Release();
+                }
+                case 54 -> {
+                    heldKeys.remove("6");
+                    on6Release();
+                }
+                case 55 -> {
+                    heldKeys.remove("7");
+                    on7Release();
+                }
+                case 56 -> {
+                    heldKeys.remove("8");
+                    on8Release();
+                }
+                case 57 -> {
+                    heldKeys.remove("9");
+                    on9Release();
+                }
+                case 59 -> {
+                    heldKeys.remove("Semicolon");
+                    onSemicolonRelease();
+                }
+                case 61 -> {
+                    heldKeys.remove("Equals");
+                    onEqualsRelease();
+                }
+                case 65 -> {
+                    heldKeys.remove("A");
+                    onARelease();
+                }
+                case 66 -> {
+                    heldKeys.remove("B");
+                    onBRelease();
+                }
+                case 67 -> {
+                    heldKeys.remove("C");
+                    onCRelease();
+                }
+                case 68 -> {
+                    heldKeys.remove("D");
+                    onDRelease();
+                }
+                case 69 -> {
+                    heldKeys.remove("E");
+                    onERelease();
+                }
+                case 70 -> {
+                    heldKeys.remove("F");
+                    onFRelease();
+                }
+                case 71 -> {
+                    heldKeys.remove("G");
+                    onGRelease();
+                }
+                case 72 -> {
+                    heldKeys.remove("H");
+                    onHRelease();
+                }
+                case 73 -> {
+                    heldKeys.remove("I");
+                    onIRelease();
+                }
+                case 74 -> {
+                    heldKeys.remove("J");
+                    onJRelease();
+                }
+                case 75 -> {
+                    heldKeys.remove("K");
+                    onKRelease();
+                }
+                case 76 -> {
+                    heldKeys.remove("L");
+                    onLRelease();
+                }
+                case 77 -> {
+                    heldKeys.remove("M");
+                    onMRelease();
+                }
+                case 78 -> {
+                    heldKeys.remove("N");
+                    onNRelease();
+                }
+                case 79 -> {
+                    heldKeys.remove("O");
+                    onORelease();
+                }
+                case 80 -> {
+                    heldKeys.remove("P");
+                    onPRelease();
+                }
+                case 81 -> {
+                    heldKeys.remove("Q");
+                    onQRelease();
+                }
+                case 82 -> {
+                    heldKeys.remove("R");
+                    onRRelease();
+                }
+                case 83 -> {
+                    heldKeys.remove("S");
+                    onSRelease();
+                }
+                case 84 -> {
+                    heldKeys.remove("T");
+                    onTRelease();
+                }
+                case 85 -> {
+                    heldKeys.remove("U");
+                    onURelease();
+                }
+                case 86 -> {
+                    heldKeys.remove("V");
+                    onVRelease();
+                }
+                case 87 -> {
+                    heldKeys.remove("W");
+                    onWRelease();
+                }
+                case 88 -> {
+                    heldKeys.remove("X");
+                    onXRelease();
+                }
+                case 89 -> {
+                    heldKeys.remove("Y");
+                    onYRelease();
+                }
+                case 90 -> {
+                    heldKeys.remove("Z");
+                    onZRelease();
+                }
+                case 91 -> {
+                    heldKeys.remove("OpenBracket");
+                    onOpenBracketRelease();
+                }
+                case 92 -> {
+                    heldKeys.remove("BackSlash");
+                    onBackSlashRelease();
+                }
+                case 93 -> {
+                    heldKeys.remove("CloseBracket");
+                    onCloseBracketRelease();
+                }
+                case 96 -> {
+                    heldKeys.remove("NumPad0");
+                    onNumPad0Release();
+                }
+                case 97 -> {
+                    heldKeys.remove("NumPad1");
+                    onNumPad1Release();
+                }
+                case 98 -> {
+                    heldKeys.remove("NumPad2");
+                    onNumPad2Release();
+                }
+                case 99 -> {
+                    heldKeys.remove("NumPad3");
+                    onNumPad3Release();
+                }
+                case 100 -> {
+                    heldKeys.remove("NumPad4");
+                    onNumPad4Release();
+                }
+                case 101 -> {
+                    heldKeys.remove("NumPad5");
+                    onNumPad5Release();
+                }
+                case 102 -> {
+                    heldKeys.remove("NumPad6");
+                    onNumPad6Release();
+                }
+                case 103 -> {
+                    heldKeys.remove("NumPad7");
+                    onNumPad7Release();
+                }
+                case 104 -> {
+                    heldKeys.remove("NumPad8");
+                    onNumPad8Release();
+                }
+                case 105 -> {
+                    heldKeys.remove("NumPad9");
+                    onNumPad9Release();
+                }
+                case 106 -> {
+                    heldKeys.remove("NumPadAsterisk");
+                    onNumPadAsteriskRelease();
+                }
+                case 107 -> {
+                    heldKeys.remove("NumPadPlus");
+                    onNumPadPlusRelease();
+                }
+                case 108 -> {
+                    heldKeys.remove("NumPadComma");
+                    onNumPadCommaRelease();
+                }
+                case 109 -> {
+                    heldKeys.remove("NumPad");
+                    onNumPadRelease();
+                }
+                case 110 -> {
+                    heldKeys.remove("NumPadPeriod");
+                    onNumPadPeriodRelease();
+                }
+                case 111 -> {
+                    heldKeys.remove("NumPadSlash");
+                    onNumPadSlashRelease();
+                }
+                case 112 -> {
+                    heldKeys.remove("F1");
+                    onF1Release();
+                }
+                case 113 -> {
+                    heldKeys.remove("F2");
+                    onF2Release();
+                }
+                case 114 -> {
+                    heldKeys.remove("F3");
+                    onF3Release();
+                }
+                case 115 -> {
+                    heldKeys.remove("F4");
+                    onF4Release();
+                }
+                case 116 -> {
+                    heldKeys.remove("F5");
+                    onF5Release();
+                }
+                case 117 -> {
+                    heldKeys.remove("F6");
+                    onF6Release();
+                }
+                case 118 -> {
+                    heldKeys.remove("F7");
+                    onF7Release();
+                }
+                case 119 -> {
+                    heldKeys.remove("F8");
+                    onF8Release();
+                }
+                case 120 -> {
+                    heldKeys.remove("F9");
+                    onF9Release();
+                }
+                case 121 -> {
+                    heldKeys.remove("F10");
+                    onF10Release();
+                }
+                case 122 -> {
+                    heldKeys.remove("F11");
+                    onF11Release();
+                }
+                case 123 -> {
+                    heldKeys.remove("F12");
+                    onF12Release();
+                }
+                case 127 -> {
+                    heldKeys.remove("Delete");
+                    onDeleteRelease();
+                }
+                case 128 -> {
+                    heldKeys.remove("DeadGrave");
+                    onDeadGraveRelease();
+                }
+                case 129 -> {
+                    heldKeys.remove("DeadAcute");
+                    onDeadAcuteRelease();
+                }
+                case 130 -> {
+                    heldKeys.remove("DeadCircumflex");
+                    onDeadCircumflexRelease();
+                }
+                case 131 -> {
+                    heldKeys.remove("DeadTilde");
+                    onDeadTildeRelease();
+                }
+                case 132 -> {
+                    heldKeys.remove("DeadMacron");
+                    onDeadMacronRelease();
+                }
+                case 133 -> {
+                    heldKeys.remove("DeadBreve");
+                    onDeadBreveRelease();
+                }
+                case 134 -> {
+                    heldKeys.remove("DeadAboveDot");
+                    onDeadAboveDotRelease();
+                }
+                case 135 -> {
+                    heldKeys.remove("DeadDiaeresis");
+                    onDeadDiaeresisRelease();
+                }
+                case 136 -> {
+                    heldKeys.remove("DeadAboveRing");
+                    onDeadAboveRingRelease();
+                }
+                case 137 -> {
+                    heldKeys.remove("DeadDoubleAcute");
+                    onDeadDoubleAcuteRelease();
+                }
+                case 138 -> {
+                    heldKeys.remove("DeadCaron");
+                    onDeadCaronRelease();
+                }
+                case 139 -> {
+                    heldKeys.remove("DeadCedilla");
+                    onDeadCedillaRelease();
+                }
+                case 140 -> {
+                    heldKeys.remove("DeadOgonek");
+                    onDeadOgonekRelease();
+                }
+                case 141 -> {
+                    heldKeys.remove("DeadIota");
+                    onDeadIotaRelease();
+                }
+                case 142 -> {
+                    heldKeys.remove("DeadVoicedSound");
+                    onDeadVoicedSoundRelease();
+                }
+                case 143 -> {
+                    heldKeys.remove("DeadSemivoicedSound");
+                    onDeadSemivoicedSoundRelease();
+                }
+                case 144 -> {
+                    heldKeys.remove("NumLock");
+                    onNumLockRelease();
+                }
+                case 145 -> {
+                    heldKeys.remove("ScrollLock");
+                    onScrollLockRelease();
+                }
+                case 150 -> {
+                    heldKeys.remove("Ampersand");
+                    onAmpersandRelease();
+                }
+                case 151 -> {
+                    heldKeys.remove("Asterisk");
+                    onAsteriskRelease();
+                }
+                case 152 -> {
+                    heldKeys.remove("DoubleQuote");
+                    onDoubleQuoteRelease();
+                }
+                case 153 -> {
+                    heldKeys.remove("Less");
+                    onLessRelease();
+                }
+                case 154 -> {
+                    heldKeys.remove("PrintScreen");
+                    onPrintScreenRelease();
+                }
+                case 155 -> {
+                    heldKeys.remove("Insert");
+                    onInsertRelease();
+                }
+                case 156 -> {
+                    heldKeys.remove("Help");
+                    onHelpRelease();
+                }
+                case 157 -> {
+                    heldKeys.remove("Meta");
+                    onMetaRelease();
+                }
+                case 160 -> {
+                    heldKeys.remove("Greater");
+                    onGreaterRelease();
+                }
+                case 161 -> {
+                    heldKeys.remove("LeftBrace");
+                    onLeftBraceRelease();
+                }
+                case 162 -> {
+                    heldKeys.remove("RightBrace");
+                    onRightBraceRelease();
+                }
+                case 192 -> {
+                    heldKeys.remove("BackQuote");
+                    onBackQuoteRelease();
+                }
+                case 222 -> {
+                    heldKeys.remove("Quote");
+                    onQuoteRelease();
+                }
+                case 240 -> {
+                    heldKeys.remove("Alphanumeric");
+                    onAlphanumericRelease();
+                }
+                case 241 -> {
+                    heldKeys.remove("Katakana");
+                    onKatakanaRelease();
+                }
+                case 242 -> {
+                    heldKeys.remove("Hiragana");
+                    onHiraganaRelease();
+                }
+                case 243 -> {
+                    heldKeys.remove("FullWidth");
+                    onFullWidthRelease();
+                }
+                case 244 -> {
+                    heldKeys.remove("HalfWidth");
+                    onHalfWidthRelease();
+                }
+                case 245 -> {
+                    heldKeys.remove("RomanCharacters");
+                    onRomanCharactersRelease();
+                }
+                case 256 -> {
+                    heldKeys.remove("AllCandidates");
+                    onAllCandidatesRelease();
+                }
+                case 257 -> {
+                    heldKeys.remove("PreviousCandidate");
+                    onPreviousCandidateRelease();
+                }
+                case 258 -> {
+                    heldKeys.remove("CodeInput");
+                    onCodeInputRelease();
+                }
+                case 259 -> {
+                    heldKeys.remove("JapaneseKatakana");
+                    onJapaneseKatakanaRelease();
+                }
+                case 260 -> {
+                    heldKeys.remove("JapaneseHiragana");
+                    onJapaneseHiraganaRelease();
+                }
+                case 261 -> {
+                    heldKeys.remove("JapaneseRoman");
+                    onJapaneseRomanRelease();
+                }
+                case 262 -> {
+                    heldKeys.remove("KanaLock");
+                    onKanaLockRelease();
+                }
+                case 263 -> {
+                    heldKeys.remove("InputMethodOnOff");
+                    onInputMethodOnOffRelease();
+                }
+                case 512 -> {
+                    heldKeys.remove("At");
+                    onAtRelease();
+                }
+                case 513 -> {
+                    heldKeys.remove("Colon");
+                    onColonRelease();
+                }
+                case 514 -> {
+                    heldKeys.remove("Circumflex");
+                    onCircumflexRelease();
+                }
+                case 515 -> {
+                    heldKeys.remove("Dollar");
+                    onDollarRelease();
+                }
+                case 516 -> {
+                    heldKeys.remove("Euro");
+                    onEuroRelease();
+                }
+                case 517 -> {
+                    heldKeys.remove("ExclamationMark");
+                    onExclamationMarkRelease();
+                }
+                case 518 -> {
+                    heldKeys.remove("InvertedExclamationMark");
+                    onInvertedExclamationMarkRelease();
+                }
+                case 519 -> {
+                    heldKeys.remove("LeftParenthesis");
+                    onLeftParenthesisRelease();
+                }
+                case 520 -> {
+                    heldKeys.remove("NumberSign");
+                    onNumberSignRelease();
+                }
+                case 521 -> {
+                    heldKeys.remove("Plus");
+                    onPlusRelease();
+                }
+                case 522 -> {
+                    heldKeys.remove("RightParenthesis");
+                    onRightParenthesisRelease();
+                }
+                case 523 -> {
+                    heldKeys.remove("Underscore");
+                    onUnderscoreRelease();
+                }
+                case 524 -> {
+                    heldKeys.remove("Windows");
+                    onWindowsRelease();
+                }
+                case 525 -> {
+                    heldKeys.remove("ContextMenu");
+                    onContextMenuRelease();
+                }
+                case 61440 -> {
+                    heldKeys.remove("F13");
+                    onF13Release();
+                }
+                case 61441 -> {
+                    heldKeys.remove("F14");
+                    onF14Release();
+                }
+                case 61442 -> {
+                    heldKeys.remove("F15");
+                    onF15Release();
+                }
+                case 61443 -> {
+                    heldKeys.remove("F16");
+                    onF16Release();
+                }
+                case 61444 -> {
+                    heldKeys.remove("F17");
+                    onF17Release();
+                }
+                case 61445 -> {
+                    heldKeys.remove("F18");
+                    onF18Release();
+                }
+                case 61446 -> {
+                    heldKeys.remove("F19");
+                    onF19Release();
+                }
+                case 61447 -> {
+                    heldKeys.remove("F20");
+                    onF20Release();
+                }
+                case 61448 -> {
+                    heldKeys.remove("F21");
+                    onF21Release();
+                }
+                case 61449 -> {
+                    heldKeys.remove("F22");
+                    onF22Release();
+                }
+                case 61450 -> {
+                    heldKeys.remove("F23");
+                    onF23Release();
+                }
+                case 61451 -> {
+                    heldKeys.remove("F24");
+                    onF24Release();
+                }
+                case 65312 -> {
+                    heldKeys.remove("Compose");
+                    onComposeRelease();
+                }
             }
         } else if (id == MouseEvent.MOUSE_PRESSED || id == MouseEvent.MOUSE_RELEASED) {
             Insets  ins = ((JFrame) event.getSource()).getInsets();
             NGVec2i pos = new NGVec2i(((MouseEvent) event).getPoint()).sub(ins.left, ins.top);
             switch (((MouseEvent) event).getButton()) {
-                case MouseEvent.BUTTON1 -> { if (id == MouseEvent.MOUSE_PRESSED) onLMBPressed(pos); else onLMBReleased(pos); }
-                case MouseEvent.BUTTON3 -> { if (id == MouseEvent.MOUSE_PRESSED) onRMBPressed(pos); else onRMBReleased(pos); }
-                case MouseEvent.BUTTON2 -> { if (id == MouseEvent.MOUSE_PRESSED) onMMBPressed(pos); else onMMBReleased(pos); }
+                case MouseEvent.BUTTON3 -> {
+                    if (id == MouseEvent.MOUSE_PRESSED) {
+                        heldKeys.push("RMB");
+                        onLMBPressed(pos);
+                    } else {
+                        heldKeys.remove("RMB");
+                        onLMBReleased(pos);
+                    }
+                }
+                case MouseEvent.BUTTON2 -> {
+                    if (id == MouseEvent.MOUSE_PRESSED) {
+                        heldKeys.push("MMB");
+                        onLMBPressed(pos);
+                    } else {
+                        heldKeys.remove("MMB");
+                        onLMBReleased(pos);
+                    }
+                }
+                case MouseEvent.BUTTON1 -> {
+                    if (id == MouseEvent.MOUSE_PRESSED) {
+                        heldKeys.push("LMB");
+                        onLMBPressed(pos);
+                    } else {
+                        heldKeys.remove("LMB");
+                        onLMBReleased(pos);
+                    }
+                }
             }
         } else if (id == MouseEvent.MOUSE_MOVED || id == MouseEvent.MOUSE_DRAGGED) {
             Insets  ins = ((JFrame) event.getSource()).getInsets();
@@ -375,6 +1462,9 @@ public class NGMain extends NGHotReloadable implements AWTEventListener {
         } else if (id == ComponentEvent.COMPONENT_MOVED) {
             Component c = ((ComponentEvent) event).getComponent();
             if (!(c instanceof JFrame && c.isVisible())) return;
+            // NOTE: window.pos points to the top-left corner of the drawable area.
+            //  In other words - excludes title bar.
+            window.pos = new NGVec2i(c.getLocation()).add(window.ins.left, window.ins.top);
             onWindowMoved(c.getX(), c.getY());
         } else if (id == ComponentEvent.COMPONENT_RESIZED) {
             Component c = ((ComponentEvent) event).getComponent();
@@ -388,9 +1478,13 @@ public class NGMain extends NGHotReloadable implements AWTEventListener {
         }
     }
 
-    public void onLMBPressed(NGVec2i pos) { }
-    public void onLMBReleased(NGVec2i pos) { }
-    public void whileLMBHeld(NGVec2i pos) { }
+    public void onMouseMoved(NGVec2i pos) { }
+    public void onMouseWheel(NGVec2i pos, int direction) { }
+
+    public void onWindowMoved(int x, int y) { }
+    public void onWindowResize(int w, int h) { }
+    public void onWindowMinimize() { }
+    public void onWindowRestore() { }
 
     public void onRMBPressed(NGVec2i pos) { }
     public void onRMBReleased(NGVec2i pos) { }
@@ -400,13 +1494,9 @@ public class NGMain extends NGHotReloadable implements AWTEventListener {
     public void onMMBReleased(NGVec2i pos) { }
     public void whileMMBHeld(NGVec2i pos) { }
 
-    public void onMouseMoved(NGVec2i pos) { }
-    public void onMouseWheel(NGVec2i pos,int direction) { }
-
-    public void onWindowMoved(int x, int y) { }
-    public void onWindowResize(int w, int h) { }
-    public void onWindowMinimize() { }
-    public void onWindowRestore() { }
+    public void onLMBPressed(NGVec2i pos) { }
+    public void onLMBReleased(NGVec2i pos) { }
+    public void whileLMBHeld(NGVec2i pos) { }
 
     public void onEnterPress() { }
     public void onEnterRelease() { }

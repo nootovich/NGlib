@@ -1,7 +1,6 @@
 package examples.snake;
 
 import java.awt.Font;
-import javax.swing.Timer;
 import nootovich.nglib.*;
 
 import static examples.snake.Main.*;
@@ -9,12 +8,12 @@ import static nootovich.nglib.NGUtils.mod;
 
 public class Snake extends NGMain {
 
-    private static NGWindow window;
-
     public void main() {
+        setTickRate(10);
+        setFrameRate(80);
+
         SnakeRenderer renderer = new SnakeRenderer();
         renderer.defaultFont = new Font(Font.MONOSPACED, Font.BOLD, 64);
-
         window = new NGWindow(w, h, renderer, this);
 
         snake.add(new SnakePart(cellAmount / 2, cellAmount / 2 + 6, DIRECTION.UP));
@@ -22,11 +21,11 @@ public class Snake extends NGMain {
         snake.add(new SnakePart(cellAmount / 2, cellAmount / 2 + 4, DIRECTION.UP));
         foodPosition = new NGVec2i(getRandomPos(), getRandomPos());
 
-        new Timer((int) (TICK_DURATION * 1000), _ -> update()).start();
-        new Timer((int) (FRAME_DURATION * 1000), _ -> window.redraw()).start();
+        start();
     }
 
-    private static void update() {
+    @Override
+    public void update() {
         SnakePart head = snake.getLast();
 
         int nx = head.pos.x;
@@ -57,6 +56,11 @@ public class Snake extends NGMain {
     public void onLMBPressed(NGVec2i pos) {
         if (pos.divide(cellSize).equals(foodPosition)) eat();
         SnakeRenderer.highlightFood = false;
+    }
+
+    @Override
+    public void whileRMBHeld(NGVec2i pos) {
+        foodPosition = pos.divide(cellSize);
     }
 
     @Override
