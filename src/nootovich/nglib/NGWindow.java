@@ -1,6 +1,5 @@
 package nootovich.nglib;
 
-import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
@@ -10,23 +9,26 @@ public class NGWindow {
     public final int HOT_RELOAD_CHECK_COOLDOWN = 500;
 
     public boolean shouldClose = false;
-    public int     w, h;
 
-    private final Insets ins;
+    public NGVec2i pos;
+    public int     w, h; // TODO: NGVec2i size
+    public final Insets ins;
 
-    public NGRenderer      renderer;
-    public NGKeyHandler    keyHandler;
-    public NGMouseHandler  mouseHandler;
-    public NGWindowHandler resizeHandler;
+    private NGMain     main;
+    public  NGRenderer renderer;
 
-    public final JFrame     jf = new JFrame();
+    public       JFrame     jf;
     public final NGGraphics g;
 
     private long lastHotReloadCheckTime = 0;
 
-    public NGWindow(int width, int height, NGRenderer renderer) {
-        this.w = width;
-        this.h = height;
+    public NGWindow(int width, int height, NGRenderer renderer, NGMain main) {
+        this.w    = width;
+        this.h    = height;
+        this.main = main;
+        this.jf   = new JFrame();
+
+        jf.getToolkit().addAWTEventListener(main, -1);
 
         jf.pack();
         ins = jf.getInsets();
@@ -57,9 +59,13 @@ public class NGWindow {
                 if (reloadedRenderer != null) setRenderer(reloadedRenderer);
             }
 
-            if (keyHandler != null) {
-                NGKeyHandler reloadedKeyHandler = (NGKeyHandler) keyHandler.reloadIfNeeded();
-                if (reloadedKeyHandler != null) setKeyHandler(reloadedKeyHandler);
+            if (main != null) {
+                NGMain reloadedMain = (NGMain) main.reloadIfNeeded();
+                if (reloadedMain != null) {
+                    jf.getToolkit().removeAWTEventListener(this.main);
+                    this.main = reloadedMain;
+                    jf.getToolkit().addAWTEventListener(this.main, -1);
+                }
             }
         }
     }
@@ -83,20 +89,5 @@ public class NGWindow {
     public void setRenderer(NGRenderer renderer) {
         this.renderer = renderer;
         if (renderer.defaultFont != null) g.setFont(renderer.defaultFont);
-    }
-
-    public void setKeyHandler(NGKeyHandler keyHandler) {
-        this.keyHandler = keyHandler;
-        jf.getToolkit().addAWTEventListener(this.keyHandler, NGEventHandler.KEY);
-    }
-
-    public void setMouseHandler(NGMouseHandler mouseHandler) {
-        this.mouseHandler = mouseHandler;
-        jf.getToolkit().addAWTEventListener(this.mouseHandler, NGEventHandler.MOUSE);
-    }
-
-    public void setResizeHandler(NGWindowHandler resizeHandler) {
-        this.resizeHandler = resizeHandler;
-        jf.getToolkit().addAWTEventListener(this.resizeHandler, NGEventHandler.WINDOW);
     }
 }

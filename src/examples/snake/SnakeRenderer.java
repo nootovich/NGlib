@@ -1,9 +1,10 @@
 package examples.snake;
 
+import examples.snake.Snake.SnakePart;
 import java.awt.Color;
 import nootovich.nglib.*;
 
-import static examples.snake.Snake.*;
+import static examples.snake.Main.*;
 
 public class SnakeRenderer extends NGRenderer {
 

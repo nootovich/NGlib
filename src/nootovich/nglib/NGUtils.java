@@ -4,6 +4,10 @@ public class NGUtils {
 
     private static final int FILENAME_LEN = 32;
 
+    public static int mod(int n, int m) {
+        return ((n % m) + m) % m;
+    }
+
     public static int clamp(int n, int min, int max) {
         if (max < min) max = min;
         if (n < min) return min;
