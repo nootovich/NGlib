@@ -1,20 +1,20 @@
 package examples.snake;
 
 import examples.snake.Snake.SnakePart;
-import java.awt.Color;
 import nootovich.nglib.*;
 
 import static examples.snake.Main.*;
 
 public class SnakeRenderer extends NGRenderer {
 
-    private static final Color COLOR_BG             = new Color(0x141820);
-    private static final Color COLOR_SNAKE          = new Color(0xFFFFFF);
-    private static final Color COLOR_SNAKE_BORDER   = new Color(0x000000);
-    private static final Color COLOR_FOOD           = new Color(0x166236);
-    private static final Color COLOR_FOOD_HIGHLIGHT = new Color(0x338F54);
-    private static final Color COLOR_FOOD_BORDER    = new Color(0xFFFFFF);
-    private static final Color COLOR_SCORE          = new Color(0x507DBE);
+    private static final NGColor COLOR_BG             = new NGColor(0x141820);
+    private static final NGColor COLOR_SNAKE          = new NGColor(0xFFFFFF);
+    private static final NGColor COLOR_SNAKE_BORDER   = new NGColor(0x000000);
+    private static final NGColor COLOR_SNAKE_EYES     = new NGColor(0x000000);
+    private static final NGColor COLOR_FOOD           = new NGColor(0x166236);
+    private static final NGColor COLOR_FOOD_HIGHLIGHT = new NGColor(0x338F54);
+    private static final NGColor COLOR_FOOD_BORDER    = new NGColor(0xFFFFFF);
+    private static final NGColor COLOR_SCORE          = new NGColor(0x507DBE);
 
     private static final int EYE_RADIUS = cellSize / 4;
     private static final int EYE_LEFT   = (int) (cellSize * 0.275f);
@@ -50,8 +50,8 @@ public class SnakeRenderer extends NGRenderer {
             int       rdir     = (ldir + 1) % 4;
             NGVec2f   leftEye  = head.anim.state.add((ldir % 3) < 1 ? EYE_LEFT : EYE_RIGHT, ldir < 2 ? EYE_LEFT : EYE_RIGHT);
             NGVec2f   rightEye = head.anim.state.add((rdir % 3) < 1 ? EYE_LEFT : EYE_RIGHT, rdir < 2 ? EYE_LEFT : EYE_RIGHT);
-            g.drawCircleCentered(leftEye, EYE_RADIUS, Color.BLACK);
-            g.drawCircleCentered(rightEye, EYE_RADIUS, Color.BLACK);
+            g.drawCircleCentered(leftEye, EYE_RADIUS, COLOR_SNAKE_EYES);
+            g.drawCircleCentered(rightEye, EYE_RADIUS, COLOR_SNAKE_EYES);
         }
         { // SCORE
             g.drawTextCentered(String.valueOf(score), w / 2, cellSize / 2, COLOR_SCORE);

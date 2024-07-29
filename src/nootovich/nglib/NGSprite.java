@@ -19,7 +19,7 @@ public class NGSprite {
         pixels[y][x] = color;
     }
 
-    public Color getPixel(int x, int y) {
-        return pixels[y][x];
+    public NGColor getPixel(int x, int y) {
+        return new NGColor(pixels[y][x]);
     }
 }
