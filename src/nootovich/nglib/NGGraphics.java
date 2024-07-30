@@ -162,17 +162,28 @@ public class NGGraphics {
         drawCircle(pos.x - radius / 2, pos.y - radius / 2, radius, color);
     }
 
-    public void drawPixelSprite(int x, int y, int w, int h, NGSprite pixelSprite) {
-        // TODO: Temporary naive approach. Just enough to get things going
-        if (pixelSprite.pixels.length == 0 || pixelSprite.pixels[0].length == 0) NGUtils.error("Invalid `NGPixelSprite`");
-        int sw = pixelSprite.pixels.length;
-        int sh = pixelSprite.pixels[0].length;
-        for (int dy = 0; dy < h; dy++) {
-            for (int dx = 0; dx < w; dx++) {
-                int sx = dx * sw / w;
-                int sy = dy * sh / h;
-                drawPixel(dx, dy, pixelSprite.getPixel(sx, sy));
-            }
+    // public void drawPixelSprite(int x, int y, int w, int h, NGSprite pixelSprite) {
+    //     // NOTE: Temporary naive approach. Just enough to get things going
+    //     if (pixelSprite.pixels.length == 0 || pixelSprite.pixels[0].length == 0) NGUtils.error("Invalid `NGPixelSprite`");
+    //     int sw = pixelSprite.pixels.length;
+    //     int sh = pixelSprite.pixels[0].length;
+    //     for (int dy = 0; dy < h; dy++) {
+    //         for (int dx = 0; dx < w; dx++) {
+    //             int sx = dx * sw / w;
+    //             int sy = dy * sh / h;
+    //             drawPixel(dx, dy, pixelSprite.getPixel(sx, sy));
+    //         }
+    //     }
+    // }
+
+    public void drawSprite(NGSprite sprite) {
+        if (sprite.anims.isEmpty()) {
+            drawRect(sprite.pos, sprite.size, sprite.color);
+            drawRectBorder(sprite.pos, sprite.size, sprite.borderColor);
+        } else for (NGAnimation anim: sprite.anims) {
+            drawRect(anim.state.toInt(), sprite.size, sprite.color);
+            drawRectBorder(anim.state.toInt(), sprite.size, sprite.borderColor);
+            for (NGSprite child: sprite.children) drawSprite(child);
         }
     }
 

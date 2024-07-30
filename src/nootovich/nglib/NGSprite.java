@@ -1,25 +1,53 @@
 package nootovich.nglib;
 
 import java.awt.Color;
+import java.util.ArrayList;
 
 public class NGSprite {
 
-    public Color[][] pixels;
+    public NGVec2i       pos;
+    public NGVec2i       size;
+    public Color         color;
+    public Color         borderColor = new Color(0, true);
+    public NGSpriteShape shape;
 
-    public NGSprite(int w, int h) {
-        pixels = new Color[h][w];
-        for (int i = 0; i < h; i++) for (int j = 0; j < w; j++) pixels[i][j] = new Color(0, 0, 0, 0);
+    public ArrayList<NGAnimation> anims    = new ArrayList<>();
+    public ArrayList<NGSprite>    children = new ArrayList<>();
+
+    public enum NGSpriteShape {RECT, CIRCLE}
+
+    public NGSprite(int x, int y, int w, int h, Color color) {
+        this.pos   = new NGVec2i(x, y);
+        this.size  = new NGVec2i(w, h);
+        this.color = color;
+        this.shape = NGSpriteShape.RECT;
     }
 
-    public NGSprite(Color[][] pixels) {
-        this.pixels = pixels;
+    public NGSprite(int x, int y, int w, int h, Color color, Color borderColor) {
+        this.pos         = new NGVec2i(x, y);
+        this.size        = new NGVec2i(w, h);
+        this.color       = color;
+        this.borderColor = borderColor;
+        this.shape       = NGSpriteShape.RECT;
     }
 
-    public void setPixel(int x, int y, Color color) {
-        pixels[y][x] = color;
+    public NGSprite(NGVec2i pos, NGVec2i size, Color color) {
+        this.pos   = pos;
+        this.size  = size;
+        this.color = color;
+        this.shape = NGSpriteShape.RECT;
     }
 
-    public Color getPixel(int x, int y) {
-        return pixels[y][x];
+    public NGSprite(NGVec2i pos, NGVec2i size, Color color, Color borderColor) {
+        this.pos         = pos;
+        this.size        = size;
+        this.color       = color;
+        this.borderColor = borderColor;
+        this.shape       = NGSpriteShape.RECT;
+    }
+
+    public void update(float dt) {
+        for (NGAnimation anim: anims) anim.update(dt);
+        for (NGSprite child: children) child.update(dt);
     }
 }

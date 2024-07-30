@@ -2,7 +2,12 @@ package examples.snake;
 
 import examples.snake.Snake.SnakePart;
 import java.util.ArrayList;
+import nootovich.nglib.NGSprite;
 import nootovich.nglib.NGVec2i;
+
+import static examples.snake.Snake.getRandomPos;
+import static examples.snake.SnakeRenderer.COLOR_FOOD;
+import static examples.snake.SnakeRenderer.COLOR_FOOD_BORDER;
 
 // TODO: I don't like this workaround inorder to escape static context.
 //  Would be nice to get rid of this at least by supporting inner classes hot-reloading.
@@ -18,7 +23,7 @@ public class Main {
 
     public static ArrayList<SnakePart> snake = new ArrayList<>();
 
-    public static NGVec2i foodPosition = new NGVec2i();
+    public static NGSprite food = new NGSprite(getRandomPos(), new NGVec2i(cellSize), COLOR_FOOD, COLOR_FOOD_BORDER);
 
     public enum DIRECTION {UP, RIGHT, DOWN, LEFT}
 
