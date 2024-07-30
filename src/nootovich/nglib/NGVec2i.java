@@ -9,6 +9,11 @@ public class NGVec2i {
     public NGVec2i() {
     }
 
+    public NGVec2i(int n) {
+        this.x = n;
+        this.y = n;
+    }
+
     public NGVec2i(int x, int y) {
         this.x = x;
         this.y = y;
@@ -68,6 +73,10 @@ public class NGVec2i {
 
     public NGVec2i lerp(NGVec2i other, float n) {
         return this.add(other.sub(this).scale(n));
+    }
+
+    public NGVec2i snap(int n) { // TODO: think of a name for parameter
+        return this.divide(n).scale(n);
     }
 
     public NGVec2f toFloat() {

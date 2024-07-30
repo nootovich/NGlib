@@ -3,12 +3,12 @@ package nootovich.nglib;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-// TODO: NGColor
+// TODO: NGColor?
 
 @SuppressWarnings("unused")
 public class NGGraphics {
 
-    // TODO: NGVec4(2x2?)i
+    // TODO: NGVec4(2x2?)i?
     private final int gX, gY;
     private int gW, gH;
     private BufferedImage buffer;
@@ -123,6 +123,11 @@ public class NGGraphics {
         g2d.drawRect(pos.x, pos.y, size, size);
     }
 
+    public void drawRectWithBorder(NGVec2i pos, NGVec2i size, Color color, Color borderColor) {
+        drawRect(pos, size, color);
+        drawRectBorder(pos, size, borderColor);
+    }
+
     public void drawRoundRect(int x, int y, int w, int h, int aw, int ah, Color color) {
         g2d.setColor(color);
         g2d.fillRoundRect(x, y, w, h, aw, ah);
@@ -162,18 +167,22 @@ public class NGGraphics {
         drawCircle(pos.x - radius / 2, pos.y - radius / 2, radius, color);
     }
 
-    public void drawPixelSprite(int x, int y, int w, int h, NGSprite pixelSprite) {
-        // TODO: Temporary naive approach. Just enough to get things going
-        if (pixelSprite.pixels.length == 0 || pixelSprite.pixels[0].length == 0) NGUtils.error("Invalid `NGPixelSprite`");
-        int sw = pixelSprite.pixels.length;
-        int sh = pixelSprite.pixels[0].length;
-        for (int dy = 0; dy < h; dy++) {
-            for (int dx = 0; dx < w; dx++) {
-                int sx = dx * sw / w;
-                int sy = dy * sh / h;
-                drawPixel(dx, dy, pixelSprite.getPixel(sx, sy));
-            }
-        }
+    // public void drawPixelSprite(int x, int y, int w, int h, NGSprite pixelSprite) {
+    //     // NOTE: Temporary naive approach. Just enough to get things going
+    //     if (pixelSprite.pixels.length == 0 || pixelSprite.pixels[0].length == 0) NGUtils.error("Invalid `NGPixelSprite`");
+    //     int sw = pixelSprite.pixels.length;
+    //     int sh = pixelSprite.pixels[0].length;
+    //     for (int dy = 0; dy < h; dy++) {
+    //         for (int dx = 0; dx < w; dx++) {
+    //             int sx = dx * sw / w;
+    //             int sy = dy * sh / h;
+    //             drawPixel(dx, dy, pixelSprite.getPixel(sx, sy));
+    //         }
+    //     }
+    // }
+
+    public void drawSprite(NGSprite sprite) {
+        sprite.draw(this);
     }
 
     public void setStroke(Stroke stroke) {

@@ -2,6 +2,8 @@ package nootovich.nglib;
 
 public class NGAnimation {
 
+    // position, rotation, scale, color, etc.
+
     public NGVec2f start;
     public NGVec2f end;
     public NGVec2f state;

@@ -1,9 +1,12 @@
 package examples.snake;
 
 import java.awt.Font;
+import java.util.ArrayList;
 import nootovich.nglib.*;
 
 import static examples.snake.Main.*;
+import static examples.snake.SnakeRenderer.highlightFood;
+import static nootovich.nglib.NGSprite.NGSpriteType.CIRCLE_CENTERED;
 import static nootovich.nglib.NGUtils.mod;
 
 public class Snake extends NGMain {
@@ -14,12 +17,16 @@ public class Snake extends NGMain {
 
         SnakeRenderer renderer = new SnakeRenderer();
         renderer.defaultFont = new Font(Font.MONOSPACED, Font.BOLD, 64);
-        window = new NGWindow(w, h, renderer, this);
+        window               = new NGWindow(w, h, renderer, this);
 
-        snake.add(new SnakePart(cellAmount / 2, cellAmount / 2 + 6, DIRECTION.UP));
-        snake.add(new SnakePart(cellAmount / 2, cellAmount / 2 + 5, DIRECTION.UP));
-        snake.add(new SnakePart(cellAmount / 2, cellAmount / 2 + 4, DIRECTION.UP));
-        foodPosition = new NGVec2i(getRandomPos(), getRandomPos());
+        ArrayList<NGSprite> eyes = new ArrayList<>();
+        eyes.add(new NGSprite(new NGVec2i(EYE_LEFT, EYE_LEFT), EYE_RADIUS, COLOR_SNAKE_EYE, CIRCLE_CENTERED));
+        eyes.add(new NGSprite(new NGVec2i(EYE_RIGHT, EYE_LEFT), EYE_RADIUS, COLOR_SNAKE_EYE, CIRCLE_CENTERED));
+        eyes.add(new NGSprite(new NGVec2i(EYE_LEFT, EYE_RIGHT), EYE_RADIUS, COLOR_SNAKE_EYE, CIRCLE_CENTERED));
+        eyes.add(new NGSprite(new NGVec2i(EYE_RIGHT, EYE_RIGHT), EYE_RADIUS, COLOR_SNAKE_EYE, CIRCLE_CENTERED));
+        snake.add(new SnakePart(new NGVec2i(CELL_AMOUNT / 2).add(0, 6).scale(CELL_SIZE), DIRECTION.UP));
+        snake.add(new SnakePart(new NGVec2i(CELL_AMOUNT / 2).add(0, 5).scale(CELL_SIZE), DIRECTION.UP));
+        snake.add(new SnakePart(new NGVec2i(CELL_AMOUNT / 2).add(0, 4).scale(CELL_SIZE), DIRECTION.UP, eyes));
 
         start();
     }
@@ -31,41 +38,45 @@ public class Snake extends NGMain {
         int nx = head.pos.x;
         int ny = head.pos.y;
         switch (head.dir) {
-            case UP -> ny = mod(head.pos.y - 1, h / cellSize);
-            case RIGHT -> nx = mod(head.pos.x + 1, w / cellSize);
-            case DOWN -> ny = mod(head.pos.y + 1, h / cellSize);
-            case LEFT -> nx = mod(head.pos.x - 1, w / cellSize);
+            case UP -> ny = mod(head.pos.y - CELL_SIZE, h);
+            case RIGHT -> nx = mod(head.pos.x + CELL_SIZE, w);
+            case DOWN -> ny = mod(head.pos.y + CELL_SIZE, h);
+            case LEFT -> nx = mod(head.pos.x - CELL_SIZE, w);
             default -> NGUtils.error("Snake has entered the 4-th dimension.");
         }
 
-        if (nx == foodPosition.x && ny == foodPosition.y) eat();
+        NGVec2i newPos = new NGVec2i(nx, ny).snap(CELL_SIZE);
+
+        if (newPos.equals(food.pos)) eat();
         else snake.removeFirst();
 
         for (SnakePart part: snake) {
-            if (part.pos.x == nx && part.pos.y == ny) {
+            if (newPos.equals(part.pos)) {
                 System.out.println("u ded");
                 window.shouldClose = true;
             }
         }
 
-        snake.add(new SnakePart(nx, ny, queuedDirection));
+        snake.add(new SnakePart(newPos, queuedDirection, head.children));
+        head.children.clear();
         for (SnakePart part: snake) part.nextAnim();
     }
 
     @Override
     public void onLMBPressed(NGVec2i pos) {
-        if (pos.divide(cellSize).equals(foodPosition)) eat();
-        SnakeRenderer.highlightFood = false;
+        if (pos.snap(CELL_SIZE).equals(food.pos)) eat();
+        highlightFood = false;
     }
 
     @Override
     public void whileRMBHeld(NGVec2i pos) {
-        foodPosition = pos.divide(cellSize);
+        food.pos = pos.snap(CELL_SIZE);
+        highlightFood = true;
     }
 
     @Override
     public void onMouseMoved(NGVec2i pos) {
-        SnakeRenderer.highlightFood = (pos.divide(cellSize).equals(foodPosition));
+        highlightFood = (pos.snap(CELL_SIZE).equals(food.pos));
     }
 
     @Override
@@ -100,39 +111,53 @@ public class Snake extends NGMain {
     }
 
     public static void eat() {
-        foodPosition = new NGVec2i(getRandomPos(), getRandomPos());
+        food.pos = getRandomPos();
         score++;
     }
 
-    private static int getRandomPos() {
-        return (int) (Math.random() * (cellAmount));
+    public static NGVec2i getRandomPos() {
+        return new NGVec2f((float) Math.random(), (float) Math.random()).scale(CELL_AMOUNT).toInt().scale(CELL_SIZE);
     }
 
-    public static class SnakePart {
-        public NGVec2i     pos;
-        public DIRECTION   dir;
-        public NGAnimation anim;
+    public static class SnakePart extends NGSprite {
+        public DIRECTION dir;
 
-        public SnakePart(int x, int y, DIRECTION dir, NGAnimation anim) {
-            this.pos = new NGVec2i(x, y);
-            this.dir = dir;
-            if (anim == null) nextAnim();
-            else this.anim = anim;
+        public SnakePart(NGVec2i pos, DIRECTION dir) {
+            this(pos, dir, new ArrayList<>());
         }
 
-        public SnakePart(int x, int y, DIRECTION dir) {
-            this(x, y, dir, null);
+        public SnakePart(NGVec2i pos, DIRECTION dir, ArrayList<NGSprite> eyes) {
+            this(pos, dir, eyes, null);
+        }
+
+        public SnakePart(NGVec2i pos, DIRECTION dir, ArrayList<NGSprite> eyes, NGAnimation anim) {
+            super(pos, new NGVec2i(CELL_SIZE), COLOR_SNAKE, COLOR_SNAKE_BORDER);
+            this.dir = dir;
+            if (anims.isEmpty()) nextAnim();
+            else anims.add(anim);
+            for (NGSprite eye: eyes) addChild(eye);
+        }
+
+        @Override
+        public void update(float dt) {
+            super.update(dt);
+            if (children.size() != 4) return;
+            children.get(0).visible = dir == DIRECTION.UP || dir == DIRECTION.LEFT;
+            children.get(1).visible = dir == DIRECTION.UP || dir == DIRECTION.RIGHT;
+            children.get(2).visible = dir == DIRECTION.DOWN || dir == DIRECTION.LEFT;
+            children.get(3).visible = dir == DIRECTION.DOWN || dir == DIRECTION.RIGHT;
         }
 
         public void nextAnim() {
-            NGVec2i start = pos.scale(cellSize);
+            anims.clear();
+            NGVec2i start = pos;
             NGVec2i end = switch (dir) {
-                case UP -> pos.add(0, -1).scale(cellSize);
-                case RIGHT -> pos.add(1, 0).scale(cellSize);
-                case DOWN -> pos.add(0, 1).scale(cellSize);
-                case LEFT -> pos.add(-1, 0).scale(cellSize);
+                case UP -> pos.add(0, -CELL_SIZE);
+                case RIGHT -> pos.add(CELL_SIZE, 0);
+                case DOWN -> pos.add(0, CELL_SIZE);
+                case LEFT -> pos.add(-CELL_SIZE, 0);
             };
-            anim = new NGAnimation(start.toFloat(), end.toFloat(), TICK_DURATION);
+            anims.add(new NGAnimation(start.toFloat(), end.toFloat(), TICK_DURATION));
         }
     }
 }
