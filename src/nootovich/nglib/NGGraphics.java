@@ -3,12 +3,12 @@ package nootovich.nglib;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-// TODO: NGColor
+// TODO: NGColor?
 
 @SuppressWarnings("unused")
 public class NGGraphics {
 
-    // TODO: NGVec4(2x2?)i
+    // TODO: NGVec4(2x2?)i?
     private final int gX, gY;
     private int gW, gH;
     private BufferedImage buffer;
@@ -123,6 +123,11 @@ public class NGGraphics {
         g2d.drawRect(pos.x, pos.y, size, size);
     }
 
+    public void drawRectWithBorder(NGVec2i pos, NGVec2i size, Color color, Color borderColor) {
+        drawRect(pos, size, color);
+        drawRectBorder(pos, size, borderColor);
+    }
+
     public void drawRoundRect(int x, int y, int w, int h, int aw, int ah, Color color) {
         g2d.setColor(color);
         g2d.fillRoundRect(x, y, w, h, aw, ah);
@@ -178,11 +183,9 @@ public class NGGraphics {
 
     public void drawSprite(NGSprite sprite) {
         if (sprite.anims.isEmpty()) {
-            drawRect(sprite.pos, sprite.size, sprite.color);
-            drawRectBorder(sprite.pos, sprite.size, sprite.borderColor);
+            drawRectWithBorder(sprite.pos, sprite.size, sprite.color, sprite.borderColor);
         } else for (NGAnimation anim: sprite.anims) {
-            drawRect(anim.state.toInt(), sprite.size, sprite.color);
-            drawRectBorder(anim.state.toInt(), sprite.size, sprite.borderColor);
+            drawRectWithBorder(anim.state.toInt(), sprite.size, sprite.color, sprite.borderColor);
             for (NGSprite child: sprite.children) drawSprite(child);
         }
     }
