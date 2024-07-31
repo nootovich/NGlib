@@ -1,12 +1,12 @@
 package examples.snake;
 
-import java.awt.Color;
 import java.awt.Font;
+import java.util.ArrayList;
 import nootovich.nglib.*;
-import nootovich.nglib.NGSprite.NGSpriteShape;
 
 import static examples.snake.Main.*;
 import static examples.snake.SnakeRenderer.*;
+import static nootovich.nglib.NGSprite.NGSpriteType.CIRCLE_CENTERED;
 import static nootovich.nglib.NGUtils.mod;
 
 public class Snake extends NGMain {
@@ -19,13 +19,14 @@ public class Snake extends NGMain {
         renderer.defaultFont = new Font(Font.MONOSPACED, Font.BOLD, 64);
         window               = new NGWindow(w, h, renderer, this);
 
+        ArrayList<NGSprite> eyes = new ArrayList<>();
+        eyes.add(new NGSprite(new NGVec2i(EYE_LEFT, EYE_LEFT), new NGVec2i(EYE_RADIUS), COLOR_SNAKE_EYE, CIRCLE_CENTERED));
+        eyes.add(new NGSprite(new NGVec2i(EYE_RIGHT, EYE_LEFT), new NGVec2i(EYE_RADIUS), COLOR_SNAKE_EYE, CIRCLE_CENTERED));
+        eyes.add(new NGSprite(new NGVec2i(EYE_LEFT, EYE_RIGHT), new NGVec2i(EYE_RADIUS), COLOR_SNAKE_EYE, CIRCLE_CENTERED));
+        eyes.add(new NGSprite(new NGVec2i(EYE_RIGHT, EYE_RIGHT), new NGVec2i(EYE_RADIUS), COLOR_SNAKE_EYE, CIRCLE_CENTERED));
         snake.add(new SnakePart(new NGVec2i(cellAmount / 2).add(0, 6).scale(cellSize), DIRECTION.UP));
         snake.add(new SnakePart(new NGVec2i(cellAmount / 2).add(0, 5).scale(cellSize), DIRECTION.UP));
-        snake.add(new SnakePart(new NGVec2i(cellAmount / 2).add(0, 4).scale(cellSize), DIRECTION.UP));
-        SnakePart head = snake.getLast();
-        NGSprite  eye  = new NGSprite(head.pos, new NGVec2i(EYE_RADIUS), Color.RED/*COLOR_SNAKE_EYE*/);
-        eye.shape = NGSpriteShape.CIRCLE;
-        head.children.add(eye);
+        snake.add(new SnakePart(new NGVec2i(cellAmount / 2).add(0, 4).scale(cellSize), DIRECTION.UP, eyes));
 
         start();
     }
@@ -56,32 +57,15 @@ public class Snake extends NGMain {
             }
         }
 
+        snake.add(new SnakePart(newPos, queuedDirection, head.children));
         head.children.clear();
-
-        SnakePart newHead = new SnakePart(newPos, queuedDirection);
-        int       ldir    = queuedDirection.ordinal();
-        int       rdir    = (ldir + 1) % 4;
-
-        NGVec2i  leftEyePos = newPos.add((ldir % 3) < 1 ? EYE_LEFT : EYE_RIGHT, ldir < 2 ? EYE_LEFT : EYE_RIGHT);
-        NGSprite leftEye    = new NGSprite(leftEyePos, new NGVec2i(EYE_RADIUS), Color.RED/*COLOR_SNAKE_EYE*/);
-        leftEye.shape = NGSpriteShape.CIRCLE;
-        // leftEye.anims.add(newHead.anims.getLast()); // TODO: figure out the animations
-        newHead.children.add(leftEye);
-
-        NGVec2i  rightEyePos = newPos.add((rdir % 3) < 1 ? EYE_LEFT : EYE_RIGHT, rdir < 2 ? EYE_LEFT : EYE_RIGHT);
-        NGSprite rightEye    = new NGSprite(rightEyePos, new NGVec2i(EYE_RADIUS), Color.CYAN/*COLOR_SNAKE_EYE*/);
-        rightEye.shape = NGSpriteShape.CIRCLE;
-        // rightEye.anims.add(newHead.anims.getLast()); // TODO: figure out the animations
-        newHead.children.add(rightEye);
-
-        snake.add(newHead);
         for (SnakePart part: snake) part.nextAnim();
     }
 
     @Override
     public void onLMBPressed(NGVec2i pos) {
         if (pos.snap(cellSize).equals(food.pos)) eat();
-        SnakeRenderer.highlightFood = false;
+        highlightFood = false;
     }
 
     @Override
@@ -91,7 +75,7 @@ public class Snake extends NGMain {
 
     @Override
     public void onMouseMoved(NGVec2i pos) {
-        SnakeRenderer.highlightFood = (pos.snap(cellSize).equals(food.pos));
+        highlightFood = (pos.snap(cellSize).equals(food.pos));
     }
 
     @Override
@@ -138,14 +122,29 @@ public class Snake extends NGMain {
         public DIRECTION dir;
 
         public SnakePart(NGVec2i pos, DIRECTION dir) {
-            this(pos, dir, null);
+            this(pos, dir, new ArrayList<>());
         }
 
-        public SnakePart(NGVec2i pos, DIRECTION dir, NGAnimation anim) {
+        public SnakePart(NGVec2i pos, DIRECTION dir, ArrayList<NGSprite> eyes) {
+            this(pos, dir, eyes, null);
+        }
+
+        public SnakePart(NGVec2i pos, DIRECTION dir, ArrayList<NGSprite> eyes, NGAnimation anim) {
             super(pos, new NGVec2i(cellSize), COLOR_SNAKE, COLOR_SNAKE_BORDER);
             this.dir = dir;
             if (anims.isEmpty()) nextAnim();
             else anims.add(anim);
+            for (NGSprite eye: eyes) addChild(eye);
+        }
+
+        @Override
+        public void update(float dt) {
+            super.update(dt);
+            if (children.size() != 4) return;
+            children.get(0).visible = dir == DIRECTION.UP || dir == DIRECTION.LEFT;
+            children.get(1).visible = dir == DIRECTION.UP || dir == DIRECTION.RIGHT;
+            children.get(2).visible = dir == DIRECTION.DOWN || dir == DIRECTION.LEFT;
+            children.get(3).visible = dir == DIRECTION.DOWN || dir == DIRECTION.RIGHT;
         }
 
         public void nextAnim() {

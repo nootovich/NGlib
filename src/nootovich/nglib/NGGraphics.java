@@ -182,12 +182,7 @@ public class NGGraphics {
     // }
 
     public void drawSprite(NGSprite sprite) {
-        if (sprite.anims.isEmpty()) {
-            drawRectWithBorder(sprite.pos, sprite.size, sprite.color, sprite.borderColor);
-        } else for (NGAnimation anim: sprite.anims) {
-            drawRectWithBorder(anim.state.toInt(), sprite.size, sprite.color, sprite.borderColor);
-            for (NGSprite child: sprite.children) drawSprite(child);
-        }
+        sprite.draw(this);
     }
 
     public void setStroke(Stroke stroke) {

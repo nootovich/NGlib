@@ -2,7 +2,8 @@ package examples.snake;
 
 import examples.snake.Snake.SnakePart;
 import java.awt.Color;
-import nootovich.nglib.*;
+import nootovich.nglib.NGGraphics;
+import nootovich.nglib.NGRenderer;
 
 import static examples.snake.Main.*;
 
@@ -41,17 +42,6 @@ public class SnakeRenderer extends NGRenderer {
             for (SnakePart part: snake) {
                 part.update(dt);
                 g.drawSprite(part);
-            }
-        }
-        { // EYES
-            SnakePart head = snake.getLast();
-            int       ldir = head.dir.ordinal();
-            int       rdir = (ldir + 1) % 4;
-            for (NGAnimation anim: head.anims) {
-                NGVec2f leftEye  = anim.state.add((ldir % 3) < 1 ? EYE_LEFT : EYE_RIGHT, ldir < 2 ? EYE_LEFT : EYE_RIGHT);
-                NGVec2f rightEye = anim.state.add((rdir % 3) < 1 ? EYE_LEFT : EYE_RIGHT, rdir < 2 ? EYE_LEFT : EYE_RIGHT);
-                g.drawCircleCentered(leftEye, EYE_RADIUS, COLOR_SNAKE_EYE);
-                g.drawCircleCentered(rightEye, EYE_RADIUS, COLOR_SNAKE_EYE);
             }
         }
         { // SCORE
