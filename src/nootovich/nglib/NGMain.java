@@ -4,10 +4,12 @@ import java.awt.*;
 import java.awt.event.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Stack;
+import javax.annotation.processing.Generated;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 
 @SuppressWarnings("unused")
+@Generated("nootovich.nglib.NGGenerateMain")
 public class NGMain extends NGHotReloadable implements AWTEventListener {
 
     public static float TICK_DURATION  = 0.0333f; // Measured in seconds

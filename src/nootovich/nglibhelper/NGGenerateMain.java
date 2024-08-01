@@ -50,10 +50,12 @@ public class NGGenerateMain {
         sb.append("import java.awt.event.*;\n");
         sb.append("import java.lang.reflect.InvocationTargetException;\n");
         sb.append("import java.util.Stack;\n");
+        sb.append("import javax.annotation.processing.Generated;\n");
         sb.append("import javax.swing.JFrame;\n");
         sb.append("import javax.swing.Timer;\n\n");
 
         sb.append("@SuppressWarnings(\"unused\")\n");
+        sb.append("@Generated(\"nootovich.nglib.NGGenerateMain\")\n");
         sb.append("public class NGMain extends NGHotReloadable implements AWTEventListener {\n\n");
 
         sb.append("    public static float TICK_DURATION  = 0.0333f; // Measured in seconds\n");

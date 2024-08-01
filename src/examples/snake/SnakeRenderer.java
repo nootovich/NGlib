@@ -1,26 +1,12 @@
 package examples.snake;
 
 import examples.snake.Snake.SnakePart;
-import java.awt.Color;
 import nootovich.nglib.NGGraphics;
 import nootovich.nglib.NGRenderer;
 
 import static examples.snake.Main.*;
 
 public class SnakeRenderer extends NGRenderer {
-
-    private static final Color COLOR_BG             = new Color(0x141820);
-    public static final  Color COLOR_SNAKE          = new Color(0xFFFFFF);
-    public static final  Color COLOR_SNAKE_BORDER   = new Color(0x000000);
-    public static final  Color COLOR_SNAKE_EYE      = new Color(0x000000);
-    public static final  Color COLOR_FOOD           = new Color(0x166236);
-    public static final  Color COLOR_FOOD_HIGHLIGHT = new Color(0x338F54);
-    public static final  Color COLOR_FOOD_BORDER    = new Color(0xFFFFFF);
-    private static final Color COLOR_SCORE          = new Color(0x507DBE);
-
-    public static final int EYE_RADIUS = cellSize / 4;
-    public static final int EYE_LEFT   = (int) (cellSize * 0.275f);
-    public static final int EYE_RIGHT  = (int) (cellSize * 0.725f);
 
     public long prevTime = System.currentTimeMillis();
 
@@ -36,6 +22,7 @@ public class SnakeRenderer extends NGRenderer {
         }
         { // FOOD
             food.update(dt);
+            food.color = highlightFood ? COLOR_FOOD_HIGHLIGHT : COLOR_FOOD;
             g.drawSprite(food);
         }
         { // SNAKE
@@ -45,7 +32,7 @@ public class SnakeRenderer extends NGRenderer {
             }
         }
         { // SCORE
-            g.drawTextCentered(String.valueOf(score), w / 2, cellSize / 2, COLOR_SCORE);
+            g.drawTextCentered(String.valueOf(score), w / 2, CELL_SIZE / 2, COLOR_SCORE);
         }
     }
 }

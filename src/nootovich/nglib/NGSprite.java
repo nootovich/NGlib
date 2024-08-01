@@ -3,6 +3,7 @@ package nootovich.nglib;
 import java.awt.Color;
 import java.util.ArrayList;
 
+@Deprecated//until I make code generation for it
 public class NGSprite {
 
     public boolean visible = true;
@@ -35,12 +36,24 @@ public class NGSprite {
         this.borderColor = borderColor;
     }
 
+    public NGSprite(NGVec2i pos, int size, Color color) {
+        this.pos   = pos;
+        this.size  = new NGVec2i(size);
+        this.color = color;
+    }
+
     public NGSprite(NGVec2i pos, NGVec2i size, Color color) {
         this.pos   = pos;
         this.size  = size;
         this.color = color;
     }
 
+    public NGSprite(NGVec2i pos, int size, Color color, NGSpriteType type) {
+        this.pos   = pos;
+        this.size  = new NGVec2i(size);
+        this.color = color;
+        this.type  = type;
+    }
 
     public NGSprite(NGVec2i pos, NGVec2i size, Color color, NGSpriteType type) {
         this.pos   = pos;
