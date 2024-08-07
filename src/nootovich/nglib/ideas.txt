@@ -1,3 +1,4 @@
 Add powerups to snake
 Tic-tac-toe
 Puzzle game
+Clicker game
