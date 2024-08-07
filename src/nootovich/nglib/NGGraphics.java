@@ -138,33 +138,38 @@ public class NGGraphics {
         g2d.drawRoundRect(x, y, w, h, aw, ah);
     }
 
-    public void drawCircle(int x, int y, int radius, Color color) {
+    public void drawCircle(int x, int y, int diameter, Color color) {
         g2d.setColor(color);
-        g2d.fillOval(x, y, radius, radius);
+        g2d.fillOval(x, y, diameter, diameter);
     }
 
-    public void drawCircle(NGVec2i pos, int radius, Color color) {
+    public void drawCircle(NGVec2i pos, int diameter, Color color) {
         g2d.setColor(color);
-        g2d.fillOval(pos.x, pos.y, radius, radius);
+        g2d.fillOval(pos.x, pos.y, diameter, diameter);
     }
 
-    public void drawCircle(NGVec2f fpos, int radius, Color color) {
+    public void drawCircle(NGVec2f fpos, int diameter, Color color) {
         g2d.setColor(color);
         NGVec2i pos = fpos.toInt();
-        g2d.fillOval(pos.x, pos.y, radius, radius);
+        g2d.fillOval(pos.x, pos.y, diameter, diameter);
     }
 
-    public void drawCircleCentered(int x, int y, int radius, Color color) {
-        drawCircle(x - radius / 2, y - radius / 2, radius, color);
+    public void drawCircleCentered(int x, int y, int diameter, Color color) {
+        drawCircle(x - diameter / 2, y - diameter / 2, diameter, color);
     }
 
-    public void drawCircleCentered(NGVec2i pos, int radius, Color color) {
-        drawCircle(pos.x - radius / 2, pos.y - radius / 2, radius, color);
+    public void drawCircleCentered(NGVec2i pos, int diameter, Color color) {
+        drawCircle(pos.x - diameter / 2, pos.y - diameter / 2, diameter, color);
     }
 
-    public void drawCircleCentered(NGVec2f fpos, int radius, Color color) {
+    public void drawCircleCentered(NGVec2f fpos, int diameter, Color color) {
         NGVec2i pos = fpos.toInt();
-        drawCircle(pos.x - radius / 2, pos.y - radius / 2, radius, color);
+        drawCircle(pos.x - diameter / 2, pos.y - diameter / 2, diameter, color);
+    }
+
+    public void drawCircleBorder(int x, int y, int diameter, Color color) {
+        g2d.setColor(color);
+        g2d.drawOval(x, y, diameter, diameter);
     }
 
     // public void drawPixelSprite(int x, int y, int w, int h, NGSprite pixelSprite) {
