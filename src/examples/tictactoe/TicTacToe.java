@@ -15,7 +15,7 @@ public class TicTacToe extends NGMain {
 
     public void win(byte player) {
         System.out.printf("Player '%c' won!\n", player == 1 ? 'O' : 'X');
-        window.shouldClose = true;
+        board = new byte[3][3];
     }
 
     public void checkWin() {
@@ -34,6 +34,7 @@ public class TicTacToe extends NGMain {
         // TODO: change to "pos.div(cellWidth, cellHeight).in(board) = (byte) (player ? 1 : 2);" after NGVec rework
         int x = pos.x / cellWidth;
         int y = pos.y / cellHeight;
+        if (board[y][x] != 0) return;
         board[y][x] = player;
         player      = (byte) (player == 1 ? 2 : 1);
         checkWin();
