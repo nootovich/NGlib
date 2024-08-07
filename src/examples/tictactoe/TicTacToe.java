@@ -18,26 +18,39 @@ public class TicTacToe extends NGMain {
         board = new byte[3][3];
     }
 
-    public void checkWin() {
-        for (int y = 0; y < BOARD_SIZE; y++) {
-            if (board[y][0] > 0 && board[y][0] == board[y][1] && board[y][1] == board[y][2]) win(board[y][0]);
-        }
-        for (int x = 0; x < BOARD_SIZE; x++) {
-            if (board[0][x] > 0 && board[0][x] == board[1][x] && board[1][x] == board[2][x]) win(board[0][x]);
-        }
-        if (board[0][0] > 0 && board[0][0] == board[1][1] && board[1][1] == board[2][2]) win(board[1][1]);
-        if (board[0][2] > 0 && board[0][2] == board[1][1] && board[1][1] == board[2][0]) win(board[1][1]);
-    }
-
     @Override
     public void onLMBPressed(NGVec2i pos) {
         // TODO: change to "pos.div(cellWidth, cellHeight).in(board) = (byte) (player ? 1 : 2);" after NGVec rework
-        int x = pos.x / cellWidth;
-        int y = pos.y / cellHeight;
-        if (board[y][x] != 0) return;
-        board[y][x] = player;
-        player      = (byte) (player == 1 ? 2 : 1);
-        checkWin();
+        int cellX = pos.x / cellWidth;
+        int cellY = pos.y / cellHeight;
+        if (board[cellY][cellX] != 0) return;
+
+        board[cellY][cellX] = player;
+
+        player = (byte) (player == 1 ? 2 : 1);
+
+        { // CHECK WIN CONDITIONS
+            for (int y = 0; y < BOARD_SIZE; y++) {
+                if (board[y][0] > 0 && board[y][0] == board[y][1] && board[y][1] == board[y][2]) win(board[y][0]);
+            }
+            for (int x = 0; x < BOARD_SIZE; x++) {
+                if (board[0][x] > 0 && board[0][x] == board[1][x] && board[1][x] == board[2][x]) win(board[0][x]);
+            }
+            if (board[0][0] > 0 && board[0][0] == board[1][1] && board[1][1] == board[2][2]) win(board[1][1]);
+            if (board[0][2] > 0 && board[0][2] == board[1][1] && board[1][1] == board[2][0]) win(board[1][1]);
+        } // CHECK WIN CONDITIONS
+
+checkDraw:
+        { // CHECK DRAW CONDITION
+            boolean hasEmpty = false;
+            for (int y = 0; y < BOARD_SIZE; y++) {
+                for (int x = 0; x < BOARD_SIZE; x++) {
+                    if (board[y][x] == 0) break checkDraw;
+                }
+            }
+            System.out.printf("Draw!");
+            board = new byte[3][3];
+        } // CHECK DRAW CONDITION
     }
 
     @Override
