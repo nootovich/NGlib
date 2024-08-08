@@ -47,10 +47,18 @@ public class NGGraphics {
         g2d.drawLine(x1, y1, x2, y2);
     }
 
+    public void drawLine(NGVec2i pos1, NGVec2i pos2, Color color) {
+        drawLine(pos1.x, pos1.y, pos2.x, pos2.y, color);
+    }
+
     public void drawRoundedLine(int x1, int y1, int x2, int y2, Color color, int thiccness) {
         g2d.setStroke(new BasicStroke(thiccness, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-        drawLine(x1,y1,x2,y2,color);
+        drawLine(x1, y1, x2, y2, color);
         g2d.setStroke(new BasicStroke());
+    }
+
+    public void drawRoundedLine(NGVec2i pos1, NGVec2i pos2, Color color, int thiccness) {
+        drawRoundedLine(pos1.x, pos1.y, pos2.x, pos2.y, color, thiccness);
     }
 
     public void drawRect(int x, int y, int w, int h, Color color) {
@@ -180,7 +188,13 @@ public class NGGraphics {
 
     public void drawCircleBorder(int x, int y, int diameter, Color color, int thiccness) {
         g2d.setStroke(new BasicStroke(thiccness, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-        drawCircleBorder(x,y,diameter,color);
+        drawCircleBorder(x, y, diameter, color);
+        g2d.setStroke(new BasicStroke());
+    }
+
+    public void drawCircleBorder(NGVec2i pos, int diameter, Color color, int thiccness) {
+        g2d.setStroke(new BasicStroke(thiccness, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        drawCircleBorder(pos.x, pos.y, diameter, color);
         g2d.setStroke(new BasicStroke());
     }
 

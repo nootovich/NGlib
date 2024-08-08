@@ -7,6 +7,11 @@ public class NGVec2f {
     public NGVec2f() {
     }
 
+    public NGVec2f(float n) {
+        this.x = n;
+        this.y = n;
+    }
+
     public NGVec2f(int x, int y) {
         this.x = x;
         this.y = y;

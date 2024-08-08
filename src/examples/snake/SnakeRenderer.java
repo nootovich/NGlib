@@ -14,6 +14,7 @@ public class SnakeRenderer extends NGRenderer {
 
     @Override
     public void render(NGGraphics g) {
+        // TODO: `dt` should be a parameter
         long  curTime = System.currentTimeMillis();
         float dt      = (curTime - prevTime) / 1000f;
         prevTime = curTime;

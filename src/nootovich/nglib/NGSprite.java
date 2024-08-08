@@ -3,7 +3,6 @@ package nootovich.nglib;
 import java.awt.Color;
 import java.util.ArrayList;
 
-@Deprecated// until I make code generation for it
 public class NGSprite {
 
     public boolean visible = true;
@@ -25,7 +24,7 @@ public class NGSprite {
     public enum NGSpriteType {
         LINE,
         RECT, RECT_CENTERED,
-        CIRCLE, CIRCLE_CENTERED
+        CIRCLE, CIRCLE_CENTERED, CIRCLE_BORDER;
     }
 
     public NGSprite(int x, int y, int w, int h, Color color) {
@@ -75,16 +74,26 @@ public class NGSprite {
     }
 
     public void update(float dt) {
-        for (NGAnimation anim: anims) anim.update(dt);
+        int animsLen = anims.size();
+        for (int i = 0; i < animsLen; i++) {
+            NGAnimation anim = anims.get(i);
+            if (!anim.update(dt)) {
+                this.pos = anim.state.toInt();
+                anims.remove(anim);
+                animsLen--;
+                i--;
+            }
+        }
         for (NGSprite child: children) child.update(dt);
     }
 
-    public void draw(NGGraphics g) {
+    void draw(NGGraphics g) {
         if (visible) switch (type) {
-            case LINE -> g.drawRoundedLine(pos.x, pos.y, pos.x + size.x, pos.y + size.y, color, extra);
+            case LINE -> g.drawRoundedLine(getPos(), getPos().add(size), color, extra);
             case RECT -> g.drawRectWithBorder(getPos(), size, color, borderColor);
             case CIRCLE -> g.drawCircle(getPos(), size.x, color);
             case CIRCLE_CENTERED -> g.drawCircleCentered(getPos(), size.x, color);
+            case CIRCLE_BORDER -> g.drawCircleBorder(getPos(), size.x, color, extra);
             default -> NGUtils.error("Not implemented");
         }
         for (NGSprite child: children) child.draw(g);
@@ -103,5 +112,12 @@ public class NGSprite {
     public void addChild(NGSprite child) {
         children.add(child);
         child.parent = this;
+    }
+
+    // TODO: Not so sure about that.
+    //  I'm gradually losing clarity, it's so hard to just think these days...
+    public void addAnimPosRelative(NGVec2f relativePos, float time) {
+        NGAnimation anim = new NGAnimation(pos.toFloat(), pos.toFloat().add(relativePos), time);
+        anims.add(anim);
     }
 }

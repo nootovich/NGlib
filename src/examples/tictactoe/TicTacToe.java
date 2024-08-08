@@ -27,7 +27,7 @@ public class TicTacToe extends NGMain {
         if (restartTime > 0 && System.currentTimeMillis() > restartTime) {
             restartTime = 0;
             board       = new byte[3][3];
-            TicTacToeRenderer.lines.clear();
+            TicTacToeRenderer.sprites.clear();
         }
     }
 
@@ -40,6 +40,7 @@ public class TicTacToe extends NGMain {
         if (board[cellY][cellX] != 0) return;
 
         board[cellY][cellX] = player;
+        TicTacToeRenderer.addShape(cellX, cellY, player);
 
         player = (byte) (player == 1 ? 2 : 1);
 
