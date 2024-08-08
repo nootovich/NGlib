@@ -3,13 +3,14 @@ package nootovich.nglib;
 import java.awt.Color;
 import java.util.ArrayList;
 
-@Deprecated//until I make code generation for it
+@Deprecated// until I make code generation for it
 public class NGSprite {
 
     public boolean visible = true;
 
     public NGVec2i      pos;
     public NGVec2i      size;
+    public int          extra       = 0;
     public Color        color;
     public Color        borderColor = new Color(0, true);
     public NGSpriteType type        = NGSpriteType.RECT;
@@ -21,7 +22,11 @@ public class NGSprite {
 
     public ArrayList<NGSprite> children = new ArrayList<>();
 
-    public enum NGSpriteType {RECT, RECT_CENTERED, CIRCLE, CIRCLE_CENTERED;}
+    public enum NGSpriteType {
+        LINE,
+        RECT, RECT_CENTERED,
+        CIRCLE, CIRCLE_CENTERED
+    }
 
     public NGSprite(int x, int y, int w, int h, Color color) {
         this.pos   = new NGVec2i(x, y);
@@ -76,6 +81,7 @@ public class NGSprite {
 
     public void draw(NGGraphics g) {
         if (visible) switch (type) {
+            case LINE -> g.drawRoundedLine(pos.x, pos.y, pos.x + size.x, pos.y + size.y, color, extra);
             case RECT -> g.drawRectWithBorder(getPos(), size, color, borderColor);
             case CIRCLE -> g.drawCircle(getPos(), size.x, color);
             case CIRCLE_CENTERED -> g.drawCircleCentered(getPos(), size.x, color);
