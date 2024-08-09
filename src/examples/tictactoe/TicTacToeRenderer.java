@@ -65,11 +65,11 @@ public class TicTacToeRenderer extends NGRenderer {
 
     public static void addShape(int cellX, int cellY, byte player) {
 
-        NGVec2i  offset = MARGIN.scale(1.0f - DROP_ANIMATION_OFFSET);
-        NGVec2i  pos1   = new NGVec2i(cellX * cellWidth, cellY * cellHeight).add(offset);
-        NGVec2i  pos2   = new NGVec2i(cellWidth, cellHeight).sub(MARGIN.scale(2));
+        NGVec2i offset = MARGIN.scale(1.0f - DROP_ANIMATION_OFFSET);
+        NGVec2i pos1   = new NGVec2i(cellX * cellWidth, cellY * cellHeight).add(offset);
+        NGVec2i pos2   = new NGVec2i(cellWidth, cellHeight).sub(MARGIN.scale(2));
 
-        NGSprite shape  = new NGSprite(pos1, pos2, player == 1 ? COLOR_PLAYER1 : COLOR_PLAYER2, player == 1 ? CIRCLE_BORDER : LINE);
+        NGSprite shape = new NGSprite(pos1, pos2, player == 1 ? COLOR_PLAYER1 : COLOR_PLAYER2, player == 1 ? CIRCLE_BORDER : LINE);
         shape.extra = LINE_THICCNESS;
         shape.addAnimPosRelative(MARGIN.scale(DROP_ANIMATION_OFFSET).toFloat(), 0.15f);
         sprites.add(shape);
@@ -103,5 +103,12 @@ public class TicTacToeRenderer extends NGRenderer {
             sprite.update(dt);
             g.drawSprite(sprite);
         }
+
+        Color gradientColor1 = new Color(0x20 << 24, true);
+        Color gradientColor2 = new Color(0, true);
+        g.drawGradient(new NGVec2i(0, h - MARGIN_V * 2), new NGVec2i(w, MARGIN_V * 2), 0, gradientColor1, gradientColor2);
+        g.drawGradient(new NGVec2i(0, 0), new NGVec2i(MARGIN_H * 2, h), 1, gradientColor1, gradientColor2);
+        g.drawGradient(new NGVec2i(0, 0), new NGVec2i(w, MARGIN_V * 2), 2, gradientColor1, gradientColor2);
+        g.drawGradient(new NGVec2i(w - MARGIN_H * 2, 0), new NGVec2i(MARGIN_H * 2, h), 3, gradientColor1, gradientColor2);
     }
 }

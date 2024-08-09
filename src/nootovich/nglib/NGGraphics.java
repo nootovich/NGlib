@@ -198,6 +198,38 @@ public class NGGraphics {
         g2d.setStroke(new BasicStroke());
     }
 
+    // A BIG TODO:
+    public void drawGradient(NGVec2i pos, NGVec2i size, int direction, Color color1, Color color2) {
+        // NOTE: direction implementation is temporary
+        NGVec4i colorVec1 = new NGVec4i(color1.getRed(), color1.getGreen(), color1.getBlue(), color1.getAlpha());
+        NGVec4i colorVec2 = new NGVec4i(color2.getRed(), color2.getGreen(), color2.getBlue(), color2.getAlpha());
+        if (direction == 0) { // TO THE TOP
+            for (int y = pos.y; y < pos.y + size.y; y++) {
+                NGVec4i colorVec3 = colorVec2.lerp(colorVec1, (float) (y - pos.y) / size.y);
+                Color   color     = new Color(colorVec3.x, colorVec3.y, colorVec3.z, colorVec3.w);
+                drawLine(pos.x, y, pos.x + size.x, y, color);
+            }
+        } else if (direction == 1) { // TO THE RIGHT
+            for (int x = pos.x; x < pos.x + size.x; x++) {
+                NGVec4i colorVec3 = colorVec1.lerp(colorVec2, (float) (x - pos.x) / size.x);
+                Color   color     = new Color(colorVec3.x, colorVec3.y, colorVec3.z, colorVec3.w);
+                drawLine(x, pos.y, x, pos.y + size.y, color);
+            }
+        } else if (direction == 2) { // TO THE BOTTOM
+            for (int y = pos.y; y < pos.y + size.y; y++) {
+                NGVec4i colorVec3 = colorVec1.lerp(colorVec2, (float) (y - pos.y) / size.y);
+                Color   color     = new Color(colorVec3.x, colorVec3.y, colorVec3.z, colorVec3.w);
+                drawLine(pos.x, y, pos.x + size.x, y, color);
+            }
+        } else if (direction == 3) { // TO THE LEFT
+            for (int x = pos.x; x < pos.x + size.x; x++) {
+                NGVec4i colorVec3 = colorVec2.lerp(colorVec1, (float) (x - pos.x) / size.x);
+                Color   color     = new Color(colorVec3.x, colorVec3.y, colorVec3.z, colorVec3.w);
+                drawLine(x, pos.y, x, pos.y + size.y, color);
+            }
+        } else NGUtils.error("no. bad.");
+    }
+
     // public void drawPixelSprite(int x, int y, int w, int h, NGSprite pixelSprite) {
     //     // NOTE: Temporary naive approach. Just enough to get things going
     //     if (pixelSprite.pixels.length == 0 || pixelSprite.pixels[0].length == 0) NGUtils.error("Invalid `NGPixelSprite`");
