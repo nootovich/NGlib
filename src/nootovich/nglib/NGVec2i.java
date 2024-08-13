@@ -51,6 +51,10 @@ public class NGVec2i {
         return new NGVec2i(x + dx, y + dy);
     }
 
+    public NGVec2i add(float dx, float dy) {
+        return new NGVec2i(x + dx, y + dy);
+    }
+
     public NGVec2i sub(NGVec2i other) {
         return new NGVec2i(x - other.x, y - other.y);
     }
@@ -69,6 +73,18 @@ public class NGVec2i {
 
     public NGVec2i divide(float factor) {
         return new NGVec2i(x / factor, y / factor);
+    }
+
+    public NGVec2i neg() {
+        return new NGVec2i(-x, -y);
+    }
+
+    public NGVec2i negX() {
+        return new NGVec2i(-x, y);
+    }
+
+    public NGVec2i negY() {
+        return new NGVec2i(x, -y);
     }
 
     public NGVec2i lerp(NGVec2i other, float n) {

@@ -15,7 +15,7 @@ public class NGMain extends NGHotReloadable implements AWTEventListener {
     public static float TICK_DURATION  = 0.0333f; // Measured in seconds
     public static float FRAME_DURATION = 0.0167f; // Measured in seconds
 
-    public NGWindow window;
+    public static NGWindow window;
 
     Stack<String> heldKeys = new Stack<>();
 
@@ -1472,7 +1472,7 @@ public class NGMain extends NGHotReloadable implements AWTEventListener {
             Component c = ((ComponentEvent) event).getComponent();
             if (!(c instanceof JFrame && c.isVisible())) return;
             Insets ins = ((JFrame) c).getInsets();
-            onWindowResize(c.getWidth() - ins.left, c.getHeight() - ins.top);
+            onWindowResize(c.getWidth() - ins.left - ins.right, c.getHeight() - ins.top - ins.bottom);
         } else if (id == WindowEvent.WINDOW_ICONIFIED) {
             onWindowMinimize();
         } else if (id == WindowEvent.WINDOW_DEICONIFIED) {

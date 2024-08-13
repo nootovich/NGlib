@@ -11,7 +11,7 @@ public class TicTacToe extends NGMain {
     public void main() {
         setTickRate(30);
         setFrameRate(60);
-        window = new NGWindow(w, h, new TicTacToeRenderer(), this); // TODO: rework
+        window = new NGWindow(W, H, new TicTacToeRenderer(), this); // TODO: rework
         start();
     }
 
@@ -26,44 +26,45 @@ public class TicTacToe extends NGMain {
         // TODO: reset breaks after hot-reloading
         if (restartTime > 0 && System.currentTimeMillis() > restartTime) {
             restartTime = 0;
-            board       = new byte[3][3];
-            TicTacToeRenderer.sprites.clear();
+            BOARD       = new byte[BOARD_SIZE][BOARD_SIZE];
+            TicTacToeRenderer.lineSprites.clear();
+            TicTacToeRenderer.shapeSprites = new NGSprite[BOARD_SIZE][BOARD_SIZE];
         }
     }
 
     @Override
     public void onLMBPressed(NGVec2i pos) {
         if (restartTime > 0) return;
-        // TODO: change to "pos.div(cellWidth, cellHeight).in(board) = (byte) (player ? 1 : 2);" after NGVec rework
-        int cellX = pos.x / cellWidth;
-        int cellY = pos.y / cellHeight;
-        if (board[cellY][cellX] != 0) return;
+        // TODO: change to "pos.sub(MARGIN).div(CELL_SIZE).in(board) = (byte) (player ? 1 : 2);" after NGVec rework
+        NGVec2i cell = pos.sub(MARGIN).divide(CELL_SIZE);
+        if (0 > cell.x || cell.x >= BOARD_SIZE || 0 > cell.y || cell.y >= BOARD_SIZE) return;
+        if (BOARD[cell.y][cell.x] != 0) return;
 
-        board[cellY][cellX] = player;
-        TicTacToeRenderer.addShape(cellX, cellY, player);
+        BOARD[cell.y][cell.x] = PLAYER;
+        TicTacToeRenderer.addShape(cell, PLAYER);
 
-        player = (byte) (player == 1 ? 2 : 1);
+        PLAYER = (byte) (PLAYER == 1 ? 2 : 1);
 
         { // CHECK WIN CONDITIONS
             for (int y = 0; y < BOARD_SIZE; y++) {
-                if (board[y][0] > 0 && board[y][0] == board[y][1] && board[y][1] == board[y][2]) {
+                if (BOARD[y][0] > 0 && BOARD[y][0] == BOARD[y][1] && BOARD[y][1] == BOARD[y][2]) {
                     TicTacToeRenderer.addHorizontalLine(y);
-                    win(board[y][0]);
+                    win(BOARD[y][0]);
                 }
             }
             for (int x = 0; x < BOARD_SIZE; x++) {
-                if (board[0][x] > 0 && board[0][x] == board[1][x] && board[1][x] == board[2][x]) {
+                if (BOARD[0][x] > 0 && BOARD[0][x] == BOARD[1][x] && BOARD[1][x] == BOARD[2][x]) {
                     TicTacToeRenderer.addVerticalLine(x);
-                    win(board[0][x]);
+                    win(BOARD[0][x]);
                 }
             }
-            if (board[0][0] > 0 && board[0][0] == board[1][1] && board[1][1] == board[2][2]) {
+            if (BOARD[0][0] > 0 && BOARD[0][0] == BOARD[1][1] && BOARD[1][1] == BOARD[2][2]) {
                 TicTacToeRenderer.addDiagonalLineBackward();
-                win(board[1][1]);
+                win(BOARD[1][1]);
             }
-            if (board[0][2] > 0 && board[0][2] == board[1][1] && board[1][1] == board[2][0]) {
+            if (BOARD[0][2] > 0 && BOARD[0][2] == BOARD[1][1] && BOARD[1][1] == BOARD[2][0]) {
                 TicTacToeRenderer.addDiagonalLineForward();
-                win(board[1][1]);
+                win(BOARD[1][1]);
             }
         } // CHECK WIN CONDITIONS
 
@@ -72,12 +73,29 @@ checkDraw:
             if (restartTime > 0) break checkDraw;
             for (int y = 0; y < BOARD_SIZE; y++) {
                 for (int x = 0; x < BOARD_SIZE; x++) {
-                    if (board[y][x] == 0) break checkDraw;
+                    if (BOARD[y][x] == 0) break checkDraw;
                 }
             }
             System.out.println("Draw!");
             restartTime = System.currentTimeMillis() + 1000;
         } // CHECK DRAW CONDITION
+    }
+
+    @Override
+    public void onWindowResize(int nw, int nh) {
+        W           = Math.max(nw, 100); // TODO: think of limiting the size of a window properly
+        H           = Math.max(nh, 100); // TODO: think of limiting the size of a window properly
+        MIN_WH      = Math.min(W, H);
+        WINDOW_SIZE = new NGVec2i(W, H);
+        CELL_SIZE   = MIN_WH / BOARD_SIZE;
+        LINE_LEN    = MIN_WH - MARGIN_FIXED * 2;
+        window.g.resize(W, H);
+        TicTacToeRenderer.onResize();
+    }
+
+    @Override
+    public void onRPress() {
+        restartTime = System.currentTimeMillis();
     }
 
     @Override

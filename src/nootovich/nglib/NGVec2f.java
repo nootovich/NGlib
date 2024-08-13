@@ -52,6 +52,10 @@ public class NGVec2f {
         return new NGVec2f(x - n, y - n);
     }
 
+    public NGVec2f sub(float dx, float dy) {
+        return new NGVec2f(x - dx, y - dy);
+    }
+
     public NGVec2f scale(float factor) {
         return new NGVec2f(x * factor, y * factor);
     }

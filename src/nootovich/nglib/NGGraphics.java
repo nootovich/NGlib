@@ -15,8 +15,9 @@ public class NGGraphics {
     private Graphics2D    g2d;
 
     public NGGraphics(Container c) {
-        gX     = c.getInsets().left;
-        gY     = c.getInsets().top;
+        Insets ins = c.getInsets();
+        gX     = ins.left;
+        gY     = ins.top;
         gW     = c.getComponent(0).getWidth();
         gH     = c.getComponent(0).getHeight();
         buffer = new BufferedImage(gW, gH, BufferedImage.TYPE_INT_RGB);
@@ -63,78 +64,82 @@ public class NGGraphics {
 
     public void drawRect(int x, int y, int w, int h, Color color) {
         g2d.setColor(color);
+        if (w < 0) {
+            x += w;
+            w = -w;
+        }
+        if (h < 0) {
+            y += h;
+            h = -h;
+        }
         g2d.fillRect(x, y, w, h);
     }
 
     public void drawRect(int x, int y, int size, Color color) {
-        g2d.setColor(color);
-        g2d.fillRect(x, y, size, size);
+        drawRect(x, y, size, size, color);
     }
 
     public void drawRect(NGVec2i pos, NGVec2i size, Color color) {
-        g2d.setColor(color);
-        g2d.fillRect(pos.x, pos.y, size.x, size.y);
+        drawRect(pos.x, pos.y, size.x, size.y, color);
     }
 
     public void drawRect(NGVec4i rect, Color color) {
-        g2d.setColor(color);
-        g2d.fillRect(rect.x, rect.y, rect.z, rect.w);
+        drawRect(rect.x, rect.y, rect.z, rect.w, color);
     }
 
     public void drawRect(NGVec2f fpos, NGVec2f fsize, Color color) {
-        g2d.setColor(color);
-        NGVec2i pos  = fpos.toInt();
-        NGVec2i size = fsize.toInt();
-        g2d.fillRect(pos.x, pos.y, size.x, size.y);
+        drawRect(fpos.toInt(), fsize.toInt(), color);
     }
 
     public void drawRect(NGVec2i pos, int size, Color color) {
-        g2d.setColor(color);
-        g2d.fillRect(pos.x, pos.y, size, size);
+        drawRect(pos.x, pos.y, size, color);
     }
 
     public void drawRect(NGVec2f fpos, int size, Color color) {
-        g2d.setColor(color);
-        NGVec2i pos = fpos.toInt();
-        g2d.fillRect(pos.x, pos.y, size, size);
+        drawRect(fpos.toInt(), size, color);
     }
 
     public void drawRectBorder(int x, int y, int w, int h, Color color) {
         g2d.setColor(color);
+        if (w < 0) {
+            x += w;
+            w = -w;
+        }
+        if (h < 0) {
+            y += h;
+            h = -h;
+        }
         g2d.drawRect(x, y, w, h);
     }
 
     public void drawRectBorder(int x, int y, int size, Color color) {
-        g2d.setColor(color);
-        g2d.drawRect(x, y, size, size);
+        drawRectBorder(x, y, size, size, color);
     }
 
     public void drawRectBorder(NGVec2i pos, NGVec2i size, Color color) {
-        g2d.setColor(color);
-        g2d.drawRect(pos.x, pos.y, size.x, size.y);
+        drawRectBorder(pos.x, pos.y, size.x, size.y, color);
+    }
+
+    public void drawRectBorder(NGVec2i pos, NGVec2i size, Color color, int thiccness) {
+        g2d.setStroke(new BasicStroke(thiccness, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        drawRectBorder(pos, size, color);
+        g2d.setStroke(new BasicStroke());
     }
 
     public void drawRectBorder(NGVec4i rect, Color color) {
-        g2d.setColor(color);
-        g2d.drawRect(rect.x, rect.y, rect.z, rect.w);
+        drawRectBorder(rect.x, rect.y, rect.z, rect.w, color);
     }
 
     public void drawRectBorder(NGVec2f fpos, NGVec2f fsize, Color color) {
-        g2d.setColor(color);
-        NGVec2i pos  = fpos.toInt();
-        NGVec2i size = fsize.toInt();
-        g2d.drawRect(pos.x, pos.y, size.x, size.y);
+        drawRectBorder(fpos.toInt(), fsize.toInt(), color);
     }
 
     public void drawRectBorder(NGVec2i pos, int size, Color color) {
-        g2d.setColor(color);
-        g2d.drawRect(pos.x, pos.y, size, size);
+        drawRectBorder(pos.x, pos.y, size, color);
     }
 
     public void drawRectBorder(NGVec2f fpos, int size, Color color) {
-        g2d.setColor(color);
-        NGVec2i pos = fpos.toInt();
-        g2d.drawRect(pos.x, pos.y, size, size);
+        drawRectBorder(fpos.toInt(), size, color);
     }
 
     public void drawRectWithBorder(NGVec2i pos, NGVec2i size, Color color, Color borderColor) {
@@ -158,14 +163,11 @@ public class NGGraphics {
     }
 
     public void drawCircle(NGVec2i pos, int diameter, Color color) {
-        g2d.setColor(color);
-        g2d.fillOval(pos.x, pos.y, diameter, diameter);
+        drawCircle(pos.x, pos.y, diameter, color);
     }
 
     public void drawCircle(NGVec2f fpos, int diameter, Color color) {
-        g2d.setColor(color);
-        NGVec2i pos = fpos.toInt();
-        g2d.fillOval(pos.x, pos.y, diameter, diameter);
+        drawCircle(fpos.toInt(), diameter, color);
     }
 
     public void drawCircleCentered(int x, int y, int diameter, Color color) {
@@ -173,12 +175,11 @@ public class NGGraphics {
     }
 
     public void drawCircleCentered(NGVec2i pos, int diameter, Color color) {
-        drawCircle(pos.x - diameter / 2, pos.y - diameter / 2, diameter, color);
+        drawCircleCentered(pos.x, pos.y, diameter, color);
     }
 
     public void drawCircleCentered(NGVec2f fpos, int diameter, Color color) {
-        NGVec2i pos = fpos.toInt();
-        drawCircle(pos.x - diameter / 2, pos.y - diameter / 2, diameter, color);
+        drawCircleCentered(fpos.toInt(), diameter, color);
     }
 
     public void drawCircleBorder(int x, int y, int diameter, Color color) {
@@ -193,9 +194,7 @@ public class NGGraphics {
     }
 
     public void drawCircleBorder(NGVec2i pos, int diameter, Color color, int thiccness) {
-        g2d.setStroke(new BasicStroke(thiccness, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-        drawCircleBorder(pos.x, pos.y, diameter, color);
-        g2d.setStroke(new BasicStroke());
+        drawCircleBorder(pos.x, pos.y, diameter, color, thiccness);
     }
 
     // A BIG TODO:
