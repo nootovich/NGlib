@@ -36,7 +36,6 @@ public class NGFileSystem {
     }
 
     public static String[] getDirectoryFiles(String dir) {
-        // TODO: rewrite using `File` class?
         Stack<String> list = new Stack<>();
         try (Stream<Path> paths = Files.list(Path.of(dir))) {
             paths.filter(path -> !Files.isDirectory(path)).forEach(path -> list.push(path.getFileName().toString()));

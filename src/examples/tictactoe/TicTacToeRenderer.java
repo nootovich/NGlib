@@ -8,8 +8,6 @@ import static examples.tictactoe.Main.*;
 import static nootovich.nglib.NGSprite.NGSpriteType.CIRCLE_BORDER;
 import static nootovich.nglib.NGSprite.NGSpriteType.LINE;
 
-// TODO: Sprites don't show up after hot-reloading this class
-
 public class TicTacToeRenderer extends NGRenderer {
 
     private static final boolean DEBUG = false;

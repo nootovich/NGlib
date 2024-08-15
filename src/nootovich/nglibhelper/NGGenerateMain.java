@@ -15,7 +15,6 @@ public class NGGenerateMain {
 
     public static final Map<Integer, String> mouseButtons = Map.of(1, "LMB", 2, "MMB", 3, "RMB");
 
-    // TODO: good enough to just get something working, but needs to change at some point
     public static void main(String[] args) {
 
         for (String s: args) {

@@ -91,7 +91,7 @@ public class NGVec2i {
         return this.add(other.sub(this).scale(n));
     }
 
-    public NGVec2i snap(int n) { // TODO: think of a name for parameter
+    public NGVec2i snap(int n) {
         return this.divide(n).scale(n);
     }
 

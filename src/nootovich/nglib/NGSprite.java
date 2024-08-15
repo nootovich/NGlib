@@ -122,10 +122,4 @@ public class NGSprite {
         child.parent = this;
     }
 
-    // TODO: Not so sure about that.
-    //  I'm gradually losing clarity, it's so hard to just think these days...
-    public void addAnimPosRelative(NGVec2f relativePos, float time) {
-        NGAnimation anim = new NGAnimation(pos.toFloat(), pos.toFloat().add(relativePos), time);
-        anims.add(anim);
-    }
 }
