@@ -7,4 +7,5 @@ public abstract class NGRenderer extends NGHotReloadable {
     public Font defaultFont;
 
     public abstract void render(NGGraphics g);
+    public abstract void reset();
 }

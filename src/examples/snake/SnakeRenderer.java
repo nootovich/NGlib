@@ -36,4 +36,7 @@ public class SnakeRenderer extends NGRenderer {
             g.drawTextCentered(String.valueOf(score), w / 2, CELL_SIZE / 2, COLOR_SCORE);
         }
     }
+
+    @Override
+    public void reset() { }
 }

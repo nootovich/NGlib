@@ -1,5 +1,7 @@
 package nootovich.nglib;
 
+import java.lang.reflect.InvocationTargetException;
+
 public class NGUtils {
 
     private static final int FILENAME_LEN = 32;
@@ -13,6 +15,22 @@ public class NGUtils {
         if (n < min) return min;
         if (n > max) return max;
         return n;
+    }
+
+    public static <T> T recursiveCopy(T source) throws InstantiationException, IllegalAccessException {
+        if (source == null) return null;
+        Class<?> srcClass = source.getClass();
+        if (srcClass.isPrimitive()) return source;
+        if (source instanceof Object[] arr) {
+            Object[] copy = new Object[arr.length];
+            for (int i = 0; i < arr.length; i++) copy[i] = recursiveCopy(arr[i]);
+            return (T) copy;
+        }
+        try {
+            return (T) srcClass.getMethod("clone").invoke(source);
+        } catch (NoSuchMethodException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static <T> T info(String message) {

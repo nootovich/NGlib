@@ -177,4 +177,14 @@ public class TicTacToeRenderer extends NGRenderer {
             } // WIN LINES
         }
     }
+
+    @Override
+    public void reset() {
+        lineSprites.clear();
+        for (int i = 0; i < shapeSprites.length; i++) {
+            for (int j = 0; j < shapeSprites[i].length; j++) {
+                shapeSprites[i][j] = null;
+            }
+        }
+    }
 }

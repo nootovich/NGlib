@@ -73,6 +73,14 @@ public class NGSprite {
         this.borderColor = borderColor;
     }
 
+    public NGSprite(NGVec2i pos, NGVec2i size, Color color, Color borderColor, NGSpriteType type) {
+        this.pos         = pos;
+        this.size        = size;
+        this.color       = color;
+        this.borderColor = borderColor;
+        this.type        = type;
+    }
+
     public void update(float dt) {
         int animsLen = anims.size();
         for (int i = 0; i < animsLen; i++) {
