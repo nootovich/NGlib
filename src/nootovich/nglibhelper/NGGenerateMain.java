@@ -61,7 +61,7 @@ public class NGGenerateMain {
         sb.append("    public static float TICK_DURATION  = 0.0333f; // Measured in seconds\n");
         sb.append("    public static float FRAME_DURATION = 0.0167f; // Measured in seconds\n\n");
 
-        sb.append("    public NGWindow window;\n\n");
+        sb.append("    public static NGWindow window;\n\n");
 
         sb.append("    Stack<String> heldKeys = new Stack<>();\n\n");
 
@@ -163,7 +163,7 @@ public class NGGenerateMain {
             sb.append("            Component c = ((ComponentEvent) event).getComponent();\n");
             sb.append("            if (!(c instanceof JFrame && c.isVisible())) return;\n");
             sb.append("            Insets ins = ((JFrame) c).getInsets();\n");
-            sb.append("            onWindowResize(c.getWidth() - ins.left, c.getHeight() - ins.top);\n");
+            sb.append("            onWindowResize(c.getWidth() - ins.left - ins.right, c.getHeight() - ins.top - ins.bottom);\n");
             sb.append("        } else if (id == WindowEvent.WINDOW_ICONIFIED) {\n");
             sb.append("            onWindowMinimize();\n");
             sb.append("        } else if (id == WindowEvent.WINDOW_DEICONIFIED) {\n");
