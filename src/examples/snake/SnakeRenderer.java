@@ -1,6 +1,7 @@
 package examples.snake;
 
 import examples.snake.Snake.SnakePart;
+import java.awt.Font;
 import nootovich.nglib.NGGraphics;
 import nootovich.nglib.NGRenderer;
 
@@ -11,6 +12,11 @@ public class SnakeRenderer extends NGRenderer {
     public long prevTime = System.currentTimeMillis();
 
     public static boolean highlightFood = false;
+
+    public SnakeRenderer() {
+        super();
+        defaultFont = new Font(Font.MONOSPACED, Font.BOLD, 64);
+    }
 
     @Override
     public void render(NGGraphics g) {

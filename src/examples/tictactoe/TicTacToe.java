@@ -1,6 +1,7 @@
 package examples.tictactoe;
 
-import nootovich.nglib.*;
+import nootovich.nglib.NGMain;
+import nootovich.nglib.NGVec2i;
 
 import static examples.tictactoe.Main.*;
 
@@ -11,7 +12,7 @@ public class TicTacToe extends NGMain {
     public void main() {
         setTickRate(30);
         setFrameRate(60);
-        window = new NGWindow(W, H, new TicTacToeRenderer(), this); // TODO: rework
+        createWindow(W, H, new TicTacToeRenderer());
         start();
     }
 
@@ -23,7 +24,6 @@ public class TicTacToe extends NGMain {
 
     @Override
     public void update() {
-        // TODO: reset breaks after hot-reloading
         if (restartTime > 0 && System.currentTimeMillis() > restartTime) {
             restartTime = 0;
             BOARD       = new byte[BOARD_SIZE][BOARD_SIZE];

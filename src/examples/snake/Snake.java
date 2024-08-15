@@ -1,6 +1,5 @@
 package examples.snake;
 
-import java.awt.Font;
 import java.util.ArrayList;
 import nootovich.nglib.*;
 
@@ -14,10 +13,7 @@ public class Snake extends NGMain {
     public void main() {
         setTickRate(10);
         setFrameRate(80);
-
-        SnakeRenderer renderer = new SnakeRenderer();
-        renderer.defaultFont = new Font(Font.MONOSPACED, Font.BOLD, 64);
-        window               = new NGWindow(w, h, renderer, this);
+        createWindow(w, h, new SnakeRenderer());
 
         ArrayList<NGSprite> eyes = new ArrayList<>();
         eyes.add(new NGSprite(new NGVec2i(EYE_LEFT, EYE_LEFT), EYE_RADIUS, COLOR_SNAKE_EYE, CIRCLE_CENTERED));
@@ -70,7 +66,7 @@ public class Snake extends NGMain {
 
     @Override
     public void whileRMBHeld(NGVec2i pos) {
-        food.pos = pos.snap(CELL_SIZE);
+        food.pos      = pos.snap(CELL_SIZE);
         highlightFood = true;
     }
 

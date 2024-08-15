@@ -27,6 +27,10 @@ public class NGMain extends NGHotReloadable implements AWTEventListener {
         FRAME_DURATION = 1.0f / fps;
     }
 
+    public void createWindow(int w, int h, NGRenderer renderer) {
+        window = new NGWindow(w, h, renderer, this);
+    }
+
     public void start() {
         NGUtils.info("tickrate: %f".formatted(1 / TICK_DURATION));
         NGUtils.info("framerate: %f".formatted(1 / FRAME_DURATION));

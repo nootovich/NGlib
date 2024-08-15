@@ -73,6 +73,10 @@ public class NGGenerateMain {
         sb.append("        FRAME_DURATION = 1.0f / fps;\n");
         sb.append("    }\n\n");
 
+        sb.append("    public void createWindow(int w, int h, NGRenderer renderer) {\n");
+        sb.append("        window = new NGWindow(w, h, renderer, this);\n");
+        sb.append("    }\n\n");
+
         sb.append("    public void start() {\n");
         if (DEBUG) {
             sb.append("        NGUtils.info(\"tickrate: %f\".formatted(1 / TICK_DURATION));\n");
