@@ -21,7 +21,9 @@ public class TicTacToeRenderer extends NGRenderer {
 
     private static final float DROP_ANIMATION_OFFSET = 0.25f;
 
+    @NGKeepStateAfterHotReload
     public static NGSprite[][]        shapeSprites = new NGSprite[BOARD_SIZE][BOARD_SIZE];
+    @NGKeepStateAfterHotReload
     public static ArrayList<NGSprite> lineSprites  = new ArrayList<>();
 
     private long prevTime = System.currentTimeMillis();
@@ -141,7 +143,7 @@ public class TicTacToeRenderer extends NGRenderer {
                 Color p2e = new Color(0x6969ff69, true);
                 for (int cy = 0; cy < BOARD_SIZE; cy++) {
                     for (int cx = 0; cx < BOARD_SIZE; cx++) {
-                        int     plr  = (cx + cy) % 2 + 1;
+                        int plr = (cx + cy) % 2 + 1;
 
                         NGVec2i cell = new NGVec2i(cx, cy);
                         NGVec2i pos  = MARGIN.add(cell.scale(CELL_SIZE));//.sub((int) (MARGIN_FIXED * (1 - DROP_ANIMATION_OFFSET)));
