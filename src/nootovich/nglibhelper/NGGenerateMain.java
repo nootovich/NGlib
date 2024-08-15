@@ -86,6 +86,14 @@ public class NGGenerateMain {
         sb.append("        new Timer((int) (FRAME_DURATION * 1000), _ -> window.redraw()).start();\n");
         sb.append("    }\n\n");
 
+        sb.append("    public void exit() {\n");
+        sb.append("        window.shouldClose = true;\n");
+        sb.append("    }\n\n");
+
+        sb.append("    public void exit(float waitTime) {\n");
+        sb.append("        new Timer((int) (waitTime * 1000), _ -> window.shouldClose = true).start();\n");
+        sb.append("    }\n\n");
+
         sb.append("    public void updateAll() {\n");
         sb.append("        updateHeldKeys();\n");
         sb.append("        update();\n");
@@ -192,9 +200,10 @@ public class NGGenerateMain {
                 sb.append("    public void while").append(mouseButtonName).append("Held(NGVec2i pos) { }\n\n");
             }
             for (int i = 0; i < keys.size(); i++) {
-                sb.append("    public void on").append(names.get(i)).append("Press() { }\n");
-                sb.append("    public void on").append(names.get(i)).append("Release() { }\n");
-                sb.append("    public void while").append(names.get(i)).append("Held() { }\n\n");
+                String name = names.get(i);
+                sb.append("    public void on").append(name).append("Press() {%s}\n".formatted(name.equals("Escape") ? "exit();" : " "));
+                sb.append("    public void on").append(name).append("Release() { }\n");
+                sb.append("    public void while").append(name).append("Held() { }\n\n");
             }
         } // on<Key>Pressed(), on<Key>Released(), while<Key>Held()
 

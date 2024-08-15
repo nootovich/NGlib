@@ -38,6 +38,14 @@ public class NGMain extends NGHotReloadable implements AWTEventListener {
         new Timer((int) (FRAME_DURATION * 1000), _ -> window.redraw()).start();
     }
 
+    public void exit() {
+        window.shouldClose = true;
+    }
+
+    public void exit(float waitTime) {
+        new Timer((int) (waitTime * 1000), _ -> window.shouldClose = true).start();
+    }
+
     public void updateAll() {
         updateHeldKeys();
         update();
@@ -1544,7 +1552,7 @@ public class NGMain extends NGHotReloadable implements AWTEventListener {
     public void onKanjiRelease() { }
     public void whileKanjiHeld() { }
 
-    public void onEscapePress() { }
+    public void onEscapePress() {exit();}
     public void onEscapeRelease() { }
     public void whileEscapeHeld() { }
 

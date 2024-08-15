@@ -97,8 +97,4 @@ checkDraw:
         restartTime = System.currentTimeMillis();
     }
 
-    @Override
-    public void onEscapePress() {
-        window.shouldClose = true; // TODO: exit(<float waitTime>?) in NGMain that does this
-    }
 }
