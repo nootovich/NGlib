@@ -39,6 +39,16 @@ public class NGVec2i {
         return result;
     }
 
+    public NGVec2i set(int x, int y) {
+        this.x = x;
+        this.y = y;
+        return this;
+    }
+
+    public NGVec2i set(int n) {
+        return set(n, n);
+    }
+
     public NGVec2i add(NGVec2i other) {
         return new NGVec2i(x + other.x, y + other.y);
     }

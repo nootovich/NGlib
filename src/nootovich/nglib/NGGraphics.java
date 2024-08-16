@@ -3,26 +3,21 @@ package nootovich.nglib;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-// TODO: NGColor?
-
 @SuppressWarnings("unused")
 public class NGGraphics {
 
     // TODO: merge `NGGraphics` with `NGRenderer`
 
-    // TODO: NGVec4(2x2?)i?
-    private final int gX, gY;
-    private int gW, gH;
+    private NGVec2i       pos;
+    private NGVec2i       size;
     private BufferedImage buffer;
     private Graphics2D    g2d;
 
     public NGGraphics(Container c) {
         Insets ins = c.getInsets();
-        gX     = ins.left;
-        gY     = ins.top;
-        gW     = c.getComponent(0).getWidth();
-        gH     = c.getComponent(0).getHeight();
-        buffer = new BufferedImage(gW, gH, BufferedImage.TYPE_INT_RGB);
+        pos    = new NGVec2i(ins.left, ins.top);
+        size   = new NGVec2i(c.getComponent(0).getWidth(), c.getComponent(0).getHeight());
+        buffer = new BufferedImage(size.x, size.y, BufferedImage.TYPE_INT_RGB);
         updateGraphics();
     }
 
@@ -33,10 +28,9 @@ public class NGGraphics {
     }
 
     public void resize(int w, int h) {
-        gW = w;
-        gH = h;
+        size.set(w, h);
         Font temp = g2d.getFont();
-        buffer = new BufferedImage(gW, gH, BufferedImage.TYPE_INT_RGB);
+        buffer = new BufferedImage(size.x, size.y, BufferedImage.TYPE_INT_RGB);
         updateGraphics();
         setFont(temp);
     }
@@ -278,6 +272,6 @@ public class NGGraphics {
     }
 
     public void displayOn(Container c) {
-        c.getGraphics().drawImage(buffer, gX, gY, null);
+        c.getGraphics().drawImage(buffer, pos.x, pos.y, null);
     }
 }

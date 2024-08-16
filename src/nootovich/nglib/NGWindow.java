@@ -11,7 +11,7 @@ public class NGWindow {
     public boolean shouldClose = false;
 
     public NGVec2i pos;
-    public int     w, h; // TODO: NGVec2i size
+    public NGVec2i size;
     public final Insets ins;
 
     private NGMain     main;
@@ -23,8 +23,7 @@ public class NGWindow {
     private long lastHotReloadCheckTime = 0;
 
     public NGWindow(int width, int height, NGRenderer renderer, NGMain main) {
-        this.w    = width;
-        this.h    = height;
+        size = new NGVec2i(width, height);
         this.main = main;
         this.jf   = new JFrame();
 
@@ -32,7 +31,7 @@ public class NGWindow {
 
         jf.pack();
         ins = jf.getInsets();
-        jf.setSize(toWindowWidth(w), toWindowHeight(h));
+        jf.setSize(toWindowWidth(size.x), toWindowHeight(size.y));
 
         g = new NGGraphics(jf);
         setRenderer(renderer);
