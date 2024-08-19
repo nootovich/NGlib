@@ -226,6 +226,10 @@ public class NGGraphics {
         } else NGUtils.error("no. bad.");
     }
 
+    public void drawGradient(NGVec2i pos, NGVec2i size, int direction, Color color) {
+        drawGradient(pos, size, direction, color, new Color(0, true));
+    }
+
     // public void drawPixelSprite(int x, int y, int w, int h, NGSprite pixelSprite) {
     //     // NOTE: Temporary naive approach. Just enough to get things going
     //     if (pixelSprite.pixels.length == 0 || pixelSprite.pixels[0].length == 0) NGUtils.error("Invalid `NGPixelSprite`");
