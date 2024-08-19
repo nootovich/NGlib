@@ -266,10 +266,12 @@ public class NGGraphics {
     }
 
     public void drawTextCentered(String text, int x, int y, Color color) {
-        var metrics = g2d.getFontMetrics();
-        int textW   = metrics.stringWidth(text);
-        int textH   = metrics.getHeight();
-        drawText(text, x - textW / 2, y + textH / 2, color);
+        FontMetrics metrics = g2d.getFontMetrics();
+        drawText(text, x - metrics.stringWidth(text) / 2, y + metrics.getDescent(), color);
+    }
+
+    public void drawTextCentered(int num, int x, int y, Color color) {
+        drawTextCentered(String.valueOf(num), x, y, color);
     }
 
     public void displayOn(Container c) {
