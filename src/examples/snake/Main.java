@@ -15,9 +15,6 @@ public class Main {
     public static final int CELL_AMOUNT = 20;
     public static final int CELL_SIZE   = 40;
 
-    public static int w = CELL_SIZE * CELL_AMOUNT;
-    public static int h = CELL_SIZE * CELL_AMOUNT;
-
     public static final Color COLOR_BG             = new Color(0x141820);
     public static final Color COLOR_SNAKE          = new Color(0xFFFFFF);
     public static final Color COLOR_SNAKE_BORDER   = new Color(0x000000);

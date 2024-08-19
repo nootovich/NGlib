@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import nootovich.nglib.*;
 
 import static examples.tictactoe.Main.*;
+import static examples.tictactoe.TicTacToe.*;
 import static nootovich.nglib.NGSprite.NGSpriteType.CIRCLE_BORDER;
 import static nootovich.nglib.NGSprite.NGSpriteType.LINE;
 
@@ -78,9 +79,6 @@ public class TicTacToeRenderer extends NGRenderer {
     }
 
     public static void onResize() {
-        MARGIN_W = (W - MIN_WH) / 2 + MARGIN_FIXED;
-        MARGIN_H = (H - MIN_WH) / 2 + MARGIN_FIXED;
-        MARGIN   = new NGVec2i(MARGIN_W, MARGIN_H);
         for (int y = 0; y < BOARD_SIZE; y++) {
             for (int x = 0; x < BOARD_SIZE; x++) {
                 if (shapeSprites[y][x] == null) continue;
@@ -98,7 +96,7 @@ public class TicTacToeRenderer extends NGRenderer {
 
         // TODO: all of this would be nice to refactor with new and improved `NGVec` whenever it's ready
 
-        g.drawRect(0, 0, W, H, Color.DARK_GRAY);
+        g.drawRect(0, 0, w, h, Color.DARK_GRAY);
 
         NGVec2i v1 = MARGIN.add(CELL_SIZE - MARGIN_FIXED, 0);
         NGVec2i v2 = MARGIN.add(0, CELL_SIZE - MARGIN_FIXED);
@@ -123,17 +121,17 @@ public class TicTacToeRenderer extends NGRenderer {
 
         Color gradientColor1 = new Color(0x20 << 24, true);
         Color gradientColor2 = new Color(0, true);
-        g.drawGradient(new NGVec2i(0, H - MARGIN_H * 2), new NGVec2i(W, MARGIN_H * 2), 0, gradientColor1, gradientColor2);
-        g.drawGradient(new NGVec2i(0, 0), new NGVec2i(MARGIN_W * 2, H), 1, gradientColor1, gradientColor2);
-        g.drawGradient(new NGVec2i(0, 0), new NGVec2i(W, MARGIN_H * 2), 2, gradientColor1, gradientColor2);
-        g.drawGradient(new NGVec2i(W - MARGIN_W * 2, 0), new NGVec2i(MARGIN_W * 2, H), 3, gradientColor1, gradientColor2);
+        g.drawGradient(new NGVec2i(0, h - MARGIN_H * 2), new NGVec2i(w, MARGIN_H * 2), 0, gradientColor1, gradientColor2);
+        g.drawGradient(new NGVec2i(0, 0), new NGVec2i(MARGIN_W * 2, h), 1, gradientColor1, gradientColor2);
+        g.drawGradient(new NGVec2i(0, 0), new NGVec2i(w, MARGIN_H * 2), 2, gradientColor1, gradientColor2);
+        g.drawGradient(new NGVec2i(w - MARGIN_W * 2, 0), new NGVec2i(MARGIN_W * 2, h), 3, gradientColor1, gradientColor2);
 
         if (DEBUG) {
             { // MARGINS
-                g.drawRect(0, (int) (H * 0.1f), MARGIN_W, (int) (H * 0.8f), new Color(0x69ff0000, true));
-                g.drawRect((int) (W * 0.1f), 0, (int) (W * 0.8f), MARGIN_H, new Color(0x6900ff00, true));
-                g.drawRect(W - MARGIN_W, (int) (H * 0.1f), MARGIN_W, (int) (H * 0.8f), new Color(0x6900ffff, true));
-                g.drawRect((int) (W * 0.1f), H - MARGIN_H, (int) (W * 0.8f), MARGIN_H, new Color(0x69ff00ff, true));
+                g.drawRect(0, (int) (h * 0.1f), MARGIN_W, (int) (h * 0.8f), new Color(0x69ff0000, true));
+                g.drawRect((int) (w * 0.1f), 0, (int) (w * 0.8f), MARGIN_H, new Color(0x6900ff00, true));
+                g.drawRect(w - MARGIN_W, (int) (h * 0.1f), MARGIN_W, (int) (h * 0.8f), new Color(0x6900ffff, true));
+                g.drawRect((int) (w * 0.1f), h - MARGIN_H, (int) (w * 0.8f), MARGIN_H, new Color(0x69ff00ff, true));
             } // MARGINS
             { // SHAPES
                 Color p1  = new Color(COLOR_PLAYER1.getRGB() & 0x69ffffff, true);

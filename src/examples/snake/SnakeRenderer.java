@@ -6,6 +6,8 @@ import nootovich.nglib.NGGraphics;
 import nootovich.nglib.NGRenderer;
 
 import static examples.snake.Main.*;
+import static examples.snake.Snake.h;
+import static examples.snake.Snake.w;
 
 public class SnakeRenderer extends NGRenderer {
 
@@ -13,9 +15,8 @@ public class SnakeRenderer extends NGRenderer {
 
     public static boolean highlightFood = false;
 
-    public SnakeRenderer() {
-        super();
-        defaultFont = new Font(Font.MONOSPACED, Font.BOLD, 64);
+    static {
+        font = new Font(Font.MONOSPACED, Font.BOLD, 64);
     }
 
     @Override

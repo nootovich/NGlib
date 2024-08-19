@@ -12,6 +12,11 @@ import javax.swing.Timer;
 @Generated("nootovich.nglib.NGGenerateMain")
 public class NGMain extends NGHotReloadable implements AWTEventListener {
 
+    private static final int WINDOW_MINIMAL_SIZE = 100;
+
+    public static int w;
+    public static int h;
+
     public static float TICK_DURATION  = 0.0333f; // Measured in seconds
     public static float FRAME_DURATION = 0.0167f; // Measured in seconds
 
@@ -28,6 +33,8 @@ public class NGMain extends NGHotReloadable implements AWTEventListener {
     }
 
     public void createWindow(int w, int h, NGRenderer renderer) {
+        this.w = w;
+        this.h = h;
         window = new NGWindow(w, h, renderer, this);
     }
 
@@ -1449,19 +1456,19 @@ public class NGMain extends NGHotReloadable implements AWTEventListener {
                 case MouseEvent.BUTTON2 -> {
                     if (id == MouseEvent.MOUSE_PRESSED) {
                         heldKeys.push("MMB");
-                        onLMBPressed(pos);
+                        onMMBPressed(pos);
                     } else {
                         heldKeys.remove("MMB");
-                        onLMBReleased(pos);
+                        onMMBReleased(pos);
                     }
                 }
                 case MouseEvent.BUTTON3 -> {
                     if (id == MouseEvent.MOUSE_PRESSED) {
                         heldKeys.push("RMB");
-                        onLMBPressed(pos);
+                        onRMBPressed(pos);
                     } else {
                         heldKeys.remove("RMB");
-                        onLMBReleased(pos);
+                        onRMBReleased(pos);
                     }
                 }
             }
@@ -1484,7 +1491,10 @@ public class NGMain extends NGHotReloadable implements AWTEventListener {
             Component c = ((ComponentEvent) event).getComponent();
             if (!(c instanceof JFrame && c.isVisible())) return;
             Insets ins = ((JFrame) c).getInsets();
-            onWindowResize(c.getWidth() - ins.left - ins.right, c.getHeight() - ins.top - ins.bottom);
+            w = Math.max(WINDOW_MINIMAL_SIZE, c.getWidth() - ins.left - ins.right);
+            h = Math.max(WINDOW_MINIMAL_SIZE, c.getHeight() - ins.top - ins.bottom);
+            window.g.resize(w, h);
+            onWindowResize(w, h);
         } else if (id == WindowEvent.WINDOW_ICONIFIED) {
             onWindowMinimize();
         } else if (id == WindowEvent.WINDOW_DEICONIFIED) {

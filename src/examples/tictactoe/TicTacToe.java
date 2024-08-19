@@ -7,12 +7,22 @@ import static examples.tictactoe.Main.*;
 
 public class TicTacToe extends NGMain {
 
+    public static NGVec2i WINDOW_SIZE = new NGVec2i(w, h);
+
+    public static int MIN_WH    = Math.min(w, h);
+    public static int CELL_SIZE = MIN_WH / BOARD_SIZE;
+    public static int LINE_LEN  = MIN_WH - MARGIN_FIXED * 2;
+
+    public static int     MARGIN_W = (w - MIN_WH) / 2 + MARGIN_FIXED;
+    public static int     MARGIN_H = (h - MIN_WH) / 2 + MARGIN_FIXED;
+    public static NGVec2i MARGIN   = new NGVec2i(MARGIN_W, MARGIN_H);
+
     private long restartTime = 0;
 
     public void main() {
         setTickRate(30);
         setFrameRate(60);
-        createWindow(W, H, new TicTacToeRenderer());
+        createWindow(600, 400, new TicTacToeRenderer());
         start();
     }
 
@@ -81,14 +91,17 @@ checkDraw:
     }
 
     @Override
-    public void onWindowResize(int nw, int nh) {
-        W           = Math.max(nw, 100); // TODO: think of limiting the size of a window properly
-        H           = Math.max(nh, 100); // TODO: think of limiting the size of a window properly
-        MIN_WH      = Math.min(W, H);
-        WINDOW_SIZE = new NGVec2i(W, H);
-        CELL_SIZE   = MIN_WH / BOARD_SIZE;
-        LINE_LEN    = MIN_WH - MARGIN_FIXED * 2;
-        window.g.resize(W, H);
+    public void onWindowResize(int w, int h) {
+        WINDOW_SIZE = new NGVec2i(w, h);
+
+        MIN_WH    = Math.min(w, h);
+        CELL_SIZE = MIN_WH / BOARD_SIZE;
+        LINE_LEN  = MIN_WH - MARGIN_FIXED * 2;
+
+        MARGIN_W = (w - MIN_WH) / 2 + MARGIN_FIXED;
+        MARGIN_H = (h - MIN_WH) / 2 + MARGIN_FIXED;
+        MARGIN   = new NGVec2i(MARGIN_W, MARGIN_H);
+
         TicTacToeRenderer.onResize();
     }
 
@@ -96,5 +109,4 @@ checkDraw:
     public void onRPress() {
         restartTime = System.currentTimeMillis();
     }
-
 }

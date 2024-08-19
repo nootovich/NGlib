@@ -87,6 +87,6 @@ public class NGWindow {
 
     public void setRenderer(NGRenderer renderer) {
         this.renderer = renderer;
-        if (renderer.defaultFont != null) g.setFont(renderer.defaultFont);
+        if (renderer.font != null) g.setFont(renderer.font);
     }
 }

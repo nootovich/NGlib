@@ -57,6 +57,11 @@ public class NGGenerateMain {
         sb.append("@Generated(\"nootovich.nglib.NGGenerateMain\")\n");
         sb.append("public class NGMain extends NGHotReloadable implements AWTEventListener {\n\n");
 
+        sb.append("    private static final int WINDOW_MINIMAL_SIZE = 100;\n\n");
+
+        sb.append("    public static int w;\n");
+        sb.append("    public static int h;\n\n");
+
         sb.append("    public static float TICK_DURATION  = 0.0333f; // Measured in seconds\n");
         sb.append("    public static float FRAME_DURATION = 0.0167f; // Measured in seconds\n\n");
 
@@ -73,6 +78,8 @@ public class NGGenerateMain {
         sb.append("    }\n\n");
 
         sb.append("    public void createWindow(int w, int h, NGRenderer renderer) {\n");
+        sb.append("        this.w = w;\n");
+        sb.append("        this.h = h;\n");
         sb.append("        window = new NGWindow(w, h, renderer, this);\n");
         sb.append("    }\n\n");
 
@@ -147,10 +154,10 @@ public class NGGenerateMain {
                 sb.append("                case MouseEvent.BUTTON").append(mouseButton).append(" -> {\n");
                 sb.append("                    if (id == MouseEvent.MOUSE_PRESSED) {\n");
                 sb.append("                        heldKeys.push(\"").append(mouseButtons.get(mouseButton)).append("\");\n");
-                sb.append("                        onLMBPressed(pos);\n");
+                sb.append("                        on").append(mouseButtons.get(mouseButton)).append("Pressed(pos);\n");
                 sb.append("                    } else {\n");
                 sb.append("                        heldKeys.remove(\"").append(mouseButtons.get(mouseButton)).append("\");\n");
-                sb.append("                        onLMBReleased(pos);\n");
+                sb.append("                        on").append(mouseButtons.get(mouseButton)).append("Released(pos);\n");
                 sb.append("                    }\n");
                 sb.append("                }\n");
             }
@@ -174,7 +181,10 @@ public class NGGenerateMain {
             sb.append("            Component c = ((ComponentEvent) event).getComponent();\n");
             sb.append("            if (!(c instanceof JFrame && c.isVisible())) return;\n");
             sb.append("            Insets ins = ((JFrame) c).getInsets();\n");
-            sb.append("            onWindowResize(c.getWidth() - ins.left - ins.right, c.getHeight() - ins.top - ins.bottom);\n");
+            sb.append("            w = Math.max(WINDOW_MINIMAL_SIZE, c.getWidth() - ins.left - ins.right);\n");
+            sb.append("            h = Math.max(WINDOW_MINIMAL_SIZE, c.getHeight() - ins.top - ins.bottom);\n");
+            sb.append("            window.g.resize(w, h);\n");
+            sb.append("            onWindowResize(w, h);\n");
             sb.append("        } else if (id == WindowEvent.WINDOW_ICONIFIED) {\n");
             sb.append("            onWindowMinimize();\n");
             sb.append("        } else if (id == WindowEvent.WINDOW_DEICONIFIED) {\n");

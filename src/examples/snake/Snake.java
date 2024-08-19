@@ -13,7 +13,7 @@ public class Snake extends NGMain {
     public void main() {
         setTickRate(10);
         setFrameRate(80);
-        createWindow(w, h, new SnakeRenderer());
+        createWindow(CELL_SIZE * CELL_AMOUNT, CELL_SIZE * CELL_AMOUNT, new SnakeRenderer());
 
         ArrayList<NGSprite> eyes = new ArrayList<>();
         eyes.add(new NGSprite(new NGVec2i(EYE_LEFT, EYE_LEFT), EYE_RADIUS, COLOR_SNAKE_EYE, CIRCLE_CENTERED));
@@ -97,13 +97,6 @@ public class Snake extends NGMain {
     public void onDPress() {
         SnakePart head = snake.getLast();
         queuedDirection = head.dir != DIRECTION.LEFT ? DIRECTION.RIGHT : head.dir;
-    }
-
-    @Override
-    public void onWindowResize(int nw, int nh) {
-        w = nw;
-        h = nh;
-        window.g.resize(w, h);
     }
 
     public static void eat() {
