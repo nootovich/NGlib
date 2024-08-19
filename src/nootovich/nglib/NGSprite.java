@@ -82,16 +82,21 @@ public class NGSprite {
     }
 
     public void update(float dt) {
-        int animsLen = anims.size();
-        for (int i = 0; i < animsLen; i++) {
-            NGAnimation anim = anims.get(i);
-            if (!anim.update(dt)) {
-                this.pos = anim.state.toInt();
-                anims.remove(anim);
-                animsLen--;
-                i--;
-            }
-        }
+        // FIXME: Wrong place to take this responsibility.
+        //  Maybe defer this to logic update.
+        // NOTE: When completed remove `anims.clear()` from `SnakePart.nextAnim()`
+        //
+        // int animsLen = anims.size();
+        // for (int i = 0; i < animsLen; i++) {
+        //     NGAnimation anim = anims.get(i);
+        //     if (!anim.update(dt)) {
+        //         this.pos = anim.state.toInt();
+        //         anims.remove(anim);
+        //         animsLen--;
+        //         i--;
+        //     }
+        // }
+        anims.forEach(anim -> anim.update(dt));
         for (NGSprite child: children) child.update(dt);
     }
 
