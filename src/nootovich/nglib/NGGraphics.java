@@ -81,7 +81,7 @@ public class NGGraphics {
     }
 
     public void drawRect(NGVec4i rect, Color color) {
-        drawRect(rect.x, rect.y, rect.z, rect.w, color);
+        drawRect(rect.x(), rect.y(), rect.z(), rect.w(), color);
     }
 
     public void drawRect(NGVec2f fpos, NGVec2f fsize, Color color) {
@@ -124,7 +124,7 @@ public class NGGraphics {
     }
 
     public void drawRectBorder(NGVec4i rect, Color color) {
-        drawRectBorder(rect.x, rect.y, rect.z, rect.w, color);
+        drawRectBorder(rect.x(), rect.y(), rect.z(), rect.w(), color);
     }
 
     public void drawRectBorder(NGVec2f fpos, NGVec2f fsize, Color color) {
@@ -202,25 +202,25 @@ public class NGGraphics {
         if (direction == 0) { // TO THE TOP
             for (int y = pos.y(); y < pos.y() + size.h(); y++) {
                 NGVec4i colorVec3 = colorVec2.lerp(colorVec1, (float) (y - pos.y()) / size.h());
-                Color   color     = new Color(colorVec3.x, colorVec3.y, colorVec3.z, colorVec3.w);
+                Color   color     = new Color(colorVec3.x(), colorVec3.y(), colorVec3.z(), colorVec3.w());
                 drawLine(pos.x(), y, pos.x() + size.w(), y, color);
             }
         } else if (direction == 1) { // TO THE RIGHT
             for (int x = pos.x(); x < pos.x() + size.w(); x++) {
                 NGVec4i colorVec3 = colorVec1.lerp(colorVec2, (float) (x - pos.x()) / size.w());
-                Color   color     = new Color(colorVec3.x, colorVec3.y, colorVec3.z, colorVec3.w);
+                Color   color     = new Color(colorVec3.x(), colorVec3.y(), colorVec3.z(), colorVec3.w());
                 drawLine(x, pos.y(), x, pos.y() + size.h(), color);
             }
         } else if (direction == 2) { // TO THE BOTTOM
             for (int y = pos.y(); y < pos.y() + size.h(); y++) {
                 NGVec4i colorVec3 = colorVec1.lerp(colorVec2, (float) (y - pos.y()) / size.h());
-                Color   color     = new Color(colorVec3.x, colorVec3.y, colorVec3.z, colorVec3.w);
+                Color   color     = new Color(colorVec3.x(), colorVec3.y(), colorVec3.z(), colorVec3.w());
                 drawLine(pos.x(), y, pos.x() + size.w(), y, color);
             }
         } else if (direction == 3) { // TO THE LEFT
             for (int x = pos.x(); x < pos.x() + size.w(); x++) {
                 NGVec4i colorVec3 = colorVec2.lerp(colorVec1, (float) (x - pos.x()) / size.w());
-                Color   color     = new Color(colorVec3.x, colorVec3.y, colorVec3.z, colorVec3.w);
+                Color   color     = new Color(colorVec3.x(), colorVec3.y(), colorVec3.z(), colorVec3.w());
                 drawLine(x, pos.y(), x, pos.y() + size.h(), color);
             }
         } else NGUtils.error("no. bad.");

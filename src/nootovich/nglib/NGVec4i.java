@@ -2,7 +2,7 @@ package nootovich.nglib;
 
 public class NGVec4i {
 
-    public int x = 0, y = 0, z = 0, w = 0;
+    private int x = 0, y = 0, z = 0, w = 0;
 
     public NGVec4i() {
     }
@@ -37,6 +37,12 @@ public class NGVec4i {
         }
         return result;
     }
+
+    public int x() { return x; }
+    public int y() { return y; }
+    public int z() { return z; }
+    public int w() { return w; }
+    public int h() { return z; }
 
     public NGVec4i add(NGVec4i other) {
         return new NGVec4i(x + other.x, y + other.y, z + other.z, w + other.w);

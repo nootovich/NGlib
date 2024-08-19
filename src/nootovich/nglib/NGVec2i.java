@@ -139,6 +139,10 @@ public class NGVec2i {
         return this.divide(n).scale(n);
     }
 
+    public boolean isInside(NGVec4i area) {
+        return area.x() < x && x < area.x() + area.w() && area.y() < y && y < area.y() + area.h();
+    }
+
     public NGVec2f toFloat() {
         return new NGVec2f(x, y);
     }
