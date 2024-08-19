@@ -66,11 +66,11 @@ public class TicTacToeRenderer extends NGRenderer {
         shape.extra = LINE_THICCNESS;
         NGAnimation anim = new NGAnimation(pos.toFloat().sub(MARGIN_FIXED * (1 - DROP_ANIMATION_OFFSET)), pos.toFloat(), 0.15f);
         shape.anims.add(anim);
-        shapeSprites[cell.y][cell.x] = shape;
+        shapeSprites[cell.y()][cell.x()] = shape;
 
         if (player == 2) {
             NGVec2i  pos2      = new NGVec2i(CELL_SIZE - MARGIN_FIXED * 2, 0);
-            NGVec2i  size2     = new NGVec2i(-size.x, size.y);
+            NGVec2i  size2     = new NGVec2i(-size.w(), size.h());
             NGSprite crossHalf = new NGSprite(pos2, size2, COLOR_PLAYER2, LINE);
             crossHalf.extra = LINE_THICCNESS;
             shape.addChild(crossHalf);
@@ -149,7 +149,7 @@ public class TicTacToeRenderer extends NGRenderer {
                         g.drawRectBorder(pos, size, plr == 1 ? p1 : p2, LINE_THICCNESS);//, plr == 1 ? CIRCLE_BORDER : LINE);
 
                         NGVec2i pos3      = new NGVec2i(CELL_SIZE - MARGIN_FIXED * 2, 0);
-                        NGVec2i pos4      = new NGVec2i(-size.x, size.y);
+                        NGVec2i pos4      = new NGVec2i(-size.w(), size.h());
                         NGVec2i dbgOffset = new NGVec2i(MARGIN_FIXED).divide(2).negY();
                         g.drawRectBorder(pos3.add(pos).sub(dbgOffset), pos4.add(dbgOffset.scale(2)), p2e, LINE_THICCNESS);//, LINE);
                     }

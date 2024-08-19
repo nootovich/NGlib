@@ -17,7 +17,8 @@ public class NGGraphics {
         Insets ins = c.getInsets();
         pos    = new NGVec2i(ins.left, ins.top);
         size   = new NGVec2i(c.getComponent(0).getWidth(), c.getComponent(0).getHeight());
-        buffer = new BufferedImage(size.x, size.y, BufferedImage.TYPE_INT_RGB);
+        buffer = new BufferedImage(size.w(), size.h(), BufferedImage.TYPE_INT_RGB);
+        System.out.println();
         updateGraphics();
     }
 
@@ -30,7 +31,7 @@ public class NGGraphics {
     public void resize(int w, int h) {
         size.set(w, h);
         Font temp = g2d.getFont();
-        buffer = new BufferedImage(size.x, size.y, BufferedImage.TYPE_INT_RGB);
+        buffer = new BufferedImage(size.w(), size.h(), BufferedImage.TYPE_INT_RGB);
         updateGraphics();
         setFont(temp);
     }
@@ -45,7 +46,7 @@ public class NGGraphics {
     }
 
     public void drawLine(NGVec2i pos1, NGVec2i pos2, Color color) {
-        drawLine(pos1.x, pos1.y, pos2.x, pos2.y, color);
+        drawLine(pos1.x(), pos1.y(), pos2.x(), pos2.y(), color);
     }
 
     public void drawRoundedLine(int x1, int y1, int x2, int y2, Color color, int thiccness) {
@@ -55,7 +56,7 @@ public class NGGraphics {
     }
 
     public void drawRoundedLine(NGVec2i pos1, NGVec2i pos2, Color color, int thiccness) {
-        drawRoundedLine(pos1.x, pos1.y, pos2.x, pos2.y, color, thiccness);
+        drawRoundedLine(pos1.x(), pos1.y(), pos2.x(), pos2.y(), color, thiccness);
     }
 
     public void drawRect(int x, int y, int w, int h, Color color) {
@@ -76,7 +77,7 @@ public class NGGraphics {
     }
 
     public void drawRect(NGVec2i pos, NGVec2i size, Color color) {
-        drawRect(pos.x, pos.y, size.x, size.y, color);
+        drawRect(pos.x(), pos.y(), size.w(), size.h(), color);
     }
 
     public void drawRect(NGVec4i rect, Color color) {
@@ -88,7 +89,7 @@ public class NGGraphics {
     }
 
     public void drawRect(NGVec2i pos, int size, Color color) {
-        drawRect(pos.x, pos.y, size, color);
+        drawRect(pos.x(), pos.y(), size, color);
     }
 
     public void drawRect(NGVec2f fpos, int size, Color color) {
@@ -113,7 +114,7 @@ public class NGGraphics {
     }
 
     public void drawRectBorder(NGVec2i pos, NGVec2i size, Color color) {
-        drawRectBorder(pos.x, pos.y, size.x, size.y, color);
+        drawRectBorder(pos.x(), pos.y(), size.w(), size.h(), color);
     }
 
     public void drawRectBorder(NGVec2i pos, NGVec2i size, Color color, int thiccness) {
@@ -131,7 +132,7 @@ public class NGGraphics {
     }
 
     public void drawRectBorder(NGVec2i pos, int size, Color color) {
-        drawRectBorder(pos.x, pos.y, size, color);
+        drawRectBorder(pos.x(), pos.y(), size, color);
     }
 
     public void drawRectBorder(NGVec2f fpos, int size, Color color) {
@@ -159,7 +160,7 @@ public class NGGraphics {
     }
 
     public void drawCircle(NGVec2i pos, int diameter, Color color) {
-        drawCircle(pos.x, pos.y, diameter, color);
+        drawCircle(pos.x(), pos.y(), diameter, color);
     }
 
     public void drawCircle(NGVec2f fpos, int diameter, Color color) {
@@ -171,7 +172,7 @@ public class NGGraphics {
     }
 
     public void drawCircleCentered(NGVec2i pos, int diameter, Color color) {
-        drawCircleCentered(pos.x, pos.y, diameter, color);
+        drawCircleCentered(pos.x(), pos.y(), diameter, color);
     }
 
     public void drawCircleCentered(NGVec2f fpos, int diameter, Color color) {
@@ -190,7 +191,7 @@ public class NGGraphics {
     }
 
     public void drawCircleBorder(NGVec2i pos, int diameter, Color color, int thiccness) {
-        drawCircleBorder(pos.x, pos.y, diameter, color, thiccness);
+        drawCircleBorder(pos.x(), pos.y(), diameter, color, thiccness);
     }
 
     // A BIG TODO:
@@ -199,28 +200,28 @@ public class NGGraphics {
         NGVec4i colorVec1 = new NGVec4i(color1.getRed(), color1.getGreen(), color1.getBlue(), color1.getAlpha());
         NGVec4i colorVec2 = new NGVec4i(color2.getRed(), color2.getGreen(), color2.getBlue(), color2.getAlpha());
         if (direction == 0) { // TO THE TOP
-            for (int y = pos.y; y < pos.y + size.y; y++) {
-                NGVec4i colorVec3 = colorVec2.lerp(colorVec1, (float) (y - pos.y) / size.y);
+            for (int y = pos.y(); y < pos.y() + size.h(); y++) {
+                NGVec4i colorVec3 = colorVec2.lerp(colorVec1, (float) (y - pos.y()) / size.h());
                 Color   color     = new Color(colorVec3.x, colorVec3.y, colorVec3.z, colorVec3.w);
-                drawLine(pos.x, y, pos.x + size.x, y, color);
+                drawLine(pos.x(), y, pos.x() + size.w(), y, color);
             }
         } else if (direction == 1) { // TO THE RIGHT
-            for (int x = pos.x; x < pos.x + size.x; x++) {
-                NGVec4i colorVec3 = colorVec1.lerp(colorVec2, (float) (x - pos.x) / size.x);
+            for (int x = pos.x(); x < pos.x() + size.w(); x++) {
+                NGVec4i colorVec3 = colorVec1.lerp(colorVec2, (float) (x - pos.x()) / size.w());
                 Color   color     = new Color(colorVec3.x, colorVec3.y, colorVec3.z, colorVec3.w);
-                drawLine(x, pos.y, x, pos.y + size.y, color);
+                drawLine(x, pos.y(), x, pos.y() + size.h(), color);
             }
         } else if (direction == 2) { // TO THE BOTTOM
-            for (int y = pos.y; y < pos.y + size.y; y++) {
-                NGVec4i colorVec3 = colorVec1.lerp(colorVec2, (float) (y - pos.y) / size.y);
+            for (int y = pos.y(); y < pos.y() + size.h(); y++) {
+                NGVec4i colorVec3 = colorVec1.lerp(colorVec2, (float) (y - pos.y()) / size.h());
                 Color   color     = new Color(colorVec3.x, colorVec3.y, colorVec3.z, colorVec3.w);
-                drawLine(pos.x, y, pos.x + size.x, y, color);
+                drawLine(pos.x(), y, pos.x() + size.w(), y, color);
             }
         } else if (direction == 3) { // TO THE LEFT
-            for (int x = pos.x; x < pos.x + size.x; x++) {
-                NGVec4i colorVec3 = colorVec2.lerp(colorVec1, (float) (x - pos.x) / size.x);
+            for (int x = pos.x(); x < pos.x() + size.w(); x++) {
+                NGVec4i colorVec3 = colorVec2.lerp(colorVec1, (float) (x - pos.x()) / size.w());
                 Color   color     = new Color(colorVec3.x, colorVec3.y, colorVec3.z, colorVec3.w);
-                drawLine(x, pos.y, x, pos.y + size.y, color);
+                drawLine(x, pos.y(), x, pos.y() + size.h(), color);
             }
         } else NGUtils.error("no. bad.");
     }
@@ -272,6 +273,6 @@ public class NGGraphics {
     }
 
     public void displayOn(Container c) {
-        c.getGraphics().drawImage(buffer, pos.x, pos.y, null);
+        c.getGraphics().drawImage(buffer, pos.x(), pos.y(), null);
     }
 }

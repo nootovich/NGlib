@@ -36,10 +36,10 @@ public class TicTacToe extends NGMain {
         if (restartTime > 0) return;
         // TODO: change to "pos.sub(MARGIN).div(CELL_SIZE).in(board) = (byte) (player ? 1 : 2);" after NGVec rework
         NGVec2i cell = pos.sub(MARGIN).divide(CELL_SIZE);
-        if (0 > cell.x || cell.x >= BOARD_SIZE || 0 > cell.y || cell.y >= BOARD_SIZE) return;
-        if (BOARD[cell.y][cell.x] != 0) return;
+        if (0 > cell.x() || cell.x() >= BOARD_SIZE || 0 > cell.y() || cell.y() >= BOARD_SIZE) return;
+        if (BOARD[cell.y()][cell.x()] != 0) return;
 
-        BOARD[cell.y][cell.x] = PLAYER;
+        BOARD[cell.y()][cell.x()] = PLAYER;
         TicTacToeRenderer.addShape(cell, PLAYER);
 
         PLAYER = (byte) (PLAYER == 1 ? 2 : 1);

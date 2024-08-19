@@ -99,9 +99,9 @@ public class NGSprite {
         if (visible) switch (type) {
             case LINE -> g.drawRoundedLine(getPos(), getPos().add(size), color, extra);
             case RECT -> g.drawRectWithBorder(getPos(), size, color, borderColor);
-            case CIRCLE -> g.drawCircle(getPos(), size.x, color);
-            case CIRCLE_CENTERED -> g.drawCircleCentered(getPos(), size.x, color);
-            case CIRCLE_BORDER -> g.drawCircleBorder(getPos(), size.x, color, extra);
+            case CIRCLE -> g.drawCircle(getPos(), size.w(), color);
+            case CIRCLE_CENTERED -> g.drawCircleCentered(getPos(), size.w(), color);
+            case CIRCLE_BORDER -> g.drawCircleBorder(getPos(), size.w(), color, extra);
             default -> NGUtils.error("Not implemented");
         }
         for (NGSprite child: children) child.draw(g);

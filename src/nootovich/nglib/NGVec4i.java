@@ -22,8 +22,8 @@ public class NGVec4i {
     }
 
     public NGVec4i(NGVec2i xy, int z, int w) {
-        this.x = xy.x;
-        this.y = xy.y;
+        this.x = xy.x();
+        this.y = xy.y();
         this.z = z;
         this.w = w;
     }

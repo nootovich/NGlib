@@ -4,7 +4,7 @@ import java.awt.Point;
 
 public class NGVec2i {
 
-    public int x = 0, y = 0;
+    private int x = 0, y = 0;
 
     public NGVec2i() {
     }
@@ -37,6 +37,40 @@ public class NGVec2i {
             result[i] = new NGVec2i(pos[0], pos[1]);
         }
         return result;
+    }
+
+    public int x() {
+        return this.x;
+    }
+
+    public NGVec2i x(int x) {
+        this.x = x;
+        return this;
+    }
+
+    public int w() {
+        return x();
+    }
+
+    public NGVec2i w(int w) {
+        return x(w);
+    }
+
+    public int y() {
+        return this.y;
+    }
+
+    public NGVec2i y(int y) {
+        this.y = y;
+        return this;
+    }
+
+    public int h() {
+        return y();
+    }
+
+    public NGVec2i h(int h) {
+        return y(h);
     }
 
     public NGVec2i set(int x, int y) {

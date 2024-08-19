@@ -31,13 +31,13 @@ public class Snake extends NGMain {
     public void update() {
         SnakePart head = snake.getLast();
 
-        int nx = head.pos.x;
-        int ny = head.pos.y;
+        int nx = head.pos.x();
+        int ny = head.pos.y();
         switch (head.dir) {
-            case UP -> ny = mod(head.pos.y - CELL_SIZE, h);
-            case RIGHT -> nx = mod(head.pos.x + CELL_SIZE, w);
-            case DOWN -> ny = mod(head.pos.y + CELL_SIZE, h);
-            case LEFT -> nx = mod(head.pos.x - CELL_SIZE, w);
+            case UP -> ny = mod(head.pos.y() - CELL_SIZE, h);
+            case RIGHT -> nx = mod(head.pos.x() + CELL_SIZE, w);
+            case DOWN -> ny = mod(head.pos.y() + CELL_SIZE, h);
+            case LEFT -> nx = mod(head.pos.x() - CELL_SIZE, w);
             default -> NGUtils.error("Snake has entered the 4-th dimension.");
         }
 
