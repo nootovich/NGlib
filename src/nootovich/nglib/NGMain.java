@@ -24,8 +24,8 @@ public class NGMain extends NGHotReloadable implements AWTEventListener {
 
     Stack<String> heldKeys = new Stack<>();
 
-    public void setTickRate(int updatesPerSecond) {
-        TICK_DURATION = 1.0f / updatesPerSecond;
+    public void setTickRate(int ups) {
+        TICK_DURATION = 1.0f / ups;
     }
 
     public void setFrameRate(int fps) {

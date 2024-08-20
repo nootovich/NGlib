@@ -69,8 +69,8 @@ public class NGGenerateMain {
 
         sb.append("    Stack<String> heldKeys = new Stack<>();\n\n");
 
-        sb.append("    public void setTickRate(int updatesPerSecond) {\n");
-        sb.append("        TICK_DURATION = 1.0f / updatesPerSecond;\n");
+        sb.append("    public void setTickRate(int ups) {\n");
+        sb.append("        TICK_DURATION = 1.0f / ups;\n");
         sb.append("    }\n\n");
 
         sb.append("    public void setFrameRate(int fps) {\n");
