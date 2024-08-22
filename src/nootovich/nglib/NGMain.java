@@ -22,6 +22,8 @@ public class NGMain extends NGHotReloadable implements AWTEventListener {
 
     public static NGWindow window;
 
+    public static int tickCount = 0;
+
     Stack<String> heldKeys = new Stack<>();
 
     public void setTickRate(int ups) {
@@ -56,6 +58,7 @@ public class NGMain extends NGHotReloadable implements AWTEventListener {
     public void updateAll() {
         updateHeldKeys();
         update();
+        tickCount++;
     }
 
     public void update() { }

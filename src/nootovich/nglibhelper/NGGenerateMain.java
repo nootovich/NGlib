@@ -67,6 +67,8 @@ public class NGGenerateMain {
 
         sb.append("    public static NGWindow window;\n\n");
 
+        sb.append("    public static int tickCount = 0;\n\n");
+
         sb.append("    Stack<String> heldKeys = new Stack<>();\n\n");
 
         sb.append("    public void setTickRate(int ups) {\n");
@@ -103,6 +105,7 @@ public class NGGenerateMain {
         sb.append("    public void updateAll() {\n");
         sb.append("        updateHeldKeys();\n");
         sb.append("        update();\n");
+        sb.append("        tickCount++;\n");
         sb.append("    }\n\n");
 
         sb.append("    public void update() { }\n\n");

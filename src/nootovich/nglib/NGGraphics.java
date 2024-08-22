@@ -278,6 +278,11 @@ public class NGGraphics {
         drawTextCentered(String.valueOf(num), x, y, color);
     }
 
+    public void drawTextCentered(String text, int x, int y, Color color, int size) {
+        g2d.setFont(g2d.getFont().deriveFont((float) size));
+        drawTextCentered(text, x, y, color);
+    }
+
     public void drawTextCentered(int num, int x, int y, Color color, int size) {
         g2d.setFont(g2d.getFont().deriveFont((float) size));
         drawTextCentered(String.valueOf(num), x, y, color);
