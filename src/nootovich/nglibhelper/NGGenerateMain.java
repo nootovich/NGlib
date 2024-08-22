@@ -129,6 +129,7 @@ public class NGGenerateMain {
             sb.append("    public void eventDispatched(AWTEvent event) {\n");
             sb.append("        int id = event.getID();\n");
             sb.append("        if (id == KeyEvent.KEY_PRESSED) {\n");
+            sb.append("            onAnyKeyPress();\n");
             sb.append("            switch (((KeyEvent) event).getKeyCode()) {\n");
 
             for (int i = 0; i < keys.size(); i++) {
@@ -139,7 +140,9 @@ public class NGGenerateMain {
             }
 
             sb.append("            }\n");
+            sb.append("            afterAnyKeyPress();\n");
             sb.append("        } else if (id == KeyEvent.KEY_RELEASED) {\n");
+            sb.append("            onAnyKeyRelease();\n");
             sb.append("            switch (((KeyEvent) event).getKeyCode()) {\n");
 
             for (int i = 0; i < keys.size(); i++) {
@@ -150,6 +153,7 @@ public class NGGenerateMain {
             }
 
             sb.append("            }\n");
+            sb.append("            afterAnyKeyRelease();\n");
             sb.append("        } else if (id == MouseEvent.MOUSE_PRESSED || id == MouseEvent.MOUSE_RELEASED) {\n");
             sb.append("            Insets  ins = ((JFrame) event.getSource()).getInsets();\n");
             sb.append("            NGVec2i pos = new NGVec2i(((MouseEvent) event).getPoint()).sub(ins.left, ins.top);\n");
@@ -158,10 +162,10 @@ public class NGGenerateMain {
                 sb.append("                case MouseEvent.BUTTON").append(mouseButton).append(" -> {\n");
                 sb.append("                    if (id == MouseEvent.MOUSE_PRESSED) {\n");
                 sb.append("                        heldKeys.push(\"").append(mouseButtons.get(mouseButton)).append("\");\n");
-                sb.append("                        on").append(mouseButtons.get(mouseButton)).append("Pressed(pos);\n");
+                sb.append("                        on").append(mouseButtons.get(mouseButton)).append("Press(pos);\n");
                 sb.append("                    } else {\n");
                 sb.append("                        heldKeys.remove(\"").append(mouseButtons.get(mouseButton)).append("\");\n");
-                sb.append("                        on").append(mouseButtons.get(mouseButton)).append("Released(pos);\n");
+                sb.append("                        on").append(mouseButtons.get(mouseButton)).append("Release(pos);\n");
                 sb.append("                    }\n");
                 sb.append("                }\n");
             }
@@ -205,20 +209,29 @@ public class NGGenerateMain {
         sb.append("    public void onWindowMinimize() { }\n");
         sb.append("    public void onWindowRestore() { }\n\n");
 
-        { // on<Key>Pressed(), on<Key>Released(), while<Key>Held()
+        { // on<Key>Press(), on<Key>Release(), while<Key>Held()
             for (int mouseButton = 1; mouseButton <= 3; mouseButton++) {
                 String mouseButtonName = mouseButtons.get(mouseButton);
-                sb.append("    public void on").append(mouseButtonName).append("Pressed(NGVec2i pos) { }\n");
-                sb.append("    public void on").append(mouseButtonName).append("Released(NGVec2i pos) { }\n");
+                sb.append("    public void on").append(mouseButtonName).append("Press(NGVec2i pos) { }\n");
+                sb.append("    public void on").append(mouseButtonName).append("Release(NGVec2i pos) { }\n");
                 sb.append("    public void while").append(mouseButtonName).append("Held(NGVec2i pos) { }\n\n");
             }
+
+            sb.append("    public void onAnyKeyPress() { }\n");
+            sb.append("    public void afterAnyKeyPress() { }\n\n");
+
+            // TODO: sb.append("    public void whileAnyKeyHeld() { }\n\n");
+
+            sb.append("    public void onAnyKeyRelease() { }\n");
+            sb.append("    public void afterAnyKeyRelease() { }\n\n");
+
             for (int i = 0; i < keys.size(); i++) {
                 String name = names.get(i);
                 sb.append("    public void on").append(name).append("Press() {%s}\n".formatted(name.equals("Escape") ? "exit();" : " "));
                 sb.append("    public void on").append(name).append("Release() { }\n");
                 sb.append("    public void while").append(name).append("Held() { }\n\n");
             }
-        } // on<Key>Pressed(), on<Key>Released(), while<Key>Held()
+        } // on<Key>Press(), on<Key>Release(), while<Key>Held()
 
         sb.append("\n}\n");
 

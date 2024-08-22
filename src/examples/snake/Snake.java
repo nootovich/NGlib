@@ -59,7 +59,7 @@ public class Snake extends NGMain {
     }
 
     @Override
-    public void onLMBPressed(NGVec2i pos) {
+    public void onLMBPress(NGVec2i pos) {
         if (pos.snap(CELL_SIZE).equals(food.pos)) eat();
         highlightFood = false;
     }

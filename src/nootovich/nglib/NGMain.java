@@ -79,6 +79,7 @@ public class NGMain extends NGHotReloadable implements AWTEventListener {
     public void eventDispatched(AWTEvent event) {
         int id = event.getID();
         if (id == KeyEvent.KEY_PRESSED) {
+            onAnyKeyPress();
             switch (((KeyEvent) event).getKeyCode()) {
                 case 10 -> {
                     heldKeys.push("Enter");
@@ -761,7 +762,9 @@ public class NGMain extends NGHotReloadable implements AWTEventListener {
                     onComposePress();
                 }
             }
+            afterAnyKeyPress();
         } else if (id == KeyEvent.KEY_RELEASED) {
+            onAnyKeyRelease();
             switch (((KeyEvent) event).getKeyCode()) {
                 case 10 -> {
                     heldKeys.remove("Enter");
@@ -1444,6 +1447,7 @@ public class NGMain extends NGHotReloadable implements AWTEventListener {
                     onComposeRelease();
                 }
             }
+            afterAnyKeyRelease();
         } else if (id == MouseEvent.MOUSE_PRESSED || id == MouseEvent.MOUSE_RELEASED) {
             Insets  ins = ((JFrame) event.getSource()).getInsets();
             NGVec2i pos = new NGVec2i(((MouseEvent) event).getPoint()).sub(ins.left, ins.top);
@@ -1451,28 +1455,28 @@ public class NGMain extends NGHotReloadable implements AWTEventListener {
                 case MouseEvent.BUTTON1 -> {
                     if (id == MouseEvent.MOUSE_PRESSED) {
                         heldKeys.push("LMB");
-                        onLMBPressed(pos);
+                        onLMBPress(pos);
                     } else {
                         heldKeys.remove("LMB");
-                        onLMBReleased(pos);
+                        onLMBRelease(pos);
                     }
                 }
                 case MouseEvent.BUTTON2 -> {
                     if (id == MouseEvent.MOUSE_PRESSED) {
                         heldKeys.push("MMB");
-                        onMMBPressed(pos);
+                        onMMBPress(pos);
                     } else {
                         heldKeys.remove("MMB");
-                        onMMBReleased(pos);
+                        onMMBRelease(pos);
                     }
                 }
                 case MouseEvent.BUTTON3 -> {
                     if (id == MouseEvent.MOUSE_PRESSED) {
                         heldKeys.push("RMB");
-                        onRMBPressed(pos);
+                        onRMBPress(pos);
                     } else {
                         heldKeys.remove("RMB");
-                        onRMBReleased(pos);
+                        onRMBRelease(pos);
                     }
                 }
             }
@@ -1514,17 +1518,23 @@ public class NGMain extends NGHotReloadable implements AWTEventListener {
     public void onWindowMinimize() { }
     public void onWindowRestore() { }
 
-    public void onLMBPressed(NGVec2i pos) { }
-    public void onLMBReleased(NGVec2i pos) { }
+    public void onLMBPress(NGVec2i pos) { }
+    public void onLMBRelease(NGVec2i pos) { }
     public void whileLMBHeld(NGVec2i pos) { }
 
-    public void onMMBPressed(NGVec2i pos) { }
-    public void onMMBReleased(NGVec2i pos) { }
+    public void onMMBPress(NGVec2i pos) { }
+    public void onMMBRelease(NGVec2i pos) { }
     public void whileMMBHeld(NGVec2i pos) { }
 
-    public void onRMBPressed(NGVec2i pos) { }
-    public void onRMBReleased(NGVec2i pos) { }
+    public void onRMBPress(NGVec2i pos) { }
+    public void onRMBRelease(NGVec2i pos) { }
     public void whileRMBHeld(NGVec2i pos) { }
+
+    public void onAnyKeyPress() { }
+    public void afterAnyKeyPress() { }
+
+    public void onAnyKeyRelease() { }
+    public void afterAnyKeyRelease() { }
 
     public void onEnterPress() { }
     public void onEnterRelease() { }

@@ -33,7 +33,7 @@ public class Clicker extends NGMain {
     }
 
     @Override
-    public void onLMBPressed(NGVec2i pos) {
+    public void onLMBPress(NGVec2i pos) {
         if (pos.isInside(CENTER)) clicks += clickPower;
         else if (pos.isInside(BUTTON1) && clicks >= clickPowerCost) {
             clicks -= clickPowerCost;
