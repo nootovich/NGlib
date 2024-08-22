@@ -21,7 +21,7 @@ public class Clicker extends NGMain {
     public static int passiveIncomeCost = 20;
 
     public void main() {
-        createWindow(400, 300, new ClickerRenderer());
+        createWindow(400, 300, ClickerRenderer.class);
         setTickRate(TICK_RATE);
         setFrameRate(60);
         start();

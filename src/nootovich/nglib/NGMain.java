@@ -34,10 +34,11 @@ public class NGMain extends NGHotReloadable implements AWTEventListener {
         FRAME_DURATION = 1.0f / fps;
     }
 
-    public void createWindow(int w, int h, NGRenderer renderer) {
+    public <NGR extends Class<? extends NGRenderer>>
+    void createWindow ( int w, int h, NGR rendererClass){
         this.w = w;
         this.h = h;
-        window = new NGWindow(w, h, renderer, this);
+        window = new NGWindow(w, h, rendererClass, this);
     }
 
     public void start() {
@@ -1496,7 +1497,7 @@ public class NGMain extends NGHotReloadable implements AWTEventListener {
             Insets ins = ((JFrame) c).getInsets();
             w = Math.max(WINDOW_MINIMAL_SIZE, c.getWidth() - ins.left - ins.right);
             h = Math.max(WINDOW_MINIMAL_SIZE, c.getHeight() - ins.top - ins.bottom);
-            window.g.resize(w, h);
+            window.renderer.resize(w, h);
             onWindowResize(w, h);
         } else if (id == WindowEvent.WINDOW_ICONIFIED) {
             onWindowMinimize();

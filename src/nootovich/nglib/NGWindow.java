@@ -1,29 +1,29 @@
 package nootovich.nglib;
 
+import java.awt.Container;
 import java.awt.Insets;
+import java.lang.reflect.InvocationTargetException;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 public class NGWindow {
 
-    public final int HOT_RELOAD_CHECK_COOLDOWN = 500;
+    public static final int HOT_RELOAD_CHECK_COOLDOWN = 500;
 
     public boolean shouldClose = false;
 
-    public NGVec2i pos;
-    public NGVec2i size;
-    public final Insets ins;
+    public       NGVec2i pos;
+    public       NGVec2i size;
+    public final Insets  ins;
 
     private NGMain     main;
     public  NGRenderer renderer;
-
-    public       JFrame     jf;
-    public final NGGraphics g;
+    public  JFrame     jf;
 
     private long lastHotReloadCheckTime = 0;
 
-    public NGWindow(int width, int height, NGRenderer renderer, NGMain main) {
-        size = new NGVec2i(width, height);
+    public <NGR extends Class<? extends NGRenderer>> NGWindow(int width, int height, NGR rendererClass, NGMain main) {
+        size      = new NGVec2i(width, height);
         this.main = main;
         this.jf   = new JFrame();
 
@@ -33,8 +33,11 @@ public class NGWindow {
         ins = jf.getInsets();
         jf.setSize(toWindowWidth(size.w()), toWindowHeight(size.h()));
 
-        g = new NGGraphics(jf);
-        setRenderer(renderer);
+        try {
+            setRenderer(rendererClass.getDeclaredConstructor(Container.class).newInstance(jf));
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
 
         jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         jf.setVisible(true);
@@ -44,8 +47,8 @@ public class NGWindow {
     public void redraw() {
         if (shouldClose) System.exit(0);
         reloadNGClassesIfNeeded();
-        renderer.render(g);
-        g.displayOn(jf);
+        renderer.render();
+        renderer.displayOn(jf);
     }
 
     public void reloadNGClassesIfNeeded() {
@@ -87,6 +90,6 @@ public class NGWindow {
 
     public void setRenderer(NGRenderer renderer) {
         this.renderer = renderer;
-        if (renderer.font != null) g.setFont(renderer.font);
+        if (renderer.font != null) renderer.setFont(renderer.font);
     }
 }

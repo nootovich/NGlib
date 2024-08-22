@@ -100,16 +100,16 @@ public class NGSprite {
         for (NGSprite child: children) child.update(dt);
     }
 
-    void draw(NGGraphics g) {
+    void draw(NGRenderer r) {
         if (visible) switch (type) {
-            case LINE -> g.drawRoundedLine(getPos(), getPos().add(size), color, extra);
-            case RECT -> g.drawRectWithBorder(getPos(), size, color, borderColor);
-            case CIRCLE -> g.drawCircle(getPos(), size.w(), color);
-            case CIRCLE_CENTERED -> g.drawCircleCentered(getPos(), size.w(), color);
-            case CIRCLE_BORDER -> g.drawCircleBorder(getPos(), size.w(), color, extra);
+            case LINE -> r.drawRoundedLine(getPos(), getPos().add(size), color, extra);
+            case RECT -> r.drawRectWithBorder(getPos(), size, color, borderColor);
+            case CIRCLE -> r.drawCircle(getPos(), size.w(), color);
+            case CIRCLE_CENTERED -> r.drawCircleCentered(getPos(), size.w(), color);
+            case CIRCLE_BORDER -> r.drawCircleBorder(getPos(), size.w(), color, extra);
             default -> NGUtils.error("Not implemented");
         }
-        for (NGSprite child: children) child.draw(g);
+        for (NGSprite child: children) child.draw(r);
     }
 
     public NGVec2i getPos() {

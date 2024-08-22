@@ -79,10 +79,11 @@ public class NGGenerateMain {
         sb.append("        FRAME_DURATION = 1.0f / fps;\n");
         sb.append("    }\n\n");
 
-        sb.append("    public void createWindow(int w, int h, NGRenderer renderer) {\n");
+        sb.append("    public <NGR extends Class<? extends NGRenderer>>\n");
+        sb.append("    void createWindow ( int w, int h, NGR rendererClass){\n");
         sb.append("        this.w = w;\n");
         sb.append("        this.h = h;\n");
-        sb.append("        window = new NGWindow(w, h, renderer, this);\n");
+        sb.append("        window = new NGWindow(w, h, rendererClass, this);\n");
         sb.append("    }\n\n");
 
         sb.append("    public void start() {\n");
@@ -186,7 +187,7 @@ public class NGGenerateMain {
             sb.append("            Insets ins = ((JFrame) c).getInsets();\n");
             sb.append("            w = Math.max(WINDOW_MINIMAL_SIZE, c.getWidth() - ins.left - ins.right);\n");
             sb.append("            h = Math.max(WINDOW_MINIMAL_SIZE, c.getHeight() - ins.top - ins.bottom);\n");
-            sb.append("            window.g.resize(w, h);\n");
+            sb.append("            window.renderer.resize(w, h);\n");
             sb.append("            onWindowResize(w, h);\n");
             sb.append("        } else if (id == WindowEvent.WINDOW_ICONIFIED) {\n");
             sb.append("            onWindowMinimize();\n");

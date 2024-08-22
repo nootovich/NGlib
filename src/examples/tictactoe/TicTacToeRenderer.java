@@ -1,6 +1,7 @@
 package examples.tictactoe;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.util.ArrayList;
 import nootovich.nglib.*;
 
@@ -26,6 +27,10 @@ public class TicTacToeRenderer extends NGRenderer {
     public static ArrayList<NGSprite> lineSprites  = new ArrayList<>();
 
     private long prevTime = System.currentTimeMillis();
+
+    public TicTacToeRenderer(Container c) {
+        super(c);
+    }
 
     public static void addHorizontalLine(int y) {
         NGVec2i  pos   = WINDOW_SIZE.sub(MIN_WH).divide(2f).add(MARGIN_FIXED, CELL_SIZE * (y + 0.5f));
@@ -88,7 +93,7 @@ public class TicTacToeRenderer extends NGRenderer {
     }
 
     @Override
-    public void render(NGGraphics g) {
+    public void render() {
         // TODO: `dt` should be a parameter of `render()` method or a field of `NGRenderer` class
         long  curTime = System.currentTimeMillis();
         float dt      = (curTime - prevTime) / 1000f;
@@ -96,42 +101,42 @@ public class TicTacToeRenderer extends NGRenderer {
 
         // TODO: all of this would be nice to refactor with new and improved `NGVec` whenever it's ready
 
-        g.drawRect(0, 0, w, h, Color.DARK_GRAY);
+        drawRect(0, 0, w, h, Color.DARK_GRAY);
 
         NGVec2i v1 = MARGIN.add(CELL_SIZE - MARGIN_FIXED, 0);
         NGVec2i v2 = MARGIN.add(0, CELL_SIZE - MARGIN_FIXED);
-        g.drawRoundedLine(v1, v1.add(0, LINE_LEN), Color.GRAY, LINE_THICCNESS);
-        g.drawRoundedLine(v2, v2.add(LINE_LEN, 0), Color.GRAY, LINE_THICCNESS);
-        g.drawRoundedLine(v1.add(CELL_SIZE, 0), v1.add(CELL_SIZE, LINE_LEN), Color.GRAY, LINE_THICCNESS);
-        g.drawRoundedLine(v2.add(0, CELL_SIZE), v2.add(LINE_LEN, CELL_SIZE), Color.GRAY, LINE_THICCNESS);
+        drawRoundedLine(v1, v1.add(0, LINE_LEN), Color.GRAY, LINE_THICCNESS);
+        drawRoundedLine(v2, v2.add(LINE_LEN, 0), Color.GRAY, LINE_THICCNESS);
+        drawRoundedLine(v1.add(CELL_SIZE, 0), v1.add(CELL_SIZE, LINE_LEN), Color.GRAY, LINE_THICCNESS);
+        drawRoundedLine(v2.add(0, CELL_SIZE), v2.add(LINE_LEN, CELL_SIZE), Color.GRAY, LINE_THICCNESS);
 
         for (int y = 0; y < BOARD_SIZE; y++) {
             for (int x = 0; x < BOARD_SIZE; x++) {
                 if (shapeSprites[y][x] == null) continue;
                 shapeSprites[y][x].update(dt);
-                g.drawSprite(shapeSprites[y][x]);
+                drawSprite(shapeSprites[y][x]);
             }
         }
 
         // TODO: this should be tucked away into `NGRenderer` class
         for (NGSprite line: lineSprites) {
             line.update(dt);
-            g.drawSprite(line);
+            drawSprite(line);
         }
 
         Color gradientColor1 = new Color(0x20 << 24, true);
         Color gradientColor2 = new Color(0, true);
-        g.drawGradient(new NGVec2i(0, h - MARGIN_H * 2), new NGVec2i(w, MARGIN_H * 2), 0, gradientColor1, gradientColor2);
-        g.drawGradient(new NGVec2i(0, 0), new NGVec2i(MARGIN_W * 2, h), 1, gradientColor1, gradientColor2);
-        g.drawGradient(new NGVec2i(0, 0), new NGVec2i(w, MARGIN_H * 2), 2, gradientColor1, gradientColor2);
-        g.drawGradient(new NGVec2i(w - MARGIN_W * 2, 0), new NGVec2i(MARGIN_W * 2, h), 3, gradientColor1, gradientColor2);
+        drawGradient(new NGVec2i(0, h - MARGIN_H * 2), new NGVec2i(w, MARGIN_H * 2), 0, gradientColor1, gradientColor2);
+        drawGradient(new NGVec2i(0, 0), new NGVec2i(MARGIN_W * 2, h), 1, gradientColor1, gradientColor2);
+        drawGradient(new NGVec2i(0, 0), new NGVec2i(w, MARGIN_H * 2), 2, gradientColor1, gradientColor2);
+        drawGradient(new NGVec2i(w - MARGIN_W * 2, 0), new NGVec2i(MARGIN_W * 2, h), 3, gradientColor1, gradientColor2);
 
         if (DEBUG) {
             { // MARGINS
-                g.drawRect(0, (int) (h * 0.1f), MARGIN_W, (int) (h * 0.8f), new Color(0x69ff0000, true));
-                g.drawRect((int) (w * 0.1f), 0, (int) (w * 0.8f), MARGIN_H, new Color(0x6900ff00, true));
-                g.drawRect(w - MARGIN_W, (int) (h * 0.1f), MARGIN_W, (int) (h * 0.8f), new Color(0x6900ffff, true));
-                g.drawRect((int) (w * 0.1f), h - MARGIN_H, (int) (w * 0.8f), MARGIN_H, new Color(0x69ff00ff, true));
+                drawRect(0, (int) (h * 0.1f), MARGIN_W, (int) (h * 0.8f), new Color(0x69ff0000, true));
+                drawRect((int) (w * 0.1f), 0, (int) (w * 0.8f), MARGIN_H, new Color(0x6900ff00, true));
+                drawRect(w - MARGIN_W, (int) (h * 0.1f), MARGIN_W, (int) (h * 0.8f), new Color(0x6900ffff, true));
+                drawRect((int) (w * 0.1f), h - MARGIN_H, (int) (w * 0.8f), MARGIN_H, new Color(0x69ff00ff, true));
             } // MARGINS
             { // SHAPES
                 Color p1  = new Color(COLOR_PLAYER1.getRGB() & 0x69ffffff, true);
@@ -144,12 +149,12 @@ public class TicTacToeRenderer extends NGRenderer {
                         NGVec2i cell = new NGVec2i(cx, cy);
                         NGVec2i pos  = MARGIN.add(cell.scale(CELL_SIZE));//.sub((int) (MARGIN_FIXED * (1 - DROP_ANIMATION_OFFSET)));
                         NGVec2i size = new NGVec2i(CELL_SIZE - MARGIN_FIXED * 2);
-                        g.drawRectBorder(pos, size, plr == 1 ? p1 : p2, LINE_THICCNESS);//, plr == 1 ? CIRCLE_BORDER : LINE);
+                        drawRectBorder(pos, size, plr == 1 ? p1 : p2, LINE_THICCNESS);//, plr == 1 ? CIRCLE_BORDER : LINE);
 
                         NGVec2i pos3      = new NGVec2i(CELL_SIZE - MARGIN_FIXED * 2, 0);
                         NGVec2i pos4      = new NGVec2i(-size.w(), size.h());
                         NGVec2i dbgOffset = new NGVec2i(MARGIN_FIXED).divide(2).negY();
-                        g.drawRectBorder(pos3.add(pos).sub(dbgOffset), pos4.add(dbgOffset.scale(2)), p2e, LINE_THICCNESS);//, LINE);
+                        drawRectBorder(pos3.add(pos).sub(dbgOffset), pos4.add(dbgOffset.scale(2)), p2e, LINE_THICCNESS);//, LINE);
                     }
                 }
             } // SHAPES
@@ -157,19 +162,19 @@ public class TicTacToeRenderer extends NGRenderer {
                 for (int i = 0; i < BOARD_SIZE; i++) {
                     // HORIZONTAL
                     NGVec2i pos1 = WINDOW_SIZE.sub(MIN_WH).divide(2f).add(MARGIN_FIXED, CELL_SIZE * (i + 0.5f));
-                    g.drawLine(pos1, pos1.add(LINE_LEN, 0), Color.RED);
+                    drawLine(pos1, pos1.add(LINE_LEN, 0), Color.RED);
 
                     // VERTICAL
                     NGVec2i pos2 = WINDOW_SIZE.sub(MIN_WH).divide(2f).add(CELL_SIZE * (i + 0.5f), MARGIN_FIXED);
-                    g.drawLine(pos2, pos2.add(0, LINE_LEN), Color.GREEN);
+                    drawLine(pos2, pos2.add(0, LINE_LEN), Color.GREEN);
                 }
 
                 // DIAGONAL BACKWARDS
-                g.drawLine(MARGIN, MARGIN.add(LINE_LEN), Color.CYAN);
+                drawLine(MARGIN, MARGIN.add(LINE_LEN), Color.CYAN);
 
                 // DIAGONAL FORWARDS
                 NGVec2i pos4 = WINDOW_SIZE.add(MIN_WH, -MIN_WH).divide(2f).add(-MARGIN_FIXED, MARGIN_FIXED);
-                g.drawLine(pos4, pos4.add(-LINE_LEN, LINE_LEN), Color.MAGENTA);
+                drawLine(pos4, pos4.add(-LINE_LEN, LINE_LEN), Color.MAGENTA);
             } // WIN LINES
         }
     }

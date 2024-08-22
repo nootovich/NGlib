@@ -22,7 +22,7 @@ public class TicTacToe extends NGMain {
     public void main() {
         setTickRate(30);
         setFrameRate(60);
-        createWindow(600, 400, new TicTacToeRenderer());
+        createWindow(600, 400, TicTacToeRenderer.class);
         start();
     }
 

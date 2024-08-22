@@ -13,7 +13,7 @@ public class Snake extends NGMain {
     public void main() {
         setTickRate(10);
         setFrameRate(80);
-        createWindow(CELL_SIZE * CELL_AMOUNT, CELL_SIZE * CELL_AMOUNT, new SnakeRenderer());
+        createWindow(CELL_SIZE * CELL_AMOUNT, CELL_SIZE * CELL_AMOUNT, SnakeRenderer.class);
 
         ArrayList<NGSprite> eyes = new ArrayList<>();
         eyes.add(new NGSprite(new NGVec2i(EYE_LEFT, EYE_LEFT), EYE_RADIUS, COLOR_SNAKE_EYE, CIRCLE_CENTERED));
