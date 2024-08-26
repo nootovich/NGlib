@@ -39,10 +39,28 @@ public class NGVec4i {
     }
 
     public int x() { return x; }
+
+    public void x(int newX) { this.x = newX; }
+
     public int y() { return y; }
+
+    public void y(int newY) { this.y = newY; }
+
     public int z() { return z; }
+
+    public void z(int newZ) { this.z = newZ; }
+
     public int w() { return w; }
-    public int h() { return z; }
+
+    public void w(int newW) { this.w = newW; }
+
+    public int width() { return z; }
+
+    public void width(int newWidth) { this.z = newWidth; }
+
+    public int height() { return w; }
+
+    public void height(int newHeight) { this.w = newHeight; }
 
     public NGVec4i add(NGVec4i other) {
         return new NGVec4i(x + other.x, y + other.y, z + other.z, w + other.w);

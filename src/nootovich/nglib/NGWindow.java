@@ -31,7 +31,7 @@ public class NGWindow {
 
         jf.pack();
         ins = jf.getInsets();
-        jf.setSize(toWindowWidth(size.w()), toWindowHeight(size.h()));
+        jf.setSize(toWindowWidth(size.width()), toWindowHeight(size.height()));
 
         try {
             setRenderer(rendererClass.getDeclaredConstructor(Container.class).newInstance(jf));

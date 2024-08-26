@@ -3,34 +3,36 @@ package nootovich.nglib;
 public class NGAnimation {
 
     // position, rotation, scale, color, etc.
+    public NGAnimationType type;
 
     public NGVec2f start;
     public NGVec2f end;
-    public NGVec2f state;
+    public NGVec2f cur;
+
+    public boolean active = true;
 
     public float duration;
     public float progress = 0;
 
+    public enum NGAnimationType {POS, SIZE}
+
     // TODO SOMEDAY: interpolations
 
-    public NGAnimation(int startX, int startY, int endX, int endY, float duration) {
-        this(new NGVec2f(startX, startY), new NGVec2f(endX, endY), duration);
-    }
-
-    public NGAnimation(NGVec2f start, NGVec2f end, float duration) {
+    public NGAnimation(NGAnimationType type, NGVec2f start, NGVec2f end, float duration) {
+        this.type     = type;
         this.start    = start;
         this.end      = end;
-        this.state    = start;
+        this.cur      = start;
         this.duration = duration;
     }
 
-    public boolean update(float dt) {
+    public void update(float dt) {
+        if (!active) return;
         progress += dt;
-        if (progress >= duration){
-            state = end;
-            return false;
+        if (progress >= duration) {
+            cur = end;
+            active = false;
         }
-        state = start.lerp(end, progress / duration);
-        return true;
+        cur = start.lerp(end, progress / duration);
     }
 }

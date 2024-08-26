@@ -5,6 +5,8 @@ import nootovich.nglib.*;
 
 import static examples.snake.Main.*;
 import static examples.snake.SnakeRenderer.highlightFood;
+import static nootovich.nglib.NGAnimation.NGAnimationType.POS;
+import static nootovich.nglib.NGAnimation.NGAnimationType.SIZE;
 import static nootovich.nglib.NGSprite.NGSpriteType.CIRCLE_CENTERED;
 import static nootovich.nglib.NGUtils.mod;
 
@@ -101,6 +103,7 @@ public class Snake extends NGMain {
 
     public static void eat() {
         food.pos = getRandomPos();
+        food.anims.add(new NGAnimation(SIZE, new NGVec2f(), new NGVec2f(CELL_SIZE), 0.2f));
         score++;
     }
 
@@ -146,7 +149,7 @@ public class Snake extends NGMain {
                 case DOWN -> pos.add(0, CELL_SIZE);
                 case LEFT -> pos.add(-CELL_SIZE, 0);
             };
-            anims.add(new NGAnimation(start.toFloat(), end.toFloat(), TICK_DURATION));
+            anims.add(new NGAnimation(POS, start.toFloat(), end.toFloat(), TICK_DURATION));
         }
     }
 }

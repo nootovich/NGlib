@@ -48,12 +48,12 @@ public class NGVec2i {
         return this;
     }
 
-    public int w() {
+    public int width() {
         return x();
     }
 
-    public NGVec2i w(int w) {
-        return x(w);
+    public NGVec2i width(int width) {
+        return x(width);
     }
 
     public int y() {
@@ -65,12 +65,12 @@ public class NGVec2i {
         return this;
     }
 
-    public int h() {
+    public int height() {
         return y();
     }
 
-    public NGVec2i h(int h) {
-        return y(h);
+    public NGVec2i height(int height) {
+        return y(height);
     }
 
     public NGVec2i set(int x, int y) {
@@ -119,6 +119,10 @@ public class NGVec2i {
         return new NGVec2i(x / factor, y / factor);
     }
 
+    public NGVec2i divide(float dx, float dy) {
+        return new NGVec2i(x / dx, y / dy);
+    }
+
     public NGVec2i neg() {
         return new NGVec2i(-x, -y);
     }
@@ -140,7 +144,7 @@ public class NGVec2i {
     }
 
     public boolean isInside(NGVec4i area) {
-        return area.x() < x && x < area.x() + area.w() && area.y() < y && y < area.y() + area.h();
+        return area.x() < x && x < area.x() + area.width() && area.y() < y && y < area.y() + area.height();
     }
 
     public NGVec2f toFloat() {
