@@ -10,7 +10,7 @@ import javax.swing.Timer;
 
 @SuppressWarnings("unused")
 @Generated("nootovich.nglib.NGGenerateMain")
-public class NGMain extends NGHotReloadable implements AWTEventListener {
+public class NGMain implements AWTEventListener {
 
     private static final int WINDOW_MINIMAL_SIZE = 100;
 

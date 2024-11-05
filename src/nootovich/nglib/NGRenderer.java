@@ -2,7 +2,7 @@ package nootovich.nglib;
 
 import java.awt.Font;
 
-public abstract class NGRenderer extends NGHotReloadable {
+public abstract class NGRenderer {
 
     public static Font font;
 

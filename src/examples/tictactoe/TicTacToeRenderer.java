@@ -20,9 +20,7 @@ public class TicTacToeRenderer extends NGRenderer {
 
     private static final float DROP_ANIMATION_OFFSET = 0.25f;
 
-    @NGKeepStateAfterHotReload
     public static NGSprite[][]        shapeSprites = new NGSprite[BOARD_SIZE][BOARD_SIZE];
-    @NGKeepStateAfterHotReload
     public static ArrayList<NGSprite> lineSprites  = new ArrayList<>();
 
     private long prevTime = System.currentTimeMillis();

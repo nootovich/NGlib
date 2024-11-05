@@ -54,8 +54,8 @@ public class NGGenerateMain {
         sb.append("import javax.swing.Timer;\n\n");
 
         sb.append("@SuppressWarnings(\"unused\")\n");
-        sb.append("@Generated(\"nootovich.nglib.NGGenerateMain\")\n");
-        sb.append("public class NGMain extends NGHotReloadable implements AWTEventListener {\n\n");
+        sb.append("@Generated(\"nootovich.nglibhelper.NGGenerateMain\")\n");
+        sb.append("public class NGMain implements AWTEventListener {\n\n");
 
         sb.append("    private static final int WINDOW_MINIMAL_SIZE = 100;\n\n");
 

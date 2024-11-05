@@ -2,11 +2,8 @@ package nootovich.nglib;
 
 import java.awt.Insets;
 import javax.swing.JFrame;
-import javax.swing.WindowConstants;
 
 public class NGWindow {
-
-    public final int HOT_RELOAD_CHECK_COOLDOWN = 500;
 
     public boolean shouldClose = false;
 
@@ -14,17 +11,13 @@ public class NGWindow {
     public NGVec2i size;
     public final Insets ins;
 
-    private NGMain     main;
     public  NGRenderer renderer;
 
     public       JFrame     jf;
     public final NGGraphics g;
 
-    private long lastHotReloadCheckTime = 0;
-
     public NGWindow(int width, int height, NGRenderer renderer, NGMain main) {
         size = new NGVec2i(width, height);
-        this.main = main;
         this.jf   = new JFrame();
 
         jf.getToolkit().addAWTEventListener(main, -1);
@@ -36,37 +29,15 @@ public class NGWindow {
         g = new NGGraphics(jf);
         setRenderer(renderer);
 
-        jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jf.setVisible(true);
         jf.requestFocus();
     }
 
     public void redraw() {
         if (shouldClose) System.exit(0);
-        reloadNGClassesIfNeeded();
         renderer.render(g);
         g.displayOn(jf);
-    }
-
-    public void reloadNGClassesIfNeeded() {
-        long curTime = System.currentTimeMillis();
-        if (curTime - lastHotReloadCheckTime > HOT_RELOAD_CHECK_COOLDOWN) {
-            lastHotReloadCheckTime = curTime;
-
-            if (renderer != null) {
-                NGRenderer reloadedRenderer = (NGRenderer) renderer.reloadIfNeeded();
-                if (reloadedRenderer != null) setRenderer(reloadedRenderer);
-            }
-
-            if (main != null) {
-                NGMain reloadedMain = (NGMain) main.reloadIfNeeded();
-                if (reloadedMain != null) {
-                    jf.getToolkit().removeAWTEventListener(this.main);
-                    this.main = reloadedMain;
-                    jf.getToolkit().addAWTEventListener(this.main, -1);
-                }
-            }
-        }
     }
 
     public int toRealWidth(int windowW) {

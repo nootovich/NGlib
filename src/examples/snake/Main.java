@@ -8,8 +8,6 @@ import nootovich.nglib.NGVec2i;
 
 import static examples.snake.Snake.getRandomPos;
 
-// TODO: I don't like this workaround inorder to escape static context.
-//  Would be nice to get rid of this at least by supporting inner classes hot-reloading.
 public class Main {
 
     public static final int CELL_AMOUNT = 20;
