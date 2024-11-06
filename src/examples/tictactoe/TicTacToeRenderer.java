@@ -2,6 +2,7 @@ package examples.tictactoe;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Arrays;
 import nootovich.nglib.*;
 
 import static examples.tictactoe.Main.*;
@@ -175,10 +176,6 @@ public class TicTacToeRenderer extends NGRenderer {
     @Override
     public void reset() {
         lineSprites.clear();
-        for (int i = 0; i < shapeSprites.length; i++) {
-            for (int j = 0; j < shapeSprites[i].length; j++) {
-                shapeSprites[i][j] = null;
-            }
-        }
+        for (NGSprite[] shapeSprite: shapeSprites) Arrays.fill(shapeSprite, null);
     }
 }

@@ -140,7 +140,7 @@ public class NGVec2i {
     }
 
     public boolean isInside(NGVec4i area) {
-        return area.x() < x && x < area.x() + area.w() && area.y() < y && y < area.y() + area.h();
+        return area.x() < x && x < area.x() + area.z() && area.y() < y && y < area.y() + area.w();
     }
 
     public NGVec2f toFloat() {
@@ -153,6 +153,6 @@ public class NGVec2i {
 
     @Override
     public String toString() {
-        return "(%d, %d)".formatted(x, y);
+        return String.format("(%d, %d)", x, y);
     }
 }

@@ -29,22 +29,26 @@ public class Snake extends NGMain {
 
     @Override
     public void update() {
-        SnakePart head = snake.getLast();
+        SnakePart head = snake.get(snake.size() - 1);
 
         int nx = head.pos.x();
         int ny = head.pos.y();
         switch (head.dir) {
-            case UP -> ny = mod(head.pos.y() - CELL_SIZE, h);
-            case RIGHT -> nx = mod(head.pos.x() + CELL_SIZE, w);
-            case DOWN -> ny = mod(head.pos.y() + CELL_SIZE, h);
-            case LEFT -> nx = mod(head.pos.x() - CELL_SIZE, w);
-            default -> NGUtils.error("Snake has entered the 4-th dimension.");
+            case UP: ny = mod(head.pos.y() - CELL_SIZE, h);
+                break;
+            case RIGHT: nx = mod(head.pos.x() + CELL_SIZE, w);
+                break;
+            case DOWN: ny = mod(head.pos.y() + CELL_SIZE, h);
+                break;
+            case LEFT: nx = mod(head.pos.x() - CELL_SIZE, w);
+                break;
+            default: NGUtils.error("Snake has entered the 4-th dimension.");
         }
 
         NGVec2i newPos = new NGVec2i(nx, ny).snap(CELL_SIZE);
 
         if (newPos.equals(food.pos)) eat();
-        else snake.removeFirst();
+        else snake.remove(0);
 
         for (SnakePart part: snake) {
             if (newPos.equals(part.pos)) {
@@ -59,7 +63,7 @@ public class Snake extends NGMain {
     }
 
     @Override
-    public void onLMBPressed(NGVec2i pos) {
+    public void onLMBPress(NGVec2i pos) {
         if (pos.snap(CELL_SIZE).equals(food.pos)) eat();
         highlightFood = false;
     }
@@ -77,25 +81,25 @@ public class Snake extends NGMain {
 
     @Override
     public void onWPress() {
-        SnakePart head = snake.getLast();
+        SnakePart head = snake.get(snake.size() - 1);
         queuedDirection = head.dir != DIRECTION.DOWN ? DIRECTION.UP : head.dir;
     }
 
     @Override
     public void onAPress() {
-        SnakePart head = snake.getLast();
+        SnakePart head = snake.get(snake.size() - 1);
         queuedDirection = head.dir != DIRECTION.RIGHT ? DIRECTION.LEFT : head.dir;
     }
 
     @Override
     public void onSPress() {
-        SnakePart head = snake.getLast();
+        SnakePart head = snake.get(snake.size() - 1);
         queuedDirection = head.dir != DIRECTION.UP ? DIRECTION.DOWN : head.dir;
     }
 
     @Override
     public void onDPress() {
-        SnakePart head = snake.getLast();
+        SnakePart head = snake.get(snake.size() - 1);
         queuedDirection = head.dir != DIRECTION.LEFT ? DIRECTION.RIGHT : head.dir;
     }
 
@@ -140,12 +144,17 @@ public class Snake extends NGMain {
         public void nextAnim() {
             anims.clear();
             NGVec2i start = pos;
-            NGVec2i end = switch (dir) {
-                case UP -> pos.add(0, -CELL_SIZE);
-                case RIGHT -> pos.add(CELL_SIZE, 0);
-                case DOWN -> pos.add(0, CELL_SIZE);
-                case LEFT -> pos.add(-CELL_SIZE, 0);
-            };
+            NGVec2i end   = new NGVec2i();
+            switch (dir) {
+                case UP: end = pos.add(0, -CELL_SIZE);
+                    break;
+                case RIGHT: end = pos.add(CELL_SIZE, 0);
+                    break;
+                case DOWN: end = pos.add(0, CELL_SIZE);
+                    break;
+                case LEFT: end = pos.add(-CELL_SIZE, 0);
+                    break;
+            }
             anims.add(new NGAnimation(start.toFloat(), end.toFloat(), TICK_DURATION));
         }
     }

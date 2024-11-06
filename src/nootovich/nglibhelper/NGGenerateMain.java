@@ -1,7 +1,6 @@
 package nootovich.nglibhelper;
 
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 import nootovich.nglib.NGFileSystem;
 
 import static java.awt.event.KeyEvent.*;
@@ -13,15 +12,20 @@ public class NGGenerateMain {
     public static final Stack<Integer> keys  = new Stack<>();
     public static final Stack<String>  names = new Stack<>();
 
-    public static final Map<Integer, String> mouseButtons = Map.of(1, "LMB", 2, "MMB", 3, "RMB");
+    public static final Map<Integer, String> mouseButtons;
+
+    static {
+        mouseButtons = new HashMap<>();
+        mouseButtons.put(1, "LMB");
+        mouseButtons.put(2, "MMB");
+        mouseButtons.put(3, "RMB");
+    }
 
     public static void main(String[] args) {
 
         for (String s: args) {
-            switch (s) {
-                case "-d" -> DEBUG = true;
-                default -> throw new IllegalStateException("Unexpected argument: " + s);
-            }
+            if (s.equals("-d")) DEBUG = true;
+            else throw new IllegalStateException("Unexpected argument: " + s);
         }
 
         for (int key = VK_ENTER; key < VK_BEGIN; key++) {
@@ -49,12 +53,10 @@ public class NGGenerateMain {
         sb.append("import java.awt.event.*;\n");
         sb.append("import java.lang.reflect.InvocationTargetException;\n");
         sb.append("import java.util.Stack;\n");
-        sb.append("import javax.annotation.processing.Generated;\n");
         sb.append("import javax.swing.JFrame;\n");
         sb.append("import javax.swing.Timer;\n\n");
 
         sb.append("@SuppressWarnings(\"unused\")\n");
-        sb.append("@Generated(\"nootovich.nglibhelper.NGGenerateMain\")\n");
         sb.append("public class NGMain implements AWTEventListener {\n\n");
 
         sb.append("    private static final int WINDOW_MINIMAL_SIZE = 100;\n\n");
@@ -69,7 +71,7 @@ public class NGGenerateMain {
 
         sb.append("    public static int tickCount = 0;\n\n");
 
-        sb.append("    Stack<String> heldKeys = new Stack<>();\n\n");
+        sb.append("    public static Stack<String> heldKeys = new Stack<>();\n\n");
 
         sb.append("    public void setTickRate(int ups) {\n");
         sb.append("        TICK_DURATION = 1.0f / ups;\n");
@@ -87,11 +89,11 @@ public class NGGenerateMain {
 
         sb.append("    public void start() {\n");
         if (DEBUG) {
-            sb.append("        NGUtils.info(\"tickrate: %f\".formatted(1 / TICK_DURATION));\n");
-            sb.append("        NGUtils.info(\"framerate: %f\".formatted(1 / FRAME_DURATION));\n");
+            sb.append("        NGUtils.info(\"tickrate: \" + 1 / TICK_DURATION);\n");
+            sb.append("        NGUtils.info(\"framerate: \" + 1 / FRAME_DURATION);\n");
         }
-        sb.append("        new Timer((int) (TICK_DURATION  * 1000), _ -> updateAll()).start();\n");
-        sb.append("        new Timer((int) (FRAME_DURATION * 1000), _ -> window.redraw()).start();\n");
+        sb.append("        new Timer((int) (TICK_DURATION  * 1000), t -> updateAll()).start();\n");
+        sb.append("        new Timer((int) (FRAME_DURATION * 1000), t -> window.redraw()).start();\n");
         sb.append("    }\n\n");
 
         sb.append("    public void exit() {\n");
@@ -99,7 +101,7 @@ public class NGGenerateMain {
         sb.append("    }\n\n");
 
         sb.append("    public void exit(float waitTime) {\n");
-        sb.append("        new Timer((int) (waitTime * 1000), _ -> window.shouldClose = true).start();\n");
+        sb.append("        new Timer((int) (waitTime * 1000), t -> window.shouldClose = true).start();\n");
         sb.append("    }\n\n");
 
         sb.append("    public void updateAll() {\n");
@@ -128,40 +130,51 @@ public class NGGenerateMain {
             sb.append("    public void eventDispatched(AWTEvent event) {\n");
             sb.append("        int id = event.getID();\n");
             sb.append("        if (id == KeyEvent.KEY_PRESSED) {\n");
-            sb.append("            switch (((KeyEvent) event).getKeyCode()) {\n");
+            sb.append("            int  keyCode = ((KeyEvent) event).getKeyCode();\n");
+            sb.append("            char keyChar = ((KeyEvent) event).getKeyChar();\n");
+            sb.append("            onAnyKeyPress(keyCode, keyChar);\n");
+            sb.append("            switch (keyCode) {\n");
 
             for (int i = 0; i < keys.size(); i++) {
-                sb.append("                case ").append(keys.get(i)).append(" -> {\n");
+                sb.append("                case ").append(keys.get(i)).append(": {\n");
                 sb.append("                    heldKeys.push(\"").append(names.get(i)).append("\");\n");
                 sb.append("                    on").append(names.get(i)).append("Press();\n");
+                sb.append("                    break;\n");
                 sb.append("                }\n");
             }
 
             sb.append("            }\n");
+            sb.append("            afterAnyKeyPress(keyCode, keyChar);\n");
             sb.append("        } else if (id == KeyEvent.KEY_RELEASED) {\n");
-            sb.append("            switch (((KeyEvent) event).getKeyCode()) {\n");
+            sb.append("            int keyCode  = ((KeyEvent) event).getKeyCode();\n");
+            sb.append("            char keyChar = ((KeyEvent) event).getKeyChar();\n");
+            sb.append("            onAnyKeyRelease(keyCode, keyChar);\n");
+            sb.append("            switch (keyCode) {\n");
 
             for (int i = 0; i < keys.size(); i++) {
-                sb.append("                case ").append(keys.get(i)).append(" -> {\n");
+                sb.append("                case ").append(keys.get(i)).append(": {\n");
                 sb.append("                    heldKeys.remove(\"").append(names.get(i)).append("\");\n");
                 sb.append("                    on").append(names.get(i)).append("Release();\n");
+                sb.append("                    break;\n");
                 sb.append("                }\n");
             }
 
             sb.append("            }\n");
+            sb.append("            afterAnyKeyRelease(keyCode, keyChar);\n");
             sb.append("        } else if (id == MouseEvent.MOUSE_PRESSED || id == MouseEvent.MOUSE_RELEASED) {\n");
             sb.append("            Insets  ins = ((JFrame) event.getSource()).getInsets();\n");
             sb.append("            NGVec2i pos = new NGVec2i(((MouseEvent) event).getPoint()).sub(ins.left, ins.top);\n");
             sb.append("            switch (((MouseEvent) event).getButton()) {\n");
             for (int mouseButton = 1; mouseButton <= 3; mouseButton++) {
-                sb.append("                case MouseEvent.BUTTON").append(mouseButton).append(" -> {\n");
+                sb.append("                case MouseEvent.BUTTON").append(mouseButton).append(": {\n");
                 sb.append("                    if (id == MouseEvent.MOUSE_PRESSED) {\n");
                 sb.append("                        heldKeys.push(\"").append(mouseButtons.get(mouseButton)).append("\");\n");
-                sb.append("                        on").append(mouseButtons.get(mouseButton)).append("Pressed(pos);\n");
+                sb.append("                        on").append(mouseButtons.get(mouseButton)).append("Press(pos);\n");
                 sb.append("                    } else {\n");
                 sb.append("                        heldKeys.remove(\"").append(mouseButtons.get(mouseButton)).append("\");\n");
-                sb.append("                        on").append(mouseButtons.get(mouseButton)).append("Released(pos);\n");
+                sb.append("                        on").append(mouseButtons.get(mouseButton)).append("Release(pos);\n");
                 sb.append("                    }\n");
+                sb.append("                    break;\n");
                 sb.append("                }\n");
             }
             sb.append("            }\n");
@@ -204,20 +217,29 @@ public class NGGenerateMain {
         sb.append("    public void onWindowMinimize() { }\n");
         sb.append("    public void onWindowRestore() { }\n\n");
 
-        { // on<Key>Pressed(), on<Key>Released(), while<Key>Held()
+        { // on<Key>Press(), on<Key>Release(), while<Key>Held()
             for (int mouseButton = 1; mouseButton <= 3; mouseButton++) {
                 String mouseButtonName = mouseButtons.get(mouseButton);
-                sb.append("    public void on").append(mouseButtonName).append("Pressed(NGVec2i pos) { }\n");
-                sb.append("    public void on").append(mouseButtonName).append("Released(NGVec2i pos) { }\n");
+                sb.append("    public void on").append(mouseButtonName).append("Press(NGVec2i pos) { }\n");
+                sb.append("    public void on").append(mouseButtonName).append("Release(NGVec2i pos) { }\n");
                 sb.append("    public void while").append(mouseButtonName).append("Held(NGVec2i pos) { }\n\n");
             }
+
+            sb.append("    public void onAnyKeyPress(int keyCode, char keyChar) { }\n");
+            sb.append("    public void afterAnyKeyPress(int keyCode, char keyChar) { }\n\n");
+
+            // TODO: sb.append("    public void whileAnyKeyHeld() { }\n\n");
+
+            sb.append("    public void onAnyKeyRelease(int keyCode, char keyChar) { }\n");
+            sb.append("    public void afterAnyKeyRelease(int keyCode, char keyChar) { }\n\n");
+
             for (int i = 0; i < keys.size(); i++) {
                 String name = names.get(i);
-                sb.append("    public void on").append(name).append("Press() {%s}\n".formatted(name.equals("Escape") ? "exit();" : " "));
+                sb.append("    public void on").append(name).append("Press() {").append(name.equals("Escape") ? "exit();" : " ").append("}\n");
                 sb.append("    public void on").append(name).append("Release() { }\n");
                 sb.append("    public void while").append(name).append("Held() { }\n\n");
             }
-        } // on<Key>Pressed(), on<Key>Released(), while<Key>Held()
+        } // on<Key>Press(), on<Key>Release(), while<Key>Held()
 
         sb.append("\n}\n");
 

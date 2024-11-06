@@ -7,18 +7,18 @@ public class NGWindow {
 
     public boolean shouldClose = false;
 
-    public NGVec2i pos;
-    public NGVec2i size;
-    public final Insets ins;
+    public       NGVec2i pos;
+    public       NGVec2i size;
+    public final Insets  ins;
 
-    public  NGRenderer renderer;
+    public NGRenderer renderer;
 
     public       JFrame     jf;
     public final NGGraphics g;
 
     public NGWindow(int width, int height, NGRenderer renderer, NGMain main) {
-        size = new NGVec2i(width, height);
-        this.jf   = new JFrame();
+        size    = new NGVec2i(width, height);
+        this.jf = new JFrame();
 
         jf.getToolkit().addAWTEventListener(main, -1);
 

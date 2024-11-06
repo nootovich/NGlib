@@ -42,7 +42,7 @@ public class TicTacToe extends NGMain {
     }
 
     @Override
-    public void onLMBPressed(NGVec2i pos) {
+    public void onLMBPress(NGVec2i pos) {
         if (restartTime > 0) return;
         // TODO: change to "pos.sub(MARGIN).div(CELL_SIZE).in(board) = (byte) (player ? 1 : 2);" after NGVec rework
         NGVec2i cell = pos.sub(MARGIN).divide(CELL_SIZE);

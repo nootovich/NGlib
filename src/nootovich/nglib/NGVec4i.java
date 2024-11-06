@@ -78,6 +78,6 @@ public class NGVec4i {
 
     @Override
     public String toString() {
-        return "(%d, %d, %d, %d)".formatted(x, y, z, w);
+        return String.format("(%d, %d, %d, %d)", x, y, z, w);
     }
 }

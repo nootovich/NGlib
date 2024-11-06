@@ -11,15 +11,18 @@ public class NGFileSystem {
 
     public static String loadFile(String filepath) {
         try {
-            return Files.readString(Path.of(filepath));
+            String[]      fileLines = Files.readAllLines(new File(filepath).toPath()).toArray(new String[]{ });
+            StringBuilder result    = new StringBuilder();
+            for (String line: fileLines) result.append(line).append('\n');
+            return result.toString();
         } catch (IOException e) {
-            throw new UncheckedIOException(e);
+            throw new RuntimeException(e);
         }
     }
 
     public static byte[] loadBytes(String filepath) {
         try {
-            return Files.readAllBytes(Path.of(filepath));
+            return Files.readAllBytes(new File(filepath).toPath());
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -27,9 +30,9 @@ public class NGFileSystem {
 
     public static void saveFile(String file, String data) {
         try {
-            Path path = Path.of(file);
+            Path path = new File(file).toPath();
             if (Files.notExists(path.getParent())) Files.createDirectories(path.getParent());
-            Files.writeString(path, data);
+            Files.write(path, data.getBytes());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -37,7 +40,7 @@ public class NGFileSystem {
 
     public static String[] getDirectoryFiles(String dir) {
         Stack<String> list = new Stack<>();
-        try (Stream<Path> paths = Files.list(Path.of(dir))) {
+        try (Stream<Path> paths = Files.list(new File(dir).toPath())) {
             paths.filter(path -> !Files.isDirectory(path)).forEach(path -> list.push(path.getFileName().toString()));
             return list.toArray(new String[]{ });
         } catch (IOException e) {
@@ -57,11 +60,11 @@ public class NGFileSystem {
 
     private static String findRecursively(String filename, String dir) throws IOException {
         Stack<String> list = new Stack<>();
-        try (Stream<Path> paths = Files.list(Path.of(dir))) {
+        try (Stream<Path> paths = Files.list(new File(dir).toPath())) {
             paths.filter(path -> !path.getFileName().toString().startsWith(".")).map(Path::toString).forEach(list::push);
         }
         for (String entry: list) {
-            Path path = Path.of(entry);
+            Path path = new File(entry).toPath();
             if (path.getFileName().toString().equals(filename)) return entry;
             if (Files.isDirectory(path)) {
                 String result = findRecursively(filename, entry);
@@ -88,7 +91,7 @@ public class NGFileSystem {
 
     public static long getLastModifiedTime(String filepath) {
         try {
-            return Files.getLastModifiedTime(Path.of(filepath)).toMillis();
+            return Files.getLastModifiedTime(new File(filepath).toPath()).toMillis();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -96,7 +99,7 @@ public class NGFileSystem {
 
     public static String getParent(String path) {
         try {
-            return Path.of(path).getParent().toString() + File.separator;
+            return new File(path).toPath().getParent().toString() + File.separator;
         } catch (Exception e) {
             NGUtils.error("Not able to get parent directory of: " + path);
         }

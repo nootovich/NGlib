@@ -26,7 +26,7 @@ public class NGAnimation {
 
     public boolean update(float dt) {
         progress += dt;
-        if (progress >= duration){
+        if (progress >= duration) {
             state = end;
             return false;
         }

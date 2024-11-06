@@ -102,18 +102,23 @@ public class NGSprite {
 
     void draw(NGGraphics g) {
         if (visible) switch (type) {
-            case LINE -> g.drawRoundedLine(getPos(), getPos().add(size), color, extra);
-            case RECT -> g.drawRectWithBorder(getPos(), size, color, borderColor);
-            case CIRCLE -> g.drawCircle(getPos(), size.w(), color);
-            case CIRCLE_CENTERED -> g.drawCircleCentered(getPos(), size.w(), color);
-            case CIRCLE_BORDER -> g.drawCircleBorder(getPos(), size.w(), color, extra);
-            default -> NGUtils.error("Not implemented");
+            case LINE: g.drawRoundedLine(getPos(), getPos().add(size), color, extra);
+                break;
+            case RECT: g.drawRectWithBorder(getPos(), size, color, borderColor);
+                break;
+            case CIRCLE: g.drawCircle(getPos(), size.w(), color);
+                break;
+            case CIRCLE_CENTERED: g.drawCircleCentered(getPos(), size.w(), color);
+                break;
+            case CIRCLE_BORDER: g.drawCircleBorder(getPos(), size.w(), color, extra);
+                break;
+            default: NGUtils.error("Not implemented");
         }
         for (NGSprite child: children) child.draw(g);
     }
 
     public NGVec2i getPos() {
-        NGVec2i  result    = anims.isEmpty() ? pos : anims.getFirst().state.toInt();
+        NGVec2i  result    = anims.isEmpty() ? pos : anims.get(0).state.toInt();
         NGSprite curSprite = this;
         while (curSprite.inheritPos && curSprite.parent != null) {
             curSprite = curSprite.parent;
@@ -126,5 +131,4 @@ public class NGSprite {
         children.add(child);
         child.parent = this;
     }
-
 }

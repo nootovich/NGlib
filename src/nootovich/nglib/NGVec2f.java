@@ -74,6 +74,6 @@ public class NGVec2f {
 
     @Override
     public String toString() {
-        return "(%.3f, %.3f)".formatted(x, y);
+        return String.format("(%.3f, %.3f)", x, y);
     }
 }
