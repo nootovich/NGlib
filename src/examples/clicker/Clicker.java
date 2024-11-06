@@ -1,8 +1,11 @@
 package examples.clicker;
 
+import java.util.ArrayList;
 import nootovich.nglib.*;
 
 public class Clicker extends NGMain {
+
+    public static ArrayList<NGButton> buttons = new ArrayList<>();
 
     public static final int TICK_RATE = 60;
 
@@ -21,9 +24,19 @@ public class Clicker extends NGMain {
     public static int passiveIncomeCost = 20;
 
     public void main() {
-        createWindow(400, 300, new ClickerRenderer());
         setTickRate(TICK_RATE);
         setFrameRate(60);
+        createWindow(400, 300, new ClickerRenderer());
+
+        buttons.add(
+            new NGButton("./assets/cross-mark.png", 0, 0, 50, 50) {
+                @Override
+                public void performAction() {
+                    window.shouldClose = true;
+                }
+            }
+        );
+
         start();
     }
 
@@ -34,6 +47,11 @@ public class Clicker extends NGMain {
 
     @Override
     public void onLMBPress(NGVec2i pos) {
+
+        for (NGButton button: buttons) {
+            if (pos.isInside(button.area)) button.performAction();
+        }
+
         if (pos.isInside(CENTER)) clicks += clickPower;
         else if (pos.isInside(BUTTON1) && clicks >= clickPowerCost) {
             clicks -= clickPowerCost;

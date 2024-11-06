@@ -40,6 +40,7 @@ public class ClickerRenderer extends NGRenderer {
                 g.drawTextCentered(passiveIncomeCost, BUTTON2.x() + BUTTON2.z() / 2, BUTTON2.y() + BUTTON2.w() / 2 + UPGRADE_COST_OFFSET, Color.WHITE, 14);
             } // PASSIVE INCOME
         } // UPGRADES
+        for (NGButton button: buttons) g.drawButton(button);
     }
 
     @Override

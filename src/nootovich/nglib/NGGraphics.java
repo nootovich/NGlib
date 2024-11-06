@@ -2,16 +2,21 @@ package nootovich.nglib;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 @SuppressWarnings("unused")
 public class NGGraphics {
 
     // TODO: merge `NGGraphics` with `NGRenderer`
 
+    private static final boolean DEBUG = false;
+
     private NGVec2i       pos;
     private NGVec2i       size;
     private BufferedImage buffer;
-    private Graphics2D    g2d;
+    public  Graphics2D    g2d;
 
     public NGGraphics(Container c) {
         Insets ins = c.getInsets();
@@ -24,8 +29,10 @@ public class NGGraphics {
 
     public void updateGraphics() {
         g2d = buffer.createGraphics();
-        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
     }
 
     public void resize(int w, int h) {
@@ -269,6 +276,12 @@ public class NGGraphics {
         g2d.drawString(text, x, y);
     }
 
+    public void drawText(String text, int x, int y, Color color, int size) {
+        g2d.setColor(color);
+        g2d.setFont(g2d.getFont().deriveFont((float) size));
+        g2d.drawString(text, x, y);
+    }
+
     public void drawTextCentered(String text, int x, int y, Color color) {
         FontMetrics metrics = g2d.getFontMetrics();
         drawText(text, x - metrics.stringWidth(text) / 2, y + metrics.getDescent(), color);
@@ -290,5 +303,22 @@ public class NGGraphics {
 
     public void displayOn(Container c) {
         c.getGraphics().drawImage(buffer, pos.x(), pos.y(), null);
+    }
+
+    public void drawImage(String path, int x, int y, int w, int h) {
+        try {
+            Image img = ImageIO.read(new File(path));
+            g2d.drawImage(img, x, y, w, h, null);
+        } catch (IOException e) {
+        }
+    }
+
+    public void drawImage(Image img, NGVec2i pos, NGVec2i size) {
+        g2d.drawImage(img, pos.x(), pos.y(), size.w(), size.h(), null);
+    }
+
+    public void drawButton(NGButton button) {
+        drawImage(button.img, button.pos, button.size);
+        if (DEBUG) drawRect(button.pos, button.size, new Color(0x69FF0000, true));
     }
 }
