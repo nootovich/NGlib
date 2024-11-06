@@ -52,9 +52,8 @@ public class NGGenerateMain {
         sb.append("import java.awt.*;\n");
         sb.append("import java.awt.event.*;\n");
         sb.append("import java.lang.reflect.InvocationTargetException;\n");
-        sb.append("import java.util.Stack;\n");
-        sb.append("import javax.swing.JFrame;\n");
-        sb.append("import javax.swing.Timer;\n\n");
+        sb.append("import java.util.*;\n");
+        sb.append("import javax.swing.JFrame;\n\n");
 
         sb.append("@SuppressWarnings(\"unused\")\n");
         sb.append("public class NGMain implements AWTEventListener {\n\n");
@@ -92,8 +91,10 @@ public class NGGenerateMain {
             sb.append("        NGUtils.info(\"tickrate: \" + 1 / TICK_DURATION);\n");
             sb.append("        NGUtils.info(\"framerate: \" + 1 / FRAME_DURATION);\n");
         }
-        sb.append("        new Timer((int) (TICK_DURATION  * 1000), t -> updateAll()).start();\n");
-        sb.append("        new Timer((int) (FRAME_DURATION * 1000), t -> window.redraw()).start();\n");
+        sb.append("        new Timer().scheduleAtFixedRate(new TimerTask(){public void run(){updateAll();}},0,(long)(TICK_DURATION*1000));\n");
+        sb.append("        new Timer().scheduleAtFixedRate(new TimerTask(){public void run(){window.redraw();}},0,(long)(FRAME_DURATION*1000));\n");
+        // sb.append("        new Timer((int) (TICK_DURATION  * 1000), t -> updateAll()).start();\n");
+        // sb.append("        new Timer((int) (FRAME_DURATION * 1000), t -> window.redraw()).start();\n");
         sb.append("    }\n\n");
 
         sb.append("    public void exit() {\n");
@@ -101,7 +102,8 @@ public class NGGenerateMain {
         sb.append("    }\n\n");
 
         sb.append("    public void exit(float waitTime) {\n");
-        sb.append("        new Timer((int) (waitTime * 1000), t -> window.shouldClose = true).start();\n");
+        sb.append("        new Timer().scheduleAtFixedRate(new TimerTask(){public void run(){window.shouldClose = true;}},0,(long)(waitTime*1000));\n");
+        // sb.append("        new Timer((int) (waitTime * 1000), t -> window.shouldClose = true).start();\n");
         sb.append("    }\n\n");
 
         sb.append("    public void updateAll() {\n");

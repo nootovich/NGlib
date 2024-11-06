@@ -3,9 +3,8 @@ package nootovich.nglib;
 import java.awt.*;
 import java.awt.event.*;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Stack;
+import java.util.*;
 import javax.swing.JFrame;
-import javax.swing.Timer;
 
 @SuppressWarnings("unused")
 public class NGMain implements AWTEventListener {
@@ -41,8 +40,8 @@ public class NGMain implements AWTEventListener {
     public void start() {
         NGUtils.info("tickrate: " + 1 / TICK_DURATION);
         NGUtils.info("framerate: " + 1 / FRAME_DURATION);
-        new Timer((int) (TICK_DURATION  * 1000), t -> updateAll()).start();
-        new Timer((int) (FRAME_DURATION * 1000), t -> window.redraw()).start();
+        new Timer().scheduleAtFixedRate(new TimerTask(){public void run(){updateAll();}},0,(long)(TICK_DURATION*1000));
+        new Timer().scheduleAtFixedRate(new TimerTask(){public void run(){window.redraw();}},0,(long)(FRAME_DURATION*1000));
     }
 
     public void exit() {
@@ -50,7 +49,7 @@ public class NGMain implements AWTEventListener {
     }
 
     public void exit(float waitTime) {
-        new Timer((int) (waitTime * 1000), t -> window.shouldClose = true).start();
+        new Timer().scheduleAtFixedRate(new TimerTask(){public void run(){window.shouldClose = true;}},0,(long)(waitTime*1000));
     }
 
     public void updateAll() {
