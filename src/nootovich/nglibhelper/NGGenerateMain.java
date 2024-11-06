@@ -93,8 +93,6 @@ public class NGGenerateMain {
         }
         sb.append("        new Timer().scheduleAtFixedRate(new TimerTask(){public void run(){updateAll();}},0,(long)(TICK_DURATION*1000));\n");
         sb.append("        new Timer().scheduleAtFixedRate(new TimerTask(){public void run(){window.redraw();}},0,(long)(FRAME_DURATION*1000));\n");
-        // sb.append("        new Timer((int) (TICK_DURATION  * 1000), t -> updateAll()).start();\n");
-        // sb.append("        new Timer((int) (FRAME_DURATION * 1000), t -> window.redraw()).start();\n");
         sb.append("    }\n\n");
 
         sb.append("    public void exit() {\n");
@@ -103,7 +101,6 @@ public class NGGenerateMain {
 
         sb.append("    public void exit(float waitTime) {\n");
         sb.append("        new Timer().scheduleAtFixedRate(new TimerTask(){public void run(){window.shouldClose = true;}},0,(long)(waitTime*1000));\n");
-        // sb.append("        new Timer((int) (waitTime * 1000), t -> window.shouldClose = true).start();\n");
         sb.append("    }\n\n");
 
         sb.append("    public void updateAll() {\n");
