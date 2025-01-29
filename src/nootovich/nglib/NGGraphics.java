@@ -88,7 +88,7 @@ public class NGGraphics {
     }
 
     public void drawRect(NGVec4i rect, Color color) {
-        drawRect(rect.x(), rect.y(), rect.z(), rect.w(), color);
+        drawRect(rect.x(), rect.y(), rect.w(), rect.h(), color);
     }
 
     public void drawRect(NGVec2f fpos, NGVec2f fsize, Color color) {
@@ -131,7 +131,7 @@ public class NGGraphics {
     }
 
     public void drawRectBorder(NGVec4i rect, Color color) {
-        drawRectBorder(rect.x(), rect.y(), rect.z(), rect.w(), color);
+        drawRectBorder(rect.x(), rect.y(), rect.w(), rect.h(), color);
     }
 
     public void drawRectBorder(NGVec2f fpos, NGVec2f fsize, Color color) {
@@ -282,6 +282,11 @@ public class NGGraphics {
         g2d.drawString(text, x, y);
     }
 
+    public void drawText(String text, NGVec2i pos, Color color) {
+        g2d.setColor(color);
+        g2d.drawString(text, pos.x(), pos.y());
+    }
+
     public void drawTextCentered(String text, int x, int y, Color color) {
         FontMetrics metrics = g2d.getFontMetrics();
         drawText(text, x - metrics.stringWidth(text) / 2, y + metrics.getDescent(), color);
@@ -294,6 +299,11 @@ public class NGGraphics {
     public void drawTextCentered(String text, int x, int y, Color color, int size) {
         g2d.setFont(g2d.getFont().deriveFont((float) size));
         drawTextCentered(text, x, y, color);
+    }
+
+    public void drawTextCentered(String text, NGVec2i pos, Color color) {
+        FontMetrics metrics = g2d.getFontMetrics();
+        drawText(text, pos.x() - metrics.stringWidth(text) / 2, pos.y() + metrics.getDescent(), color);
     }
 
     public void drawTextCentered(int num, int x, int y, Color color, int size) {
@@ -310,6 +320,7 @@ public class NGGraphics {
             Image img = ImageIO.read(new File(path));
             g2d.drawImage(img, x, y, w, h, null);
         } catch (IOException e) {
+            NGUtils.error("TODO"); // I don't remember what I was doing 4 months ago
         }
     }
 

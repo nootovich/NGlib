@@ -1,5 +1,6 @@
 package nootovich.nglib;
 
+@SuppressWarnings("unused")
 public class NGVec2f {
 
     public float x = 0, y = 0;

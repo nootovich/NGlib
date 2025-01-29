@@ -61,14 +61,14 @@ public class NGMain implements AWTEventListener {
     public void update() { }
 
     public void updateHeldKeys() {
-        for (String heldKey: heldKeys) {
-            try {
+        try {
+            for (String heldKey: heldKeys) {
                 if (heldKey.equals("LMB") || heldKey.equals("RMB") || heldKey.equals("MMB"))
                     getClass().getDeclaredMethod("while" + heldKey + "Held", NGVec2i.class)
                               .invoke(this, new NGVec2i(MouseInfo.getPointerInfo().getLocation()).sub(window.pos));
                 else getClass().getDeclaredMethod("while" + heldKey + "Held").invoke(this);
-            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ignored) { }
-        }
+            }
+        } catch (ConcurrentModificationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException ignored) { }
     }
 
     @Override

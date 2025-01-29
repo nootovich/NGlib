@@ -1,7 +1,9 @@
 package nootovich.nglib;
 
+import java.awt.Dimension;
 import java.awt.Point;
 
+@SuppressWarnings("unused")
 public class NGVec2i {
 
     private int x = 0, y = 0;
@@ -27,6 +29,11 @@ public class NGVec2i {
     public NGVec2i(Point p) {
         this.x = p.x;
         this.y = p.y;
+    }
+
+    public NGVec2i(Dimension d) {
+        this.x = d.width;
+        this.y = d.height;
     }
 
     public static NGVec2i[] createArray(int[][] positions) {
@@ -99,6 +106,10 @@ public class NGVec2i {
         return new NGVec2i(x + dx, y + dy);
     }
 
+    public NGVec2i addY(int dy) {
+        return new NGVec2i(x, y + dy);
+    }
+
     public NGVec2i sub(NGVec2i other) {
         return new NGVec2i(x - other.x, y - other.y);
     }
@@ -111,12 +122,28 @@ public class NGVec2i {
         return new NGVec2i(x - dx, y - dy);
     }
 
+    public NGVec2i subY(int dy) {
+        return new NGVec2i(x, y - dy);
+    }
+
     public NGVec2i scale(float factor) {
         return new NGVec2i(x * factor, y * factor);
     }
 
+    public NGVec2i scale(float xFactor, float yFactor) {
+        return new NGVec2i(x * xFactor, y * yFactor);
+    }
+
+    public NGVec2i scaleY(float factor) {
+        return new NGVec2i(x, y * factor);
+    }
+
     public NGVec2i divide(float factor) {
         return new NGVec2i(x / factor, y / factor);
+    }
+
+    public NGVec2i divide(float xFactor, float yFactor) {
+        return new NGVec2i(x / xFactor, y / yFactor);
     }
 
     public NGVec2i neg() {
@@ -143,9 +170,15 @@ public class NGVec2i {
         return area.x() < x && x < area.x() + area.z() && area.y() < y && y < area.y() + area.w();
     }
 
+    public NGVec2i yx() {
+        return new NGVec2i(y, x);
+    }
+
     public NGVec2f toFloat() {
         return new NGVec2f(x, y);
     }
+
+    public Point toPoint() { return new Point(x, y); }
 
     public boolean equals(NGVec2i other) {
         return this.x == other.x && this.y == other.y;

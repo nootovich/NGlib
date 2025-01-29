@@ -1,5 +1,6 @@
 package nootovich.nglib;
 
+@SuppressWarnings("unused")
 public class NGVec4i {
 
     private int x = 0, y = 0, z = 0, w = 0;
@@ -28,6 +29,13 @@ public class NGVec4i {
         this.w = w;
     }
 
+    public NGVec4i(NGVec2i xy, NGVec2i zw) {
+        this.x = xy.x();
+        this.y = xy.y();
+        this.z = zw.x();
+        this.w = zw.y();
+    }
+
     public static NGVec4i[] createArray(int[][] positions) {
         NGVec4i[] result = new NGVec4i[positions.length];
         for (int i = 0; i < positions.length; i++) {
@@ -39,10 +47,38 @@ public class NGVec4i {
     }
 
     public int x() { return x; }
+
     public int y() { return y; }
+
     public int z() { return z; }
+
     public int w() { return w; }
+
     public int h() { return z; }
+
+    public NGVec4i x(int x) {
+        this.x = x;
+        return this;
+    }
+
+    public NGVec4i y(int y) {
+        this.y = y;
+        return this;
+    }
+
+    public NGVec4i z(int z) {
+        this.z = z;
+        return this;
+    }
+
+    public NGVec4i w(int w) {
+        this.w = w;
+        return this;
+    }
+
+    public NGVec4i h(int h) {
+        return z(h);
+    }
 
     public NGVec4i add(NGVec4i other) {
         return new NGVec4i(x + other.x, y + other.y, z + other.z, w + other.w);
@@ -56,6 +92,18 @@ public class NGVec4i {
         return new NGVec4i(x + dx, y + dy, z + dz, w + dw);
     }
 
+    public NGVec4i addY(int dy) {
+        return new NGVec4i(x, y + dy, z, w);
+    }
+
+    public NGVec4i addXY(int dx, int dy) {
+        return new NGVec4i(x + dx, y + dy, z, w);
+    }
+
+    public NGVec4i addXY(NGVec2i other) {
+        return new NGVec4i(x + other.x(), y + other.y(), z, w);
+    }
+
     public NGVec4i sub(NGVec4i other) {
         return new NGVec4i(x - other.x, y - other.y, z - other.z, w - other.w);
     }
@@ -64,12 +112,40 @@ public class NGVec4i {
         return new NGVec4i(x - n, y - n, z - n, w - n);
     }
 
+    public NGVec4i subX(int dx) {
+        return new NGVec4i(x - dx, y, z, w);
+    }
+
+    public NGVec4i subY(int dy) {
+        return new NGVec4i(x, y - dy, z, w);
+    }
+
+    public NGVec4i subZ(int dz) {
+        return new NGVec4i(x, y, z - dz, w);
+    }
+
+    public NGVec4i subW(int dw) {
+        return new NGVec4i(x, y, z, w - dw);
+    }
+
+    public NGVec4i subH(int dh) {
+        return subZ(dh);
+    }
+
     public NGVec4i scale(float factor) {
         return new NGVec4i(x * factor, y * factor, z * factor, w * factor);
     }
 
+    public NGVec4i scaleW(float factor) {
+        return new NGVec4i(x, y, z, w * factor);
+    }
+
     public NGVec4i lerp(NGVec4i other, float n) {
         return this.add(other.sub(this).scale(n));
+    }
+
+    public NGVec2i xy() {
+        return new NGVec2i(x, y);
     }
 
 //    public NGVec4f toFloat() {

@@ -1,10 +1,13 @@
 package nootovich.nglib;
 
+import java.awt.image.BufferedImage;
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Stack;
 import java.util.stream.Stream;
+import javax.imageio.ImageIO;
 
 @SuppressWarnings("unused")
 public class NGFileSystem {
@@ -12,6 +15,17 @@ public class NGFileSystem {
     public static String loadFile(String filepath) {
         try {
             String[]      fileLines = Files.readAllLines(new File(filepath).toPath()).toArray(new String[]{ });
+            StringBuilder result    = new StringBuilder();
+            for (String line: fileLines) result.append(line).append('\n');
+            return result.toString();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String loadFile(String filepath, Charset charset) {
+        try {
+            String[]      fileLines = Files.readAllLines(new File(filepath).toPath(), charset).toArray(new String[]{ });
             StringBuilder result    = new StringBuilder();
             for (String line: fileLines) result.append(line).append('\n');
             return result.toString();
@@ -28,11 +42,29 @@ public class NGFileSystem {
         }
     }
 
+    public static BufferedImage loadBakedImage(String ImageBase64) {
+        try {
+            return ImageIO.read(new ByteArrayInputStream(NGConvert.decodeBase64(ImageBase64)));
+        } catch (RuntimeException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static void saveFile(String file, String data) {
         try {
             Path path = new File(file).toPath();
             if (Files.notExists(path.getParent())) Files.createDirectories(path.getParent());
             Files.write(path, data.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void saveFile(String file, byte[] data) {
+        try {
+            Path path = new File(file).toPath();
+            if (Files.notExists(path.getParent())) Files.createDirectories(path.getParent());
+            Files.write(path, data);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
