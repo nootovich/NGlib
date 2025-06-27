@@ -1,33 +1,25 @@
 package nootovich.nglib;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Stack;
 import java.util.stream.Stream;
-import javax.imageio.ImageIO;
 
 @SuppressWarnings("unused")
 public class NGFileSystem {
 
-    public static String loadFile(String filepath) {
-        try {
-            String[]      fileLines = Files.readAllLines(new File(filepath).toPath()).toArray(new String[]{ });
-            StringBuilder result    = new StringBuilder();
-            for (String line: fileLines) result.append(line).append('\n');
-            return result.toString();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public static String loadFile(String filepath, Charset charset) {
         try {
-            String[]      fileLines = Files.readAllLines(new File(filepath).toPath(), charset).toArray(new String[]{ });
-            StringBuilder result    = new StringBuilder();
-            for (String line: fileLines) result.append(line).append('\n');
+            String[] fileLines = Files.readAllLines(new File(filepath).toPath(), charset).toArray(new String[]{});
+            StringBuilder result = new StringBuilder();
+            for (String line : fileLines) result.append(line).append('\n');
             return result.toString();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -70,11 +62,18 @@ public class NGFileSystem {
         }
     }
 
+    public static void saveFile(String file, Byte[] data) {
+        byte[] unboxedData = new byte[data.length];
+        for (int i = 0; i < data.length; i++) unboxedData[i] = data[i];
+//        System.arraycopy(data, 0, unboxedData, 0, data.length);
+        saveFile(file, unboxedData);
+    }
+
     public static String[] getDirectoryFiles(String dir) {
         Stack<String> list = new Stack<>();
         try (Stream<Path> paths = Files.list(new File(dir).toPath())) {
             paths.filter(path -> !Files.isDirectory(path)).forEach(path -> list.push(path.getFileName().toString()));
-            return list.toArray(new String[]{ });
+            return list.toArray(new String[]{});
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -95,7 +94,7 @@ public class NGFileSystem {
         try (Stream<Path> paths = Files.list(new File(dir).toPath())) {
             paths.filter(path -> !path.getFileName().toString().startsWith(".")).map(Path::toString).forEach(list::push);
         }
-        for (String entry: list) {
+        for (String entry : list) {
             Path path = new File(entry).toPath();
             if (path.getFileName().toString().equals(filename)) return entry;
             if (Files.isDirectory(path)) {
@@ -109,15 +108,15 @@ public class NGFileSystem {
     @SuppressWarnings("DataFlowIssue")
     public static boolean delete(String path) {
         boolean success = true;
-        File    file    = new File(path);
-        if (file.isDirectory()) for (File f: file.listFiles()) success &= deleteRecursively(f);
+        File file = new File(path);
+        if (file.isDirectory()) for (File f : file.listFiles()) success &= deleteRecursively(f);
         return file.delete() && success;
     }
 
     @SuppressWarnings("DataFlowIssue")
     private static boolean deleteRecursively(File file) {
         boolean success = true;
-        if (file.isDirectory()) for (File f: file.listFiles()) success &= deleteRecursively(f);
+        if (file.isDirectory()) for (File f : file.listFiles()) success &= deleteRecursively(f);
         return file.delete() && success;
     }
 

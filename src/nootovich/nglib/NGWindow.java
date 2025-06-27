@@ -1,23 +1,26 @@
 package nootovich.nglib;
 
-import java.awt.Insets;
-import javax.swing.JFrame;
+import javax.swing.*;
+import java.awt.*;
 
 public class NGWindow {
 
     public boolean shouldClose = false;
 
-    public       NGVec2i pos;
-    public       NGVec2i size;
-    public final Insets  ins;
+    public NGVec2i pos;
+    public NGVec2i size;
+    public Insets ins;
 
+    public JFrame jf;
     public NGRenderer renderer;
+    public NGGraphics g;
 
-    public       JFrame     jf;
-    public final NGGraphics g;
+    public NGWindow(int width, int height) {
+        size = new NGVec2i(width, height);
+    }
 
     public NGWindow(int width, int height, NGRenderer renderer, NGMain main) {
-        size    = new NGVec2i(width, height);
+        size = new NGVec2i(width, height);
         this.jf = new JFrame();
 
         jf.getToolkit().addAWTEventListener(main, -1);

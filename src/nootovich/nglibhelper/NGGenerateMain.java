@@ -1,7 +1,10 @@
 package nootovich.nglibhelper;
 
-import java.util.*;
 import nootovich.nglib.NGFileSystem;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
 
 import static java.awt.event.KeyEvent.*;
 
@@ -9,6 +12,7 @@ public class NGGenerateMain {
 
     public static boolean DEBUG = false;
 
+    // TODO: why is this not a 'Map'?
     public static final Stack<Integer> keys  = new Stack<>();
     public static final Stack<String>  names = new Stack<>();
 
@@ -70,7 +74,7 @@ public class NGGenerateMain {
 
         sb.append("    public static int tickCount = 0;\n\n");
 
-        sb.append("    public static Stack<String> heldKeys = new Stack<>();\n\n");
+        sb.append("    public static HashMap<String, Integer> heldKeys = new HashMap<>();\n\n");
 
         sb.append("    public void setTickRate(int ups) {\n");
         sb.append("        TICK_DURATION = 1.0f / ups;\n");
@@ -113,14 +117,14 @@ public class NGGenerateMain {
 
         { // updateHeldKeys()
             sb.append("    public void updateHeldKeys() {\n");
-            sb.append("        for (String heldKey: heldKeys) {\n");
-            sb.append("            try {\n");
+            sb.append("        try {\n");
+            sb.append("            for (String heldKey: heldKeys.keySet()) {\n");
             sb.append("                if (heldKey.equals(\"LMB\") || heldKey.equals(\"RMB\") || heldKey.equals(\"MMB\"))\n");
             sb.append("                    getClass().getDeclaredMethod(\"while\" + heldKey + \"Held\", NGVec2i.class)\n");
             sb.append("                              .invoke(this, new NGVec2i(MouseInfo.getPointerInfo().getLocation()).sub(window.pos));\n");
             sb.append("                else getClass().getDeclaredMethod(\"while\" + heldKey + \"Held\").invoke(this);\n");
-            sb.append("            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ignored) { }\n");
-            sb.append("        }\n");
+            sb.append("            }\n");
+            sb.append("        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ignored) { }\n");
             sb.append("    }\n\n");
         } // updateHeldKeys()
 
@@ -136,7 +140,7 @@ public class NGGenerateMain {
 
             for (int i = 0; i < keys.size(); i++) {
                 sb.append("                case ").append(keys.get(i)).append(": {\n");
-                sb.append("                    heldKeys.push(\"").append(names.get(i)).append("\");\n");
+                sb.append("                    heldKeys.putIfAbsent(\"").append(names.get(i)).append("\", 1);\n");
                 sb.append("                    on").append(names.get(i)).append("Press();\n");
                 sb.append("                    break;\n");
                 sb.append("                }\n");
@@ -167,7 +171,7 @@ public class NGGenerateMain {
             for (int mouseButton = 1; mouseButton <= 3; mouseButton++) {
                 sb.append("                case MouseEvent.BUTTON").append(mouseButton).append(": {\n");
                 sb.append("                    if (id == MouseEvent.MOUSE_PRESSED) {\n");
-                sb.append("                        heldKeys.push(\"").append(mouseButtons.get(mouseButton)).append("\");\n");
+                sb.append("                        heldKeys.putIfAbsent(\"").append(mouseButtons.get(mouseButton)).append("\", 1);\n");
                 sb.append("                        on").append(mouseButtons.get(mouseButton)).append("Press(pos);\n");
                 sb.append("                    } else {\n");
                 sb.append("                        heldKeys.remove(\"").append(mouseButtons.get(mouseButton)).append("\");\n");

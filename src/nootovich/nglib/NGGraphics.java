@@ -1,10 +1,10 @@
 package nootovich.nglib;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import javax.imageio.ImageIO;
 
 @SuppressWarnings("unused")
 public class NGGraphics {
@@ -13,18 +13,35 @@ public class NGGraphics {
 
     private static final boolean DEBUG = false;
 
-    private NGVec2i       pos;
-    private NGVec2i       size;
+    private NGVec2i pos;
+    private NGVec2i size;
     private BufferedImage buffer;
-    public  Graphics2D    g2d;
+    public Graphics2D g2d;
 
     public NGGraphics(Container c) {
         Insets ins = c.getInsets();
-        pos    = new NGVec2i(ins.left, ins.top);
-        size   = new NGVec2i(c.getComponent(0).getWidth(), c.getComponent(0).getHeight());
-        buffer = new BufferedImage(size.w(), size.h(), BufferedImage.TYPE_INT_RGB);
-        System.out.println();
+        pos = new NGVec2i(ins.left, ins.top);
+        size = new NGVec2i(c.getComponentAt(1, 1).getWidth(), c.getComponentAt(1, 1).getHeight());
+        recreateBuffer();
         updateGraphics();
+    }
+
+    public void recreateBuffer() {
+//        buffer = new AccelTypedVolatileImage(
+//                GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration(),
+//                size.w(),
+//                size.h(),
+//                Transparency.OPAQUE,
+//                AccelSurface.UNDEFINED
+//        );
+//        buffer = new SunVolatileImage(
+//                GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration(),
+//                size.w(),
+//                size.h(),
+//                Transparency.OPAQUE,
+//                new ImageCapabilities(true)
+//        );
+        buffer = new BufferedImage(size.w(), size.h(), BufferedImage.TYPE_INT_RGB);
     }
 
     public void updateGraphics() {
@@ -38,7 +55,7 @@ public class NGGraphics {
     public void resize(int w, int h) {
         size.set(w, h);
         Font temp = g2d.getFont();
-        buffer = new BufferedImage(size.w(), size.h(), BufferedImage.TYPE_INT_RGB);
+        recreateBuffer();
         updateGraphics();
         setFont(temp);
     }
@@ -209,25 +226,25 @@ public class NGGraphics {
         if (direction == 0) { // TO THE TOP
             for (int y = pos.y(); y < pos.y() + size.h(); y++) {
                 NGVec4i colorVec3 = colorVec2.lerp(colorVec1, (float) (y - pos.y()) / size.h());
-                Color   color     = new Color(colorVec3.x(), colorVec3.y(), colorVec3.z(), colorVec3.w());
+                Color color = new Color(colorVec3.x(), colorVec3.y(), colorVec3.z(), colorVec3.w());
                 drawLine(pos.x(), y, pos.x() + size.w(), y, color);
             }
         } else if (direction == 1) { // TO THE RIGHT
             for (int x = pos.x(); x < pos.x() + size.w(); x++) {
                 NGVec4i colorVec3 = colorVec1.lerp(colorVec2, (float) (x - pos.x()) / size.w());
-                Color   color     = new Color(colorVec3.x(), colorVec3.y(), colorVec3.z(), colorVec3.w());
+                Color color = new Color(colorVec3.x(), colorVec3.y(), colorVec3.z(), colorVec3.w());
                 drawLine(x, pos.y(), x, pos.y() + size.h(), color);
             }
         } else if (direction == 2) { // TO THE BOTTOM
             for (int y = pos.y(); y < pos.y() + size.h(); y++) {
                 NGVec4i colorVec3 = colorVec1.lerp(colorVec2, (float) (y - pos.y()) / size.h());
-                Color   color     = new Color(colorVec3.x(), colorVec3.y(), colorVec3.z(), colorVec3.w());
+                Color color = new Color(colorVec3.x(), colorVec3.y(), colorVec3.z(), colorVec3.w());
                 drawLine(pos.x(), y, pos.x() + size.w(), y, color);
             }
         } else if (direction == 3) { // TO THE LEFT
             for (int x = pos.x(); x < pos.x() + size.w(); x++) {
                 NGVec4i colorVec3 = colorVec2.lerp(colorVec1, (float) (x - pos.x()) / size.w());
-                Color   color     = new Color(colorVec3.x(), colorVec3.y(), colorVec3.z(), colorVec3.w());
+                Color color = new Color(colorVec3.x(), colorVec3.y(), colorVec3.z(), colorVec3.w());
                 drawLine(x, pos.y(), x, pos.y() + size.h(), color);
             }
         } else NGUtils.error("no. bad.");

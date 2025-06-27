@@ -1,10 +1,12 @@
 package nootovich.nglib;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
-import javax.swing.JFrame;
+import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @SuppressWarnings("unused")
 public class NGMain implements AWTEventListener {
@@ -21,7 +23,7 @@ public class NGMain implements AWTEventListener {
 
     public static int tickCount = 0;
 
-    public static Stack<String> heldKeys = new Stack<>();
+    public static HashMap<String, Integer> heldKeys = new HashMap<>();
 
     public void setTickRate(int ups) {
         TICK_DURATION = 1.0f / ups;
@@ -41,7 +43,7 @@ public class NGMain implements AWTEventListener {
         NGUtils.info("tickrate: " + 1 / TICK_DURATION);
         NGUtils.info("framerate: " + 1 / FRAME_DURATION);
         new Timer().scheduleAtFixedRate(new TimerTask(){public void run(){updateAll();}},0,(long)(TICK_DURATION*1000));
-        new Timer().scheduleAtFixedRate(new TimerTask(){public void run(){window.redraw();}},0,(long)(FRAME_DURATION*1000));
+        new Timer().scheduleAtFixedRate(new TimerTask(){public void run(){window.redraw();}},500,(long)(FRAME_DURATION*1000));
     }
 
     public void exit() {
@@ -62,13 +64,13 @@ public class NGMain implements AWTEventListener {
 
     public void updateHeldKeys() {
         try {
-            for (String heldKey: heldKeys) {
+            for (String heldKey: heldKeys.keySet()) {
                 if (heldKey.equals("LMB") || heldKey.equals("RMB") || heldKey.equals("MMB"))
                     getClass().getDeclaredMethod("while" + heldKey + "Held", NGVec2i.class)
                               .invoke(this, new NGVec2i(MouseInfo.getPointerInfo().getLocation()).sub(window.pos));
                 else getClass().getDeclaredMethod("while" + heldKey + "Held").invoke(this);
             }
-        } catch (ConcurrentModificationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException ignored) { }
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ignored) { }
     }
 
     @Override
@@ -80,852 +82,852 @@ public class NGMain implements AWTEventListener {
             onAnyKeyPress(keyCode, keyChar);
             switch (keyCode) {
                 case 10: {
-                    heldKeys.push("Enter");
+                    heldKeys.putIfAbsent("Enter", 1);
                     onEnterPress();
                     break;
                 }
                 case 12: {
-                    heldKeys.push("Clear");
+                    heldKeys.putIfAbsent("Clear", 1);
                     onClearPress();
                     break;
                 }
                 case 16: {
-                    heldKeys.push("Shift");
+                    heldKeys.putIfAbsent("Shift", 1);
                     onShiftPress();
                     break;
                 }
                 case 17: {
-                    heldKeys.push("Ctrl");
+                    heldKeys.putIfAbsent("Ctrl", 1);
                     onCtrlPress();
                     break;
                 }
                 case 18: {
-                    heldKeys.push("Alt");
+                    heldKeys.putIfAbsent("Alt", 1);
                     onAltPress();
                     break;
                 }
                 case 19: {
-                    heldKeys.push("Pause");
+                    heldKeys.putIfAbsent("Pause", 1);
                     onPausePress();
                     break;
                 }
                 case 20: {
-                    heldKeys.push("CapsLock");
+                    heldKeys.putIfAbsent("CapsLock", 1);
                     onCapsLockPress();
                     break;
                 }
                 case 21: {
-                    heldKeys.push("Kana");
+                    heldKeys.putIfAbsent("Kana", 1);
                     onKanaPress();
                     break;
                 }
                 case 24: {
-                    heldKeys.push("Final");
+                    heldKeys.putIfAbsent("Final", 1);
                     onFinalPress();
                     break;
                 }
                 case 25: {
-                    heldKeys.push("Kanji");
+                    heldKeys.putIfAbsent("Kanji", 1);
                     onKanjiPress();
                     break;
                 }
                 case 27: {
-                    heldKeys.push("Escape");
+                    heldKeys.putIfAbsent("Escape", 1);
                     onEscapePress();
                     break;
                 }
                 case 28: {
-                    heldKeys.push("Convert");
+                    heldKeys.putIfAbsent("Convert", 1);
                     onConvertPress();
                     break;
                 }
                 case 29: {
-                    heldKeys.push("NoConvert");
+                    heldKeys.putIfAbsent("NoConvert", 1);
                     onNoConvertPress();
                     break;
                 }
                 case 30: {
-                    heldKeys.push("Accept");
+                    heldKeys.putIfAbsent("Accept", 1);
                     onAcceptPress();
                     break;
                 }
                 case 31: {
-                    heldKeys.push("ModeChange");
+                    heldKeys.putIfAbsent("ModeChange", 1);
                     onModeChangePress();
                     break;
                 }
                 case 32: {
-                    heldKeys.push("Space");
+                    heldKeys.putIfAbsent("Space", 1);
                     onSpacePress();
                     break;
                 }
                 case 33: {
-                    heldKeys.push("PageUp");
+                    heldKeys.putIfAbsent("PageUp", 1);
                     onPageUpPress();
                     break;
                 }
                 case 34: {
-                    heldKeys.push("PageDown");
+                    heldKeys.putIfAbsent("PageDown", 1);
                     onPageDownPress();
                     break;
                 }
                 case 35: {
-                    heldKeys.push("End");
+                    heldKeys.putIfAbsent("End", 1);
                     onEndPress();
                     break;
                 }
                 case 36: {
-                    heldKeys.push("Home");
+                    heldKeys.putIfAbsent("Home", 1);
                     onHomePress();
                     break;
                 }
                 case 37: {
-                    heldKeys.push("Left");
+                    heldKeys.putIfAbsent("Left", 1);
                     onLeftPress();
                     break;
                 }
                 case 38: {
-                    heldKeys.push("Up");
+                    heldKeys.putIfAbsent("Up", 1);
                     onUpPress();
                     break;
                 }
                 case 39: {
-                    heldKeys.push("Right");
+                    heldKeys.putIfAbsent("Right", 1);
                     onRightPress();
                     break;
                 }
                 case 40: {
-                    heldKeys.push("Down");
+                    heldKeys.putIfAbsent("Down", 1);
                     onDownPress();
                     break;
                 }
                 case 44: {
-                    heldKeys.push("Comma");
+                    heldKeys.putIfAbsent("Comma", 1);
                     onCommaPress();
                     break;
                 }
                 case 45: {
-                    heldKeys.push("Minus");
+                    heldKeys.putIfAbsent("Minus", 1);
                     onMinusPress();
                     break;
                 }
                 case 46: {
-                    heldKeys.push("Period");
+                    heldKeys.putIfAbsent("Period", 1);
                     onPeriodPress();
                     break;
                 }
                 case 47: {
-                    heldKeys.push("Slash");
+                    heldKeys.putIfAbsent("Slash", 1);
                     onSlashPress();
                     break;
                 }
                 case 48: {
-                    heldKeys.push("0");
+                    heldKeys.putIfAbsent("0", 1);
                     on0Press();
                     break;
                 }
                 case 49: {
-                    heldKeys.push("1");
+                    heldKeys.putIfAbsent("1", 1);
                     on1Press();
                     break;
                 }
                 case 50: {
-                    heldKeys.push("2");
+                    heldKeys.putIfAbsent("2", 1);
                     on2Press();
                     break;
                 }
                 case 51: {
-                    heldKeys.push("3");
+                    heldKeys.putIfAbsent("3", 1);
                     on3Press();
                     break;
                 }
                 case 52: {
-                    heldKeys.push("4");
+                    heldKeys.putIfAbsent("4", 1);
                     on4Press();
                     break;
                 }
                 case 53: {
-                    heldKeys.push("5");
+                    heldKeys.putIfAbsent("5", 1);
                     on5Press();
                     break;
                 }
                 case 54: {
-                    heldKeys.push("6");
+                    heldKeys.putIfAbsent("6", 1);
                     on6Press();
                     break;
                 }
                 case 55: {
-                    heldKeys.push("7");
+                    heldKeys.putIfAbsent("7", 1);
                     on7Press();
                     break;
                 }
                 case 56: {
-                    heldKeys.push("8");
+                    heldKeys.putIfAbsent("8", 1);
                     on8Press();
                     break;
                 }
                 case 57: {
-                    heldKeys.push("9");
+                    heldKeys.putIfAbsent("9", 1);
                     on9Press();
                     break;
                 }
                 case 59: {
-                    heldKeys.push("Semicolon");
+                    heldKeys.putIfAbsent("Semicolon", 1);
                     onSemicolonPress();
                     break;
                 }
                 case 61: {
-                    heldKeys.push("Equals");
+                    heldKeys.putIfAbsent("Equals", 1);
                     onEqualsPress();
                     break;
                 }
                 case 65: {
-                    heldKeys.push("A");
+                    heldKeys.putIfAbsent("A", 1);
                     onAPress();
                     break;
                 }
                 case 66: {
-                    heldKeys.push("B");
+                    heldKeys.putIfAbsent("B", 1);
                     onBPress();
                     break;
                 }
                 case 67: {
-                    heldKeys.push("C");
+                    heldKeys.putIfAbsent("C", 1);
                     onCPress();
                     break;
                 }
                 case 68: {
-                    heldKeys.push("D");
+                    heldKeys.putIfAbsent("D", 1);
                     onDPress();
                     break;
                 }
                 case 69: {
-                    heldKeys.push("E");
+                    heldKeys.putIfAbsent("E", 1);
                     onEPress();
                     break;
                 }
                 case 70: {
-                    heldKeys.push("F");
+                    heldKeys.putIfAbsent("F", 1);
                     onFPress();
                     break;
                 }
                 case 71: {
-                    heldKeys.push("G");
+                    heldKeys.putIfAbsent("G", 1);
                     onGPress();
                     break;
                 }
                 case 72: {
-                    heldKeys.push("H");
+                    heldKeys.putIfAbsent("H", 1);
                     onHPress();
                     break;
                 }
                 case 73: {
-                    heldKeys.push("I");
+                    heldKeys.putIfAbsent("I", 1);
                     onIPress();
                     break;
                 }
                 case 74: {
-                    heldKeys.push("J");
+                    heldKeys.putIfAbsent("J", 1);
                     onJPress();
                     break;
                 }
                 case 75: {
-                    heldKeys.push("K");
+                    heldKeys.putIfAbsent("K", 1);
                     onKPress();
                     break;
                 }
                 case 76: {
-                    heldKeys.push("L");
+                    heldKeys.putIfAbsent("L", 1);
                     onLPress();
                     break;
                 }
                 case 77: {
-                    heldKeys.push("M");
+                    heldKeys.putIfAbsent("M", 1);
                     onMPress();
                     break;
                 }
                 case 78: {
-                    heldKeys.push("N");
+                    heldKeys.putIfAbsent("N", 1);
                     onNPress();
                     break;
                 }
                 case 79: {
-                    heldKeys.push("O");
+                    heldKeys.putIfAbsent("O", 1);
                     onOPress();
                     break;
                 }
                 case 80: {
-                    heldKeys.push("P");
+                    heldKeys.putIfAbsent("P", 1);
                     onPPress();
                     break;
                 }
                 case 81: {
-                    heldKeys.push("Q");
+                    heldKeys.putIfAbsent("Q", 1);
                     onQPress();
                     break;
                 }
                 case 82: {
-                    heldKeys.push("R");
+                    heldKeys.putIfAbsent("R", 1);
                     onRPress();
                     break;
                 }
                 case 83: {
-                    heldKeys.push("S");
+                    heldKeys.putIfAbsent("S", 1);
                     onSPress();
                     break;
                 }
                 case 84: {
-                    heldKeys.push("T");
+                    heldKeys.putIfAbsent("T", 1);
                     onTPress();
                     break;
                 }
                 case 85: {
-                    heldKeys.push("U");
+                    heldKeys.putIfAbsent("U", 1);
                     onUPress();
                     break;
                 }
                 case 86: {
-                    heldKeys.push("V");
+                    heldKeys.putIfAbsent("V", 1);
                     onVPress();
                     break;
                 }
                 case 87: {
-                    heldKeys.push("W");
+                    heldKeys.putIfAbsent("W", 1);
                     onWPress();
                     break;
                 }
                 case 88: {
-                    heldKeys.push("X");
+                    heldKeys.putIfAbsent("X", 1);
                     onXPress();
                     break;
                 }
                 case 89: {
-                    heldKeys.push("Y");
+                    heldKeys.putIfAbsent("Y", 1);
                     onYPress();
                     break;
                 }
                 case 90: {
-                    heldKeys.push("Z");
+                    heldKeys.putIfAbsent("Z", 1);
                     onZPress();
                     break;
                 }
                 case 91: {
-                    heldKeys.push("OpenBracket");
+                    heldKeys.putIfAbsent("OpenBracket", 1);
                     onOpenBracketPress();
                     break;
                 }
                 case 92: {
-                    heldKeys.push("BackSlash");
+                    heldKeys.putIfAbsent("BackSlash", 1);
                     onBackSlashPress();
                     break;
                 }
                 case 93: {
-                    heldKeys.push("CloseBracket");
+                    heldKeys.putIfAbsent("CloseBracket", 1);
                     onCloseBracketPress();
                     break;
                 }
                 case 96: {
-                    heldKeys.push("NumPad0");
+                    heldKeys.putIfAbsent("NumPad0", 1);
                     onNumPad0Press();
                     break;
                 }
                 case 97: {
-                    heldKeys.push("NumPad1");
+                    heldKeys.putIfAbsent("NumPad1", 1);
                     onNumPad1Press();
                     break;
                 }
                 case 98: {
-                    heldKeys.push("NumPad2");
+                    heldKeys.putIfAbsent("NumPad2", 1);
                     onNumPad2Press();
                     break;
                 }
                 case 99: {
-                    heldKeys.push("NumPad3");
+                    heldKeys.putIfAbsent("NumPad3", 1);
                     onNumPad3Press();
                     break;
                 }
                 case 100: {
-                    heldKeys.push("NumPad4");
+                    heldKeys.putIfAbsent("NumPad4", 1);
                     onNumPad4Press();
                     break;
                 }
                 case 101: {
-                    heldKeys.push("NumPad5");
+                    heldKeys.putIfAbsent("NumPad5", 1);
                     onNumPad5Press();
                     break;
                 }
                 case 102: {
-                    heldKeys.push("NumPad6");
+                    heldKeys.putIfAbsent("NumPad6", 1);
                     onNumPad6Press();
                     break;
                 }
                 case 103: {
-                    heldKeys.push("NumPad7");
+                    heldKeys.putIfAbsent("NumPad7", 1);
                     onNumPad7Press();
                     break;
                 }
                 case 104: {
-                    heldKeys.push("NumPad8");
+                    heldKeys.putIfAbsent("NumPad8", 1);
                     onNumPad8Press();
                     break;
                 }
                 case 105: {
-                    heldKeys.push("NumPad9");
+                    heldKeys.putIfAbsent("NumPad9", 1);
                     onNumPad9Press();
                     break;
                 }
                 case 106: {
-                    heldKeys.push("NumPadAsterisk");
+                    heldKeys.putIfAbsent("NumPadAsterisk", 1);
                     onNumPadAsteriskPress();
                     break;
                 }
                 case 107: {
-                    heldKeys.push("NumPadPlus");
+                    heldKeys.putIfAbsent("NumPadPlus", 1);
                     onNumPadPlusPress();
                     break;
                 }
                 case 108: {
-                    heldKeys.push("NumPadComma");
+                    heldKeys.putIfAbsent("NumPadComma", 1);
                     onNumPadCommaPress();
                     break;
                 }
                 case 109: {
-                    heldKeys.push("NumPad");
+                    heldKeys.putIfAbsent("NumPad", 1);
                     onNumPadPress();
                     break;
                 }
                 case 110: {
-                    heldKeys.push("NumPadPeriod");
+                    heldKeys.putIfAbsent("NumPadPeriod", 1);
                     onNumPadPeriodPress();
                     break;
                 }
                 case 111: {
-                    heldKeys.push("NumPadSlash");
+                    heldKeys.putIfAbsent("NumPadSlash", 1);
                     onNumPadSlashPress();
                     break;
                 }
                 case 112: {
-                    heldKeys.push("F1");
+                    heldKeys.putIfAbsent("F1", 1);
                     onF1Press();
                     break;
                 }
                 case 113: {
-                    heldKeys.push("F2");
+                    heldKeys.putIfAbsent("F2", 1);
                     onF2Press();
                     break;
                 }
                 case 114: {
-                    heldKeys.push("F3");
+                    heldKeys.putIfAbsent("F3", 1);
                     onF3Press();
                     break;
                 }
                 case 115: {
-                    heldKeys.push("F4");
+                    heldKeys.putIfAbsent("F4", 1);
                     onF4Press();
                     break;
                 }
                 case 116: {
-                    heldKeys.push("F5");
+                    heldKeys.putIfAbsent("F5", 1);
                     onF5Press();
                     break;
                 }
                 case 117: {
-                    heldKeys.push("F6");
+                    heldKeys.putIfAbsent("F6", 1);
                     onF6Press();
                     break;
                 }
                 case 118: {
-                    heldKeys.push("F7");
+                    heldKeys.putIfAbsent("F7", 1);
                     onF7Press();
                     break;
                 }
                 case 119: {
-                    heldKeys.push("F8");
+                    heldKeys.putIfAbsent("F8", 1);
                     onF8Press();
                     break;
                 }
                 case 120: {
-                    heldKeys.push("F9");
+                    heldKeys.putIfAbsent("F9", 1);
                     onF9Press();
                     break;
                 }
                 case 121: {
-                    heldKeys.push("F10");
+                    heldKeys.putIfAbsent("F10", 1);
                     onF10Press();
                     break;
                 }
                 case 122: {
-                    heldKeys.push("F11");
+                    heldKeys.putIfAbsent("F11", 1);
                     onF11Press();
                     break;
                 }
                 case 123: {
-                    heldKeys.push("F12");
+                    heldKeys.putIfAbsent("F12", 1);
                     onF12Press();
                     break;
                 }
                 case 127: {
-                    heldKeys.push("Delete");
+                    heldKeys.putIfAbsent("Delete", 1);
                     onDeletePress();
                     break;
                 }
                 case 128: {
-                    heldKeys.push("DeadGrave");
+                    heldKeys.putIfAbsent("DeadGrave", 1);
                     onDeadGravePress();
                     break;
                 }
                 case 129: {
-                    heldKeys.push("DeadAcute");
+                    heldKeys.putIfAbsent("DeadAcute", 1);
                     onDeadAcutePress();
                     break;
                 }
                 case 130: {
-                    heldKeys.push("DeadCircumflex");
+                    heldKeys.putIfAbsent("DeadCircumflex", 1);
                     onDeadCircumflexPress();
                     break;
                 }
                 case 131: {
-                    heldKeys.push("DeadTilde");
+                    heldKeys.putIfAbsent("DeadTilde", 1);
                     onDeadTildePress();
                     break;
                 }
                 case 132: {
-                    heldKeys.push("DeadMacron");
+                    heldKeys.putIfAbsent("DeadMacron", 1);
                     onDeadMacronPress();
                     break;
                 }
                 case 133: {
-                    heldKeys.push("DeadBreve");
+                    heldKeys.putIfAbsent("DeadBreve", 1);
                     onDeadBrevePress();
                     break;
                 }
                 case 134: {
-                    heldKeys.push("DeadAboveDot");
+                    heldKeys.putIfAbsent("DeadAboveDot", 1);
                     onDeadAboveDotPress();
                     break;
                 }
                 case 135: {
-                    heldKeys.push("DeadDiaeresis");
+                    heldKeys.putIfAbsent("DeadDiaeresis", 1);
                     onDeadDiaeresisPress();
                     break;
                 }
                 case 136: {
-                    heldKeys.push("DeadAboveRing");
+                    heldKeys.putIfAbsent("DeadAboveRing", 1);
                     onDeadAboveRingPress();
                     break;
                 }
                 case 137: {
-                    heldKeys.push("DeadDoubleAcute");
+                    heldKeys.putIfAbsent("DeadDoubleAcute", 1);
                     onDeadDoubleAcutePress();
                     break;
                 }
                 case 138: {
-                    heldKeys.push("DeadCaron");
+                    heldKeys.putIfAbsent("DeadCaron", 1);
                     onDeadCaronPress();
                     break;
                 }
                 case 139: {
-                    heldKeys.push("DeadCedilla");
+                    heldKeys.putIfAbsent("DeadCedilla", 1);
                     onDeadCedillaPress();
                     break;
                 }
                 case 140: {
-                    heldKeys.push("DeadOgonek");
+                    heldKeys.putIfAbsent("DeadOgonek", 1);
                     onDeadOgonekPress();
                     break;
                 }
                 case 141: {
-                    heldKeys.push("DeadIota");
+                    heldKeys.putIfAbsent("DeadIota", 1);
                     onDeadIotaPress();
                     break;
                 }
                 case 142: {
-                    heldKeys.push("DeadVoicedSound");
+                    heldKeys.putIfAbsent("DeadVoicedSound", 1);
                     onDeadVoicedSoundPress();
                     break;
                 }
                 case 143: {
-                    heldKeys.push("DeadSemivoicedSound");
+                    heldKeys.putIfAbsent("DeadSemivoicedSound", 1);
                     onDeadSemivoicedSoundPress();
                     break;
                 }
                 case 144: {
-                    heldKeys.push("NumLock");
+                    heldKeys.putIfAbsent("NumLock", 1);
                     onNumLockPress();
                     break;
                 }
                 case 145: {
-                    heldKeys.push("ScrollLock");
+                    heldKeys.putIfAbsent("ScrollLock", 1);
                     onScrollLockPress();
                     break;
                 }
                 case 150: {
-                    heldKeys.push("Ampersand");
+                    heldKeys.putIfAbsent("Ampersand", 1);
                     onAmpersandPress();
                     break;
                 }
                 case 151: {
-                    heldKeys.push("Asterisk");
+                    heldKeys.putIfAbsent("Asterisk", 1);
                     onAsteriskPress();
                     break;
                 }
                 case 152: {
-                    heldKeys.push("DoubleQuote");
+                    heldKeys.putIfAbsent("DoubleQuote", 1);
                     onDoubleQuotePress();
                     break;
                 }
                 case 153: {
-                    heldKeys.push("Less");
+                    heldKeys.putIfAbsent("Less", 1);
                     onLessPress();
                     break;
                 }
                 case 154: {
-                    heldKeys.push("PrintScreen");
+                    heldKeys.putIfAbsent("PrintScreen", 1);
                     onPrintScreenPress();
                     break;
                 }
                 case 155: {
-                    heldKeys.push("Insert");
+                    heldKeys.putIfAbsent("Insert", 1);
                     onInsertPress();
                     break;
                 }
                 case 156: {
-                    heldKeys.push("Help");
+                    heldKeys.putIfAbsent("Help", 1);
                     onHelpPress();
                     break;
                 }
                 case 157: {
-                    heldKeys.push("Meta");
+                    heldKeys.putIfAbsent("Meta", 1);
                     onMetaPress();
                     break;
                 }
                 case 160: {
-                    heldKeys.push("Greater");
+                    heldKeys.putIfAbsent("Greater", 1);
                     onGreaterPress();
                     break;
                 }
                 case 161: {
-                    heldKeys.push("LeftBrace");
+                    heldKeys.putIfAbsent("LeftBrace", 1);
                     onLeftBracePress();
                     break;
                 }
                 case 162: {
-                    heldKeys.push("RightBrace");
+                    heldKeys.putIfAbsent("RightBrace", 1);
                     onRightBracePress();
                     break;
                 }
                 case 192: {
-                    heldKeys.push("BackQuote");
+                    heldKeys.putIfAbsent("BackQuote", 1);
                     onBackQuotePress();
                     break;
                 }
                 case 222: {
-                    heldKeys.push("Quote");
+                    heldKeys.putIfAbsent("Quote", 1);
                     onQuotePress();
                     break;
                 }
                 case 240: {
-                    heldKeys.push("Alphanumeric");
+                    heldKeys.putIfAbsent("Alphanumeric", 1);
                     onAlphanumericPress();
                     break;
                 }
                 case 241: {
-                    heldKeys.push("Katakana");
+                    heldKeys.putIfAbsent("Katakana", 1);
                     onKatakanaPress();
                     break;
                 }
                 case 242: {
-                    heldKeys.push("Hiragana");
+                    heldKeys.putIfAbsent("Hiragana", 1);
                     onHiraganaPress();
                     break;
                 }
                 case 243: {
-                    heldKeys.push("FullWidth");
+                    heldKeys.putIfAbsent("FullWidth", 1);
                     onFullWidthPress();
                     break;
                 }
                 case 244: {
-                    heldKeys.push("HalfWidth");
+                    heldKeys.putIfAbsent("HalfWidth", 1);
                     onHalfWidthPress();
                     break;
                 }
                 case 245: {
-                    heldKeys.push("RomanCharacters");
+                    heldKeys.putIfAbsent("RomanCharacters", 1);
                     onRomanCharactersPress();
                     break;
                 }
                 case 256: {
-                    heldKeys.push("AllCandidates");
+                    heldKeys.putIfAbsent("AllCandidates", 1);
                     onAllCandidatesPress();
                     break;
                 }
                 case 257: {
-                    heldKeys.push("PreviousCandidate");
+                    heldKeys.putIfAbsent("PreviousCandidate", 1);
                     onPreviousCandidatePress();
                     break;
                 }
                 case 258: {
-                    heldKeys.push("CodeInput");
+                    heldKeys.putIfAbsent("CodeInput", 1);
                     onCodeInputPress();
                     break;
                 }
                 case 259: {
-                    heldKeys.push("JapaneseKatakana");
+                    heldKeys.putIfAbsent("JapaneseKatakana", 1);
                     onJapaneseKatakanaPress();
                     break;
                 }
                 case 260: {
-                    heldKeys.push("JapaneseHiragana");
+                    heldKeys.putIfAbsent("JapaneseHiragana", 1);
                     onJapaneseHiraganaPress();
                     break;
                 }
                 case 261: {
-                    heldKeys.push("JapaneseRoman");
+                    heldKeys.putIfAbsent("JapaneseRoman", 1);
                     onJapaneseRomanPress();
                     break;
                 }
                 case 262: {
-                    heldKeys.push("KanaLock");
+                    heldKeys.putIfAbsent("KanaLock", 1);
                     onKanaLockPress();
                     break;
                 }
                 case 263: {
-                    heldKeys.push("InputMethodOnOff");
+                    heldKeys.putIfAbsent("InputMethodOnOff", 1);
                     onInputMethodOnOffPress();
                     break;
                 }
                 case 512: {
-                    heldKeys.push("At");
+                    heldKeys.putIfAbsent("At", 1);
                     onAtPress();
                     break;
                 }
                 case 513: {
-                    heldKeys.push("Colon");
+                    heldKeys.putIfAbsent("Colon", 1);
                     onColonPress();
                     break;
                 }
                 case 514: {
-                    heldKeys.push("Circumflex");
+                    heldKeys.putIfAbsent("Circumflex", 1);
                     onCircumflexPress();
                     break;
                 }
                 case 515: {
-                    heldKeys.push("Dollar");
+                    heldKeys.putIfAbsent("Dollar", 1);
                     onDollarPress();
                     break;
                 }
                 case 516: {
-                    heldKeys.push("Euro");
+                    heldKeys.putIfAbsent("Euro", 1);
                     onEuroPress();
                     break;
                 }
                 case 517: {
-                    heldKeys.push("ExclamationMark");
+                    heldKeys.putIfAbsent("ExclamationMark", 1);
                     onExclamationMarkPress();
                     break;
                 }
                 case 518: {
-                    heldKeys.push("InvertedExclamationMark");
+                    heldKeys.putIfAbsent("InvertedExclamationMark", 1);
                     onInvertedExclamationMarkPress();
                     break;
                 }
                 case 519: {
-                    heldKeys.push("LeftParenthesis");
+                    heldKeys.putIfAbsent("LeftParenthesis", 1);
                     onLeftParenthesisPress();
                     break;
                 }
                 case 520: {
-                    heldKeys.push("NumberSign");
+                    heldKeys.putIfAbsent("NumberSign", 1);
                     onNumberSignPress();
                     break;
                 }
                 case 521: {
-                    heldKeys.push("Plus");
+                    heldKeys.putIfAbsent("Plus", 1);
                     onPlusPress();
                     break;
                 }
                 case 522: {
-                    heldKeys.push("RightParenthesis");
+                    heldKeys.putIfAbsent("RightParenthesis", 1);
                     onRightParenthesisPress();
                     break;
                 }
                 case 523: {
-                    heldKeys.push("Underscore");
+                    heldKeys.putIfAbsent("Underscore", 1);
                     onUnderscorePress();
                     break;
                 }
                 case 524: {
-                    heldKeys.push("Windows");
+                    heldKeys.putIfAbsent("Windows", 1);
                     onWindowsPress();
                     break;
                 }
                 case 525: {
-                    heldKeys.push("ContextMenu");
+                    heldKeys.putIfAbsent("ContextMenu", 1);
                     onContextMenuPress();
                     break;
                 }
                 case 61440: {
-                    heldKeys.push("F13");
+                    heldKeys.putIfAbsent("F13", 1);
                     onF13Press();
                     break;
                 }
                 case 61441: {
-                    heldKeys.push("F14");
+                    heldKeys.putIfAbsent("F14", 1);
                     onF14Press();
                     break;
                 }
                 case 61442: {
-                    heldKeys.push("F15");
+                    heldKeys.putIfAbsent("F15", 1);
                     onF15Press();
                     break;
                 }
                 case 61443: {
-                    heldKeys.push("F16");
+                    heldKeys.putIfAbsent("F16", 1);
                     onF16Press();
                     break;
                 }
                 case 61444: {
-                    heldKeys.push("F17");
+                    heldKeys.putIfAbsent("F17", 1);
                     onF17Press();
                     break;
                 }
                 case 61445: {
-                    heldKeys.push("F18");
+                    heldKeys.putIfAbsent("F18", 1);
                     onF18Press();
                     break;
                 }
                 case 61446: {
-                    heldKeys.push("F19");
+                    heldKeys.putIfAbsent("F19", 1);
                     onF19Press();
                     break;
                 }
                 case 61447: {
-                    heldKeys.push("F20");
+                    heldKeys.putIfAbsent("F20", 1);
                     onF20Press();
                     break;
                 }
                 case 61448: {
-                    heldKeys.push("F21");
+                    heldKeys.putIfAbsent("F21", 1);
                     onF21Press();
                     break;
                 }
                 case 61449: {
-                    heldKeys.push("F22");
+                    heldKeys.putIfAbsent("F22", 1);
                     onF22Press();
                     break;
                 }
                 case 61450: {
-                    heldKeys.push("F23");
+                    heldKeys.putIfAbsent("F23", 1);
                     onF23Press();
                     break;
                 }
                 case 61451: {
-                    heldKeys.push("F24");
+                    heldKeys.putIfAbsent("F24", 1);
                     onF24Press();
                     break;
                 }
                 case 65312: {
-                    heldKeys.push("Compose");
+                    heldKeys.putIfAbsent("Compose", 1);
                     onComposePress();
                     break;
                 }
@@ -1794,7 +1796,7 @@ public class NGMain implements AWTEventListener {
             switch (((MouseEvent) event).getButton()) {
                 case MouseEvent.BUTTON1: {
                     if (id == MouseEvent.MOUSE_PRESSED) {
-                        heldKeys.push("LMB");
+                        heldKeys.putIfAbsent("LMB", 1);
                         onLMBPress(pos);
                     } else {
                         heldKeys.remove("LMB");
@@ -1804,7 +1806,7 @@ public class NGMain implements AWTEventListener {
                 }
                 case MouseEvent.BUTTON2: {
                     if (id == MouseEvent.MOUSE_PRESSED) {
-                        heldKeys.push("MMB");
+                        heldKeys.putIfAbsent("MMB", 1);
                         onMMBPress(pos);
                     } else {
                         heldKeys.remove("MMB");
@@ -1814,7 +1816,7 @@ public class NGMain implements AWTEventListener {
                 }
                 case MouseEvent.BUTTON3: {
                     if (id == MouseEvent.MOUSE_PRESSED) {
-                        heldKeys.push("RMB");
+                        heldKeys.putIfAbsent("RMB", 1);
                         onRMBPress(pos);
                     } else {
                         heldKeys.remove("RMB");
