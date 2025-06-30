@@ -1,12 +1,10 @@
 package nootovich.nglib;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
+import javax.swing.JFrame;
 
 @SuppressWarnings("unused")
 public class NGMain implements AWTEventListener {
@@ -19,7 +17,8 @@ public class NGMain implements AWTEventListener {
     public static float TICK_DURATION  = 0.0333f; // Measured in seconds
     public static float FRAME_DURATION = 0.0167f; // Measured in seconds
 
-    public static NGWindow window;
+    public static ArrayList<NGWindow> windows = new ArrayList<>();
+    public static NGWindow focused_window;
 
     public static int tickCount = 0;
 
@@ -36,22 +35,23 @@ public class NGMain implements AWTEventListener {
     public void createWindow(int w, int h, NGRenderer renderer) {
         this.w = w;
         this.h = h;
-        window = new NGWindow(w, h, renderer, this);
+        windows.add(new NGWindow(w, h, renderer, this));
+        if (!windows.isEmpty()) focused_window = windows.get(0);
     }
 
     public void start() {
         NGUtils.info("tickrate: " + 1 / TICK_DURATION);
         NGUtils.info("framerate: " + 1 / FRAME_DURATION);
         new Timer().scheduleAtFixedRate(new TimerTask(){public void run(){updateAll();}},0,(long)(TICK_DURATION*1000));
-        new Timer().scheduleAtFixedRate(new TimerTask(){public void run(){window.redraw();}},500,(long)(FRAME_DURATION*1000));
+        new Timer().scheduleAtFixedRate(new TimerTask(){public void run(){windows.forEach(NGWindow::redraw);}},500,(long)(FRAME_DURATION*1000));
     }
 
     public void exit() {
-        window.shouldClose = true;
+        windows.forEach((x) -> x.shouldClose = true);
     }
 
     public void exit(float waitTime) {
-        new Timer().scheduleAtFixedRate(new TimerTask(){public void run(){window.shouldClose = true;}},0,(long)(waitTime*1000));
+        new Timer().scheduleAtFixedRate(new TimerTask(){public void run(){windows.forEach((x) -> x.shouldClose = true);}},0,(long)(waitTime*1000));
     }
 
     public void updateAll() {
@@ -67,7 +67,7 @@ public class NGMain implements AWTEventListener {
             for (String heldKey: heldKeys.keySet()) {
                 if (heldKey.equals("LMB") || heldKey.equals("RMB") || heldKey.equals("MMB"))
                     getClass().getDeclaredMethod("while" + heldKey + "Held", NGVec2i.class)
-                              .invoke(this, new NGVec2i(MouseInfo.getPointerInfo().getLocation()).sub(window.pos));
+                              .invoke(this, new NGVec2i(MouseInfo.getPointerInfo().getLocation()).sub(focused_window.pos));
                 else getClass().getDeclaredMethod("while" + heldKey + "Held").invoke(this);
             }
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ignored) { }
@@ -1838,7 +1838,7 @@ public class NGMain implements AWTEventListener {
             if (!(c instanceof JFrame && c.isVisible())) return;
             // NOTE: window.pos points to the top-left corner of the drawable area.
             //  In other words - excludes title bar.
-            window.pos = new NGVec2i(c.getLocation()).add(window.ins.left, window.ins.top);
+            focused_window.pos = new NGVec2i(c.getLocation()).add(focused_window.ins.left, focused_window.ins.top);
             onWindowMoved(c.getX(), c.getY());
         } else if (id == ComponentEvent.COMPONENT_RESIZED) {
             Component c = ((ComponentEvent) event).getComponent();
@@ -1846,12 +1846,21 @@ public class NGMain implements AWTEventListener {
             Insets ins = ((JFrame) c).getInsets();
             w = Math.max(WINDOW_MINIMAL_SIZE, c.getWidth() - ins.left - ins.right);
             h = Math.max(WINDOW_MINIMAL_SIZE, c.getHeight() - ins.top - ins.bottom);
-            window.g.resize(w, h);
+            focused_window.g.resize(w, h);
             onWindowResize(w, h);
         } else if (id == WindowEvent.WINDOW_ICONIFIED) {
             onWindowMinimize();
         } else if (id == WindowEvent.WINDOW_DEICONIFIED) {
             onWindowRestore();
+        } else if (id == WindowEvent.WINDOW_GAINED_FOCUS && event.getSource() instanceof JFrame) {
+            for (int i = 0; i < windows.size(); i++) {
+                NGWindow window = windows.get(i);
+                if (window.jf == event.getSource()) {
+                    focused_window = window;
+                    return;
+                }
+            }
+            if (!windows.isEmpty()) NGUtils.error("Couldn't find focused window");
         }
     }
 

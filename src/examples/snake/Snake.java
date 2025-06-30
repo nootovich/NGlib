@@ -1,7 +1,8 @@
 package examples.snake;
 
-import java.util.ArrayList;
 import nootovich.nglib.*;
+
+import java.util.ArrayList;
 
 import static examples.snake.Main.*;
 import static examples.snake.SnakeRenderer.highlightFood;
@@ -53,7 +54,7 @@ public class Snake extends NGMain {
         for (SnakePart part: snake) {
             if (newPos.equals(part.pos)) {
                 System.out.println("u ded");
-                window.shouldClose = true;
+                exit();
             }
         }
 

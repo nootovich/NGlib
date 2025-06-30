@@ -70,7 +70,8 @@ public class NGGenerateMain {
         sb.append("    public static float TICK_DURATION  = 0.0333f; // Measured in seconds\n");
         sb.append("    public static float FRAME_DURATION = 0.0167f; // Measured in seconds\n\n");
 
-        sb.append("    public static NGWindow window;\n\n");
+        sb.append("    public static ArrayList<NGWindow> windows = new ArrayList<>();\n");
+        sb.append("    public static NGWindow focused_window;\n\n");
 
         sb.append("    public static int tickCount = 0;\n\n");
 
@@ -87,7 +88,8 @@ public class NGGenerateMain {
         sb.append("    public void createWindow(int w, int h, NGRenderer renderer) {\n");
         sb.append("        this.w = w;\n");
         sb.append("        this.h = h;\n");
-        sb.append("        window = new NGWindow(w, h, renderer, this);\n");
+        sb.append("        windows.add(new NGWindow(w, h, renderer, this));\n");
+        sb.append("        if (!windows.isEmpty()) focused_window = windows.get(0);\n");
         sb.append("    }\n\n");
 
         sb.append("    public void start() {\n");
@@ -96,15 +98,15 @@ public class NGGenerateMain {
             sb.append("        NGUtils.info(\"framerate: \" + 1 / FRAME_DURATION);\n");
         }
         sb.append("        new Timer().scheduleAtFixedRate(new TimerTask(){public void run(){updateAll();}},0,(long)(TICK_DURATION*1000));\n");
-        sb.append("        new Timer().scheduleAtFixedRate(new TimerTask(){public void run(){window.redraw();}},0,(long)(FRAME_DURATION*1000));\n");
+        sb.append("        new Timer().scheduleAtFixedRate(new TimerTask(){public void run(){windows.forEach(NGWindow::redraw);}},500,(long)(FRAME_DURATION*1000));\n");
         sb.append("    }\n\n");
 
         sb.append("    public void exit() {\n");
-        sb.append("        window.shouldClose = true;\n");
+        sb.append("        windows.forEach((x) -> x.shouldClose = true);\n");
         sb.append("    }\n\n");
 
         sb.append("    public void exit(float waitTime) {\n");
-        sb.append("        new Timer().scheduleAtFixedRate(new TimerTask(){public void run(){window.shouldClose = true;}},0,(long)(waitTime*1000));\n");
+        sb.append("        new Timer().scheduleAtFixedRate(new TimerTask(){public void run(){windows.forEach((x) -> x.shouldClose = true);}},0,(long)(waitTime*1000));\n");
         sb.append("    }\n\n");
 
         sb.append("    public void updateAll() {\n");
@@ -121,7 +123,7 @@ public class NGGenerateMain {
             sb.append("            for (String heldKey: heldKeys.keySet()) {\n");
             sb.append("                if (heldKey.equals(\"LMB\") || heldKey.equals(\"RMB\") || heldKey.equals(\"MMB\"))\n");
             sb.append("                    getClass().getDeclaredMethod(\"while\" + heldKey + \"Held\", NGVec2i.class)\n");
-            sb.append("                              .invoke(this, new NGVec2i(MouseInfo.getPointerInfo().getLocation()).sub(window.pos));\n");
+            sb.append("                              .invoke(this, new NGVec2i(MouseInfo.getPointerInfo().getLocation()).sub(focused_window.pos));\n");
             sb.append("                else getClass().getDeclaredMethod(\"while\" + heldKey + \"Held\").invoke(this);\n");
             sb.append("            }\n");
             sb.append("        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ignored) { }\n");
@@ -194,7 +196,7 @@ public class NGGenerateMain {
             sb.append("            if (!(c instanceof JFrame && c.isVisible())) return;\n");
             sb.append("            // NOTE: window.pos points to the top-left corner of the drawable area.\n");
             sb.append("            //  In other words - excludes title bar.\n");
-            sb.append("            window.pos = new NGVec2i(c.getLocation()).add(window.ins.left, window.ins.top);\n");
+            sb.append("            focused_window.pos = new NGVec2i(c.getLocation()).add(focused_window.ins.left, focused_window.ins.top);\n");
             sb.append("            onWindowMoved(c.getX(), c.getY());\n");
             sb.append("        } else if (id == ComponentEvent.COMPONENT_RESIZED) {\n");
             sb.append("            Component c = ((ComponentEvent) event).getComponent();\n");
@@ -202,12 +204,21 @@ public class NGGenerateMain {
             sb.append("            Insets ins = ((JFrame) c).getInsets();\n");
             sb.append("            w = Math.max(WINDOW_MINIMAL_SIZE, c.getWidth() - ins.left - ins.right);\n");
             sb.append("            h = Math.max(WINDOW_MINIMAL_SIZE, c.getHeight() - ins.top - ins.bottom);\n");
-            sb.append("            window.g.resize(w, h);\n");
+            sb.append("            focused_window.g.resize(w, h);\n");
             sb.append("            onWindowResize(w, h);\n");
             sb.append("        } else if (id == WindowEvent.WINDOW_ICONIFIED) {\n");
             sb.append("            onWindowMinimize();\n");
             sb.append("        } else if (id == WindowEvent.WINDOW_DEICONIFIED) {\n");
             sb.append("            onWindowRestore();\n");
+            sb.append("        } else if (id == WindowEvent.WINDOW_GAINED_FOCUS && event.getSource() instanceof JFrame) {\n");
+            sb.append("            for (int i = 0; i < windows.size(); i++) {\n");
+            sb.append("                NGWindow window = windows.get(i);\n");
+            sb.append("                if (window.jf == event.getSource()) {\n");
+            sb.append("                    focused_window = window;\n");
+            sb.append("                    return;\n");
+            sb.append("                }\n");
+            sb.append("            }\n");
+            sb.append("            if (!windows.isEmpty()) NGUtils.error(\"Couldn't find focused window\");\n");
             sb.append("        }\n");
             sb.append("    }\n\n");
         } // eventDispatched()

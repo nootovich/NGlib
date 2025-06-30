@@ -1,7 +1,11 @@
 package examples.clicker;
 
+import nootovich.nglib.NGButton;
+import nootovich.nglib.NGMain;
+import nootovich.nglib.NGVec2i;
+import nootovich.nglib.NGVec4i;
+
 import java.util.ArrayList;
-import nootovich.nglib.*;
 
 public class Clicker extends NGMain {
 
@@ -32,7 +36,7 @@ public class Clicker extends NGMain {
             new NGButton("./assets/cross-mark.png", 0, 0, 50, 50) {
                 @Override
                 public void performAction() {
-                    window.shouldClose = true;
+                    exit();
                 }
             }
         );

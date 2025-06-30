@@ -37,7 +37,7 @@ public class TicTacToe extends NGMain {
         if (restartTime > 0 && System.currentTimeMillis() > restartTime) {
             restartTime = 0;
             BOARD       = new byte[BOARD_SIZE][BOARD_SIZE];
-            window.renderer.reset();
+            focused_window.renderer.reset();
         }
     }
 
